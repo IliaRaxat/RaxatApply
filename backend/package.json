@@ -1,0 +1,25 @@
+{
+  "name": "hh-auto-apply-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/main.js",
+    "dev": "node src/main.js",
+    "api": "node src/api/server.js",
+    "clear-db": "node src/scripts/clear_db.js"
+  },
+  "dependencies": {
+    "@google/genai": "^1.9.0",
+    "cheerio": "^1.1.2",
+    "cli-progress": "^3.12.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "inquirer": "^12.7.0",
+    "log-update": "^6.1.0",
+    "node-fetch": "^3.3.2",
+    "puppeteer": "^24.12.1",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "sqlite3": "^5.1.7"
+  }
+}
