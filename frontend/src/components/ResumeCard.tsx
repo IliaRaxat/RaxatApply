@@ -13,6 +13,8 @@ interface Props {
 export default function ResumeCard({ resume, onUpdate, onDelete }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
+  // Установим значение по умолчанию 2000 для соответствия бэкенду
+  const [vacancyCount, setVacancyCount] = useState<number>(resume.progress?.target || 2000);
 
   useEffect(() => {
     if (resume.topVacancies.length > 0 && !isExpanded) {
@@ -30,40 +32,62 @@ export default function ResumeCard({ resume, onUpdate, onDelete }: Props) {
 
       await startProcess({
         resumeId: resume.id,
-        hhtoken: resume.hhtoken,
-        xsrf: resume.xsrf,
+        hhtoken: resume.hhtoken || '', // Токены могут быть пустыми
+        xsrf: resume.xsrf || '',       // Токены могут быть пустыми
         geminiKey: resume.geminiKey,
+        coverLetter: resume.coverLetter || '', // Добавляем coverLetter
+        vacancyCount: vacancyCount,
       });
 
-      // Подключаемся к SSE
-      const eventSource = new EventSource(`/api/progress/${resume.id}`);
+      // Используем polling для получения прогресса
+      const pollProgress = async () => {
+        try {
+          const response = await fetch(`/api/progress/${resume.id}`);
+          const data = await response.json();
 
-      eventSource.onmessage = event => {
-        const data = JSON.parse(event.data);
+          // Обновляем только если есть реальные данные
+          const updates: Partial<Resume> = {};
+          
+          if (data.status && data.status !== 'idle') {
+            updates.status = data.status;
+          }
+          
+          if (data.parsed !== undefined || data.target !== undefined) {
+            updates.progress = {
+              parsed: data.parsed ?? 0,
+              target: data.target ?? vacancyCount,
+              applied: data.applied ?? 0,
+              successCount: data.successCount ?? 0,
+              failedCount: data.failedCount ?? 0,
+              totalCount: data.totalCount ?? 0,
+            };
+          }
+          
+          if (data.topVacancies && data.topVacancies.length > 0) {
+            updates.topVacancies = data.topVacancies;
+          }
 
-        onUpdate(resume.id, {
-          status: data.status || 'parsing',
-          progress: {
-            parsed: data.parsed || 0,
-            target: data.target || 1000,
-            applied: data.applied || 0,
-            successCount: data.successCount || 0,
-            failedCount: data.failedCount || 0,
-            totalCount: data.totalCount || 0,
-          },
-          topVacancies: data.topVacancies || resume.topVacancies || [],
-        });
+          if (Object.keys(updates).length > 0) {
+            onUpdate(resume.id, updates);
+          }
 
-        if (data.status === 'completed' || data.status === 'error') {
-          eventSource.close();
-          setIsRunning(false);
+          // Останавливаем polling при завершении
+          if (data.status === 'completed' || data.status === 'error') {
+            setIsRunning(false);
+            return;
+          }
+
+          // Продолжаем polling каждые 500ms
+          setTimeout(pollProgress, 500);
+        } catch (error) {
+          console.error('Polling error:', error);
+          // При ошибке продолжаем polling
+          setTimeout(pollProgress, 1000);
         }
       };
 
-      eventSource.onerror = () => {
-        eventSource.close();
-        setIsRunning(false);
-      };
+      // Запускаем polling
+      pollProgress();
     } catch (error: any) {
       setIsRunning(false);
       onUpdate(resume.id, {
@@ -76,6 +100,8 @@ export default function ResumeCard({ resume, onUpdate, onDelete }: Props) {
   const getStatusColor = () => {
     const colors: Record<string, string> = {
       idle: 'bg-gray-100 text-gray-700',
+      waiting_for_auth: 'bg-yellow-100 text-yellow-700',
+      auth_completed: 'bg-green-100 text-green-700',
       parsing: 'bg-blue-100 text-blue-700',
       rating: 'bg-purple-100 text-purple-700',
       applying: 'bg-green-100 text-green-700',
@@ -88,6 +114,8 @@ export default function ResumeCard({ resume, onUpdate, onDelete }: Props) {
   const getStatusText = () => {
     const texts: Record<string, string> = {
       idle: 'Готов к запуску',
+      waiting_for_auth: '⏳ Ожидание авторизации в браузере...',
+      auth_completed: '✅ Авторизация завершена',
       parsing: 'Парсинг вакансий...',
       rating: 'Рейтинг вакансий...',
       applying: 'Отправка откликов...',
@@ -104,11 +132,14 @@ export default function ResumeCard({ resume, onUpdate, onDelete }: Props) {
           <div className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor()}`}>
             {getStatusText()}
           </div>
-          {resume.status === 'parsing' && (
+          {(resume.status === 'parsing' || resume.status === 'rating' || resume.status === 'waiting_for_auth') && (
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500" />
               <span className="text-sm text-gray-600 font-semibold">
-                {resume.progress.parsed} / {resume.progress.target}
+                {resume.status === 'waiting_for_auth' 
+                  ? 'Войдите в аккаунт HH.ru в браузере' 
+                  : `${(resume.progress?.parsed ?? 0)} / ${(resume.progress?.target ?? vacancyCount)}`
+                }
               </span>
             </div>
           )}
@@ -123,37 +154,67 @@ export default function ResumeCard({ resume, onUpdate, onDelete }: Props) {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <InputField
-          label="HH Token"
+          label="HH Token (опционально)"
           value={resume.hhtoken}
           onChange={v => onUpdate(resume.id, { hhtoken: v })}
           disabled={resume.status !== 'idle'}
-          placeholder="Ah!hXyxx2!FVA..."
+          placeholder="Оставьте пустым для ручной авторизации"
         />
         <InputField
-          label="XSRF Token"
+          label="XSRF Token (опционально)"
           value={resume.xsrf}
           onChange={v => onUpdate(resume.id, { xsrf: v })}
           disabled={resume.status !== 'idle'}
-          placeholder="225b1bb24f74..."
+          placeholder="Оставьте пустым для ручной авторизации"
         />
         <InputField
-          label="Gemini API Key"
+          label="Gemini API Key *"
           value={resume.geminiKey}
           onChange={v => onUpdate(resume.id, { geminiKey: v })}
           disabled={resume.status !== 'idle'}
           placeholder="AIzaSyAMmvC..."
         />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Количество вакансий</label>
+          <input
+            type="number"
+            value={vacancyCount}
+            onChange={e => setVacancyCount(parseInt(e.target.value) || 100)}
+            min={10}
+            max={10000}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            disabled={resume.status !== 'idle'}
+          />
+        </div>
       </div>
 
-      <button
-        onClick={handleStart}
-        disabled={isRunning || resume.status !== 'idle' || !resume.hhtoken || !resume.xsrf || !resume.geminiKey}
-        className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-      >
-        {isRunning || resume.status !== 'idle' ? 'Выполняется...' : 'Запустить'}
-      </button>
+      <div className="flex gap-4">
+        <button
+          onClick={handleStart}
+          disabled={isRunning || resume.status !== 'idle' || !resume.geminiKey}
+          className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+        >
+          {isRunning || resume.status !== 'idle' ? 'Выполняется...' : 'Запустить'}
+        </button>
+        {(resume.status !== 'idle' || isRunning) && (
+          <button
+            onClick={() => {
+              setIsRunning(false);
+              onUpdate(resume.id, { 
+                status: 'idle', 
+                error: undefined,
+                progress: { parsed: 0, target: 2000, applied: 0 },
+                topVacancies: []
+              });
+            }}
+            className="px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold shadow-md hover:bg-gray-600 transition-all duration-200"
+          >
+            Сбросить
+          </button>
+        )}
+      </div>
 
       {resume.error && (
         <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">

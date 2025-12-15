@@ -4,32 +4,48 @@ import { useState } from 'react';
 import ResumeCard from '@/components/ResumeCard';
 import { Resume } from '@/types';
 
+const DEFAULT_COVER_LETTER = `Здравствуйте!
+
+Меня зовут Илья, я frontend-разработчик с более чем 4 годами опыта работы в финтехе и high-load проектах. В своей работе я уделяю особое внимание стабильности продукта, удобству интерфейсов и оптимизации производительности.
+
+За время работы я разрабатывал и улучшал пользовательские интерфейсы для систем с высокой нагрузкой, автоматизировал процессы и внедрял решения, повышающие эффективность бизнеса. Хорошо понимаю, как строить удобные и масштабируемые продукты, и умею работать как в команде, так и самостоятельно.
+
+Я открыт к новым вызовам и уверен, что мой опыт и навыки будут полезны вашей компании. Буду рад обсудить детали и ответить на вопросы на собеседовании.
+
+Спасибо за внимание к моей кандидатуре.
+
+С уважением,
+Илья`;
+
 const DEFAULT_RESUMES: Resume[] = [
   {
     id: '1',
-    hhtoken: 'htOnjNQOTRdz_3u1mOs_429ZBsIz',
-    xsrf: '542c53b2e77ebcfd19b96b024ac0208d',
+    hhtoken: '', // Токены теперь будут получены автоматически
+    xsrf: '',    // Токены теперь будут получены автоматически
     geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
+    coverLetter: DEFAULT_COVER_LETTER,
     status: 'idle',
-    progress: { parsed: 0, target: 1000, applied: 0 },
+    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 2000, applied: 0 },
     topVacancies: [],
   },
   {
     id: '2',
-    hhtoken: 'KCDUJriJp1fI5OzhSdfYWbsyC45j',
-    xsrf: '542c53b2e77ebcfd19b96b024ac0208d',
+    hhtoken: '', // Токены теперь будут получены автоматически
+    xsrf: '',    // Токены теперь будут получены автоматически
     geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
+    coverLetter: DEFAULT_COVER_LETTER,
     status: 'idle',
-    progress: { parsed: 0, target: 1000, applied: 0 },
+    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 2000, applied: 0 },
     topVacancies: [],
   },
   {
     id: '3',
-    hhtoken: 'fF4yzUgipZpcobm1t16JwHbQSctU',
-    xsrf: '542c53b2e77ebcfd19b96b024ac0208d',
+    hhtoken: '', // Токены теперь будут получены автоматически
+    xsrf: '',    // Токены теперь будут получены автоматически
     geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
+    coverLetter: DEFAULT_COVER_LETTER,
     status: 'idle',
-    progress: { parsed: 0, target: 1000, applied: 0 },
+    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 2000, applied: 0 },
     topVacancies: [],
   },
 ];
@@ -40,11 +56,12 @@ export default function Home() {
   const addResume = () => {
     const newResume: Resume = {
       id: Date.now().toString(),
-      hhtoken: '',
-      xsrf: '',
+      hhtoken: '', // Токены теперь будут получены автоматически
+      xsrf: '',    // Токены теперь будут получены автоматически
       geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
+      coverLetter: DEFAULT_COVER_LETTER,
       status: 'idle',
-      progress: { parsed: 0, target: 1000, applied: 0 },
+      progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 2000, applied: 0 },
       topVacancies: [],
     };
     setResumes([...resumes, newResume]);
@@ -78,6 +95,7 @@ export default function Home() {
           <p className="text-gray-600 text-lg">
             Автоматизация откликов на вакансии HH.ru
           </p>
+          {/* Убрано назойливое сообщение о режиме */}
         </header>
 
         <div className="space-y-6">

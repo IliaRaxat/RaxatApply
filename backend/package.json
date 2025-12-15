@@ -6,7 +6,14 @@
     "start": "node src/main.js",
     "dev": "node src/main.js",
     "api": "node src/api/server.js",
-    "clear-db": "node src/scripts/clear_db.js"
+    "clear-db": "node src/scripts/clear_db.js",
+    "debug-apply": "node src/debug-apply.js",
+    "test-auth": "node src/test-auth.js",
+    "quick-login": "node src/quick-login-test.js",
+    "auth-only": "node src/auth-only.js",
+    "test-api-auth": "node src/test-api-auth.js",
+    "debug-auth-flow": "node src/debug-auth-flow.js",
+    "debug-modals": "node src/debug-modals.js"
   },
   "dependencies": {
     "@google/genai": "^1.9.0",

@@ -1,17 +1,26 @@
-declare global {
-  var progressStoreGlobal: Map<string, any> | undefined;
+// Хранилище прогресса в памяти (глобальное)
+// @ts-ignore
+if (!global.progressStore) {
+  // @ts-ignore
+  global.progressStore = new Map<string, any>();
 }
 
-export const progressStore = global.progressStoreGlobal ?? new Map<string, any>();
-
-if (!global.progressStoreGlobal) {
-  global.progressStoreGlobal = progressStore;
-}
-
-export function updateProgress(resumeId: string, data: any) {
-  progressStore.set(resumeId, data);
-}
+// @ts-ignore
+const progressStore: Map<string, any> = global.progressStore;
 
 export function getProgress(resumeId: string) {
   return progressStore.get(resumeId);
 }
+
+export function updateProgress(resumeId: string, updates: any) {
+  const current = progressStore.get(resumeId) || {};
+  const updated = { ...current, ...updates };
+  progressStore.set(resumeId, updated);
+  console.log(`[ProgressStore] Updated progress for ${resumeId}:`, JSON.stringify(updated).substring(0, 200));
+}
+
+export function clearProgress(resumeId: string) {
+  progressStore.delete(resumeId);
+}
+
+export { progressStore };

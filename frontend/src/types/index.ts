@@ -3,7 +3,8 @@ export interface Resume {
   hhtoken: string;
   xsrf: string;
   geminiKey: string;
-  status: 'idle' | 'parsing' | 'rating' | 'applying' | 'completed' | 'error';
+  coverLetter: string;
+  status: 'idle' | 'waiting_for_auth' | 'auth_completed' | 'parsing' | 'rating' | 'applying' | 'completed' | 'error';
   progress: {
     parsed: number;
     target: number;
@@ -31,6 +32,8 @@ export interface StartProcessParams {
   hhtoken: string;
   xsrf: string;
   geminiKey: string;
+  coverLetter: string;
+  vacancyCount?: number; // Добавляем опциональный параметр
 }
 
 export interface ProgressData {

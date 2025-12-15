@@ -9,8 +9,8 @@ export const config = {
       email: "ilshih@mail.ru",
       password: "твой_пароль_1",
       cookies: {
-        HHTOKEN: "htOnjNQOTRdz_3u1mOs_429ZBsIz",
-        XSRF: "542c53b2e77ebcfd19b96b024ac0208d",
+        HHTOKEN: "",
+        XSRF: "",
       },
       geminiApiKey: "AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik"
     },
@@ -20,8 +20,8 @@ export const config = {
       email: "ilshih2@mail.ru",
       password: "твой_пароль_2",
       cookies: {
-        HHTOKEN: "KCDUJriJp1fI5OzhSdfYWbsyC45j",
-        XSRF: "542c53b2e77ebcfd19b96b024ac0208d",
+        HHTOKEN: "",
+        XSRF: "",
       },
       geminiApiKey: "AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik"
     },
@@ -31,8 +31,8 @@ export const config = {
       email: "ishikhakhmedoa@mail.ru",
       password: "твой_пароль_3",
       cookies: {
-        HHTOKEN: "fF4yzUgipZpcobm1t16JwHbQSctU",
-        XSRF: "542c53b2e77ebcfd19b96b024ac0208d",
+        HHTOKEN: "",
+        XSRF: "",
       },
       geminiApiKey: "AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik"
     }
@@ -47,27 +47,48 @@ export const config = {
     "AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik"
   ],
 
-  // Параметры поиска вакансий
+  // Параметры поиска вакансий - расширяем для большего охвата
   search: {
     queries: [
-      { type: "text", value: 'Frontend разработчик' },
-      { type: "text", value: 'React разработчик' },
-      { type: "text", value: 'Next.js разработчик' },
-      { type: "text", value: 'TypeScript разработчик' },
-      { type: "text", value: 'JavaScript разработчик' },
-      { type: "text", value: 'Frontend developer' },
-      { type: "text", value: 'React developer' },
-      { type: "text", value: 'Web разработчик' },
-      { type: "text", value: 'Фронтенд разработчик' },
-      { type: "text", value: 'Фронтенд' },
-      { type: "text", value: 'Frontend' },
+      // Основные запросы - высокий приоритет
       { type: "text", value: 'React' },
-      { type: "text", value: 'Vue разработчик' },
-      { type: "text", value: 'Angular разработчик' },
+      { type: "text", value: 'React разработчик' },
+      { type: "text", value: 'Frontend' },
+      { type: "text", value: 'Frontend разработчик' },
+      { type: "text", value: 'Фронтенд' },
+      { type: "text", value: 'Фронтенд разработчик' },
+      { type: "text", value: 'Next.js' },
+      { type: "text", value: 'TypeScript' },
+      { type: "text", value: 'TypeScript разработчик' },
+      { type: "text", value: 'JavaScript' },
+      { type: "text", value: 'JavaScript разработчик' },
+      // Fullstack
+      { type: "text", value: 'Fullstack' },
+      { type: "text", value: 'Full-stack' },
       { type: "text", value: 'Fullstack разработчик' },
-      { type: "text", value: 'Full-stack developer' },
-      { type: "text", value: 'Node.js разработчик' },
-      { type: "text", value: 'JavaScript developer' },
+      // Английские варианты
+      { type: "text", value: 'Frontend engineer' },
+      { type: "text", value: 'Frontend developer' },
+      { type: "text", value: 'Web developer' },
+      { type: "text", value: 'Web разработчик' },
+      // Уровни
+      { type: "text", value: 'ReactJS' },
+      { type: "text", value: 'Frontend программист' },
+      { type: "text", value: 'Frontend специалист' },
+      { type: "text", value: 'Senior Frontend' },
+      { type: "text", value: 'Middle Frontend' },
+      { type: "text", value: 'Junior Frontend' },
+      { type: "text", value: 'Senior React' },
+      { type: "text", value: 'Middle React' },
+      { type: "text", value: 'Junior React' },
+      // Дополнительные технологии
+      { type: "text", value: 'Redux' },
+      { type: "text", value: 'Vue.js' },
+      { type: "text", value: 'Angular' },
+      { type: "text", value: 'Node.js' },
+      { type: "text", value: 'HTML CSS JavaScript' },
+      { type: "text", value: 'Верстальщик' },
+      { type: "text", value: 'UI разработчик' },
     ],
     keywords: [
       { word: "React", weight: 10 },
@@ -87,9 +108,36 @@ export const config = {
       { word: "Jest", weight: 2 },
       { word: "AWS", weight: 2 },
       { word: "HTML", weight: 2 },
-      { word: "CSS", weight: 2 }
+      { word: "CSS", weight: 2 },
+      // Добавляем больше ключевых слов
+      { word: "Webpack", weight: 2 },
+      { word: "Vite", weight: 2 },
+      { word: "Tailwind", weight: 2 },
+      { word: "Styled Components", weight: 2 },
+      { word: "GraphQL", weight: 2 },
+      { word: "Jira", weight: 1 },
+      { word: "Git", weight: 1 },
+      // Дополнительные ключевые слова
+      { word: "Agile", weight: 1 },
+      { word: "Scrum", weight: 1 },
+      { word: "Figma", weight: 1 },
+      { word: "UI/UX", weight: 1 },
+      { word: "Responsive", weight: 1 },
+      { word: "Mobile-first", weight: 1 },
+      // Дополнительные ключевые слова
+      { word: "ES6", weight: 1 },
+      { word: "ESLint", weight: 1 },
+      { word: "Prettier", weight: 1 },
+      { word: "Babel", weight: 1 },
+      { word: "Sass", weight: 1 },
+      { word: "Less", weight: 1 },
+      { word: "Bootstrap", weight: 1 },
+      { word: "Material UI", weight: 1 },
+      { word: "Ant Design", weight: 1 },
+      { word: "Chakra UI", weight: 1 }
     ],
-    areas: [113, 1, 2],
+    // Без фильтра по регионам - все регионы
+    areas: [null], // Упрощаем до одного значения, так как мы больше не используем этот параметр
     query: "frontend",
     area: 113,
     searchFields: ["name", "company_name", "description"],
@@ -98,22 +146,23 @@ export const config = {
     LSaveArea: true,
   },
 
-  // Правила фильтрации
+  // Правила фильтрации - только явно нерелевантные
   filters: {
     stopWords: [
-      "стажер", "стажёр", 
-      "intern", "интерн",
-      "flutter", "ios", "android", "mobile", "мобильн",
-      "devops", "деvops",
-      "qa", "тестировщик", "тестирование",
-      "аналитик", "analyst",
-      "designer", "дизайнер"
+      // Уровень - только стажёры
+      "стажер", "стажёр", "intern", "интерн",
+      // Другие фреймворки (только в заголовке)
+      //"angular", "vue.js", "vuejs", // Переносим в более мягкую фильтрацию
+      // Явно не frontend
+      "flutter", "ios разработчик", "android разработчик",
+      "devops", "qa", "тестировщик",
+      "аналитик", "analyst", "designer", "дизайнер",
+      "1с", "1c", "битрикс", "bitrix",
+      "data engineer", "data scientist", "ml engineer",
+      "системный администратор", "sysadmin",
+      "backend", "бэкенд", "back-end", "back end"
     ],
-    requiredWords: [
-      "react",
-      "next.js",
-      "nextjs"
-    ],
+    requiredWords: [],
   },
 
   // Настройки Puppeteer
@@ -128,10 +177,10 @@ export const config = {
   
   // Настройки задержек
   delays: {
-    pageLoad: 2000,
-    afterClick: 1000,
-    betweenActions: 1500,
-    afterTyping: 500,
-    beforeClose: 1000
+    pageLoad: 500,
+    afterClick: 200,
+    betweenActions: 200,
+    afterTyping: 100,
+    beforeClose: 200
   }
 };

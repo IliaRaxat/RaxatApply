@@ -8,22 +8,31 @@ const activeProcesses = new Map<string, any>();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { resumeId, hhtoken, xsrf, geminiKey } = body;
+    const { resumeId, hhtoken, xsrf, geminiKey, coverLetter, vacancyCount } = body;
 
-    if (!resumeId || !hhtoken || !xsrf || !geminiKey) {
-      return NextResponse.json({ error: 'Все поля обязательны' }, { status: 400 });
+    // Gemini ключ обязателен
+    if (!resumeId || !geminiKey) {
+      return NextResponse.json({ error: 'Resume ID и Gemini ключ обязательны' }, { status: 400 });
     }
 
-    // Путь к backend
+    // Путь к backend с таймером авторизации
     const mainPath = path.join(process.cwd(), '..', 'backend', 'src', 'main.js');
+
+    // Логируем параметры запуска
+    console.log(`[API] Запуск процесса для резюме ${resumeId}`);
+    console.log(`[API] Путь к main.js: ${mainPath}`);
+    console.log(`[API] vacancyCount: ${vacancyCount}`);
 
     const childProcess = spawn('node', [mainPath], {
       env: {
         ...process.env,
         RESUME_ID: resumeId,
-        HH_TOKEN: hhtoken,
-        XSRF: xsrf,
+        // Токены могут быть пустыми - система авторизации будет ждать ручной авторизации
+        HH_TOKEN: hhtoken || '',
+        XSRF: xsrf || '',
         GEMINI_KEY: geminiKey,
+        COVER_LETTER: coverLetter || '',
+        VACANCY_COUNT: String(vacancyCount || 2000), // Передаём как строку с дефолтом
       },
       cwd: path.join(process.cwd(), '..', 'backend'),
     });
@@ -32,21 +41,40 @@ export async function POST(request: NextRequest) {
 
     childProcess.stdout.on('data', data => {
       const output = data.toString();
+      // Логируем весь вывод для отладки
+      console.log(`[${resumeId}] STDOUT: ${output}`);
 
-      // Парсим прогресс
-      const progressMatch = output.match(/Прогресс:\s*(\d+)\/(\d+)/);
-      if (progressMatch) {
+      // Парсим сообщения о прогрессе из парсинга (удаляем дублирующуюся проверку)
+      const parsingProgressMatch = output.match(/Прогресс: (\d+)\/(\d+)/);
+      if (parsingProgressMatch) {
+        const parsed = parseInt(parsingProgressMatch[1]);
+        const target = parseInt(parsingProgressMatch[2]);
+        
+        const current = progressStore.get(resumeId) || {};
         updateProgress(resumeId, {
-          parsed: parseInt(progressMatch[1]),
-          target: parseInt(progressMatch[2]),
-          status: 'parsing',
+          ...current,
+          parsed: parsed,
+          target: target,
+          status: 'parsing'
         });
+        
+        console.log(`📊 Парсинг прогресс: ${parsed}/${target}`);
       }
 
-      // Определяем фазы
-      if (output.includes('ФАЗА РЕЙТИНГА')) {
+      // Определяем фазы - более точная проверка
+      if (output.includes('ФАЗА ПАРСИНГА') && output.includes('СЕЙЧАС СОБИРАЕМ ВАКАНСИИ')) {
+        const current = progressStore.get(resumeId) || {};
+        updateProgress(resumeId, { ...current, status: 'parsing' });
+      }
+      
+      if (output.includes('ФАЗА РЕЙТИНГА') && output.includes('СЕЙЧАС СОРТИРУЕМ ВАКАНСИИ')) {
         const current = progressStore.get(resumeId) || {};
         updateProgress(resumeId, { ...current, status: 'rating' });
+      }
+      
+      if (output.includes('ФАЗА ОТКЛИКА') && output.includes('СЕЙЧАС БУДУТ ОТПРАВЛЯТЬСЯ ОТКЛИКИ')) {
+        const current = progressStore.get(resumeId) || {};
+        updateProgress(resumeId, { ...current, status: 'applying' });
       }
 
       // Парсим отклики
@@ -97,13 +125,58 @@ export async function POST(request: NextRequest) {
           successCount: parseInt(statsMatch[1]),
           failedCount: parseInt(statsMatch[2]),
           totalCount: parseInt(statsMatch[4]),
-          status: 'applying',
         });
+      }
+      
+      // Обработка сигналов авторизации
+      if (output.includes('AUTHORIZATION_PERIOD_START: true')) {
+        const current = progressStore.get(resumeId) || {};
+        updateProgress(resumeId, { ...current, status: 'waiting_for_auth' });
+      }
+      
+      if (output.includes('AUTHORIZATION_PERIOD_END: true')) {
+        const current = progressStore.get(resumeId) || {};
+        updateProgress(resumeId, { ...current, status: 'auth_completed' });
+      }
+      
+      // Обработка завершения фаз
+      if (output.includes('✅ Парсинг завершён') || output.includes('✅ ПАРСИНГ ЗАВЕРШЕН')) {
+        // Не меняем статус здесь, чтобы не было скачков
+      }
+      
+      // Обработка завершения всего процесса
+      if (output.includes('CURRENT_PHASE: completed')) {
+        const current = progressStore.get(resumeId) || {};
+        updateProgress(resumeId, { ...current, status: 'completed' });
+      }
+      
+      if (output.includes('CURRENT_PHASE: error')) {
+        const current = progressStore.get(resumeId) || {};
+        updateProgress(resumeId, { ...current, status: 'error' });
+      }
+      
+      // Обработка TARGET_VACANCIES_JSON
+      if (output.includes('TARGET_VACANCIES_JSON:')) {
+        try {
+          const jsonStart = output.indexOf('{');
+          const jsonEnd = output.lastIndexOf('}');
+          if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+            const jsonStr = output.substring(jsonStart, jsonEnd + 1);
+            const targetData = JSON.parse(jsonStr);
+            const current = progressStore.get(resumeId) || {};
+            updateProgress(resumeId, { ...current, target: targetData.target });
+          }
+        } catch (e) {
+          // Игнорируем ошибки парсинга
+        }
       }
     });
 
     childProcess.stderr.on('data', data => {
-      console.error(`[${resumeId}] ERROR: ${data.toString()}`);
+      const err = data.toString();
+      console.error(`[${resumeId}] STDERR: ${err}`);
+      // Также выводим в stdout для отладки
+      console.log(`[${resumeId}] STDERR: ${err}`);
     });
 
     childProcess.on('close', code => {

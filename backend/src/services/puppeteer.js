@@ -9,13 +9,37 @@ puppeteer.use(StealthPlugin());
 export async function initializeBrowserAndPage(customConfig, cookies) {
   const browser = await puppeteer.launch({
     headless: customConfig.puppeteer.headless,
-    slowMo: customConfig.puppeteer.slowMo || 0,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+    slowMo: 0, // Убираем замедление для скорости
+    args: [
+      '--no-sandbox', 
+      '--disable-setuid-sandbox', 
+      '--disable-dev-shm-usage',
+      '--disable-accelerated-2d-canvas',
+      '--disable-gpu',
+      '--no-first-run',
+      '--no-zygote',
+      '--disable-background-timer-throttling',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-renderer-backgrounding',
+      '--disable-http-cache',
+      '--disk-cache-size=0'
+    ],
     defaultViewport: customConfig.puppeteer.defaultViewport || { width: 1280, height: 800 }
   });
   
   const page = await browser.newPage();
   await page.setViewport(customConfig.puppeteer.defaultViewport || { width: 1280, height: 800 });
+  
+  // Отключаем загрузку изображений для ускорения
+  await page.setRequestInterception(true);
+  page.on('request', (req) => {
+    if (req.resourceType() === 'image' || req.resourceType() === 'stylesheet' || req.resourceType() === 'font') {
+      req.abort();
+    } else {
+      req.continue();
+    }
+  });
+  
   await page.setCookie(...cookies);
   
   return { browser, page };
@@ -105,5 +129,7 @@ export async function waitForResponseCompletion(page, finalSubmitButtonSelector 
 }
 
 export async function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  // Минимальная задержка 100 мс для стабильности
+  const actualDelay = Math.max(ms, 100);
+  return new Promise(resolve => setTimeout(resolve, actualDelay));
 }
