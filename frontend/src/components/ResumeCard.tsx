@@ -13,8 +13,8 @@ interface Props {
 export default function ResumeCard({ resume, onUpdate, onDelete }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
-  // Установим значение по умолчанию 2000 для соответствия бэкенду
-  const [vacancyCount, setVacancyCount] = useState<number>(resume.progress?.target || 2000);
+  // Установим значение по умолчанию 5000 для соответствия бэкенду
+  const [vacancyCount, setVacancyCount] = useState<number>(resume.progress?.target || 5000);
 
   useEffect(() => {
     if (resume.topVacancies.length > 0 && !isExpanded) {
@@ -132,13 +132,15 @@ export default function ResumeCard({ resume, onUpdate, onDelete }: Props) {
           <div className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor()}`}>
             {getStatusText()}
           </div>
-          {(resume.status === 'parsing' || resume.status === 'rating' || resume.status === 'waiting_for_auth') && (
+          {(resume.status === 'parsing' || resume.status === 'rating' || resume.status === 'waiting_for_auth' || resume.status === 'applying') && (
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500" />
               <span className="text-sm text-gray-600 font-semibold">
                 {resume.status === 'waiting_for_auth' 
                   ? 'Войдите в аккаунт HH.ru в браузере' 
-                  : `${(resume.progress?.parsed ?? 0)} / ${(resume.progress?.target ?? vacancyCount)}`
+                  : resume.status === 'applying'
+                    ? `Отклики: ${resume.progress?.applied ?? 0} / ${resume.progress?.parsed ?? 0}`
+                    : `Парсинг: ${(resume.progress?.parsed ?? 0)} / ${(resume.progress?.target ?? vacancyCount)}`
                 }
               </span>
             </div>
@@ -154,7 +156,7 @@ export default function ResumeCard({ resume, onUpdate, onDelete }: Props) {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
         <InputField
           label="HH Token (опционально)"
           value={resume.hhtoken}
@@ -190,6 +192,24 @@ export default function ResumeCard({ resume, onUpdate, onDelete }: Props) {
         </div>
       </div>
 
+      {/* Сопроводительное письмо */}
+      <div className="mb-6">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Сопроводительное письмо
+        </label>
+        <textarea
+          value={resume.coverLetter}
+          onChange={e => onUpdate(resume.id, { coverLetter: e.target.value })}
+          placeholder="Здравствуйте! Меня заинтересовала ваша вакансия..."
+          rows={5}
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y"
+          disabled={resume.status !== 'idle'}
+        />
+        <p className="text-xs text-gray-500 mt-1">
+          Используется для вакансий с обязательным сопроводительным письмом
+        </p>
+      </div>
+
       <div className="flex gap-4">
         <button
           onClick={handleStart}
@@ -205,7 +225,7 @@ export default function ResumeCard({ resume, onUpdate, onDelete }: Props) {
               onUpdate(resume.id, { 
                 status: 'idle', 
                 error: undefined,
-                progress: { parsed: 0, target: 2000, applied: 0 },
+                progress: { parsed: 0, target: 5000, applied: 0 },
                 topVacancies: []
               });
             }}

@@ -47,48 +47,48 @@ export const config = {
     "AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik"
   ],
 
-  // Параметры поиска вакансий - расширяем для большего охвата
+  // Параметры поиска вакансий - РАСШИРЕННЫЙ СПИСОК для большего охвата
   search: {
     queries: [
-      // Основные запросы - высокий приоритет
-      { type: "text", value: 'React' },
-      { type: "text", value: 'React разработчик' },
-      { type: "text", value: 'Frontend' },
+      // Основные запросы
       { type: "text", value: 'Frontend разработчик' },
-      { type: "text", value: 'Фронтенд' },
-      { type: "text", value: 'Фронтенд разработчик' },
-      { type: "text", value: 'Next.js' },
-      { type: "text", value: 'TypeScript' },
-      { type: "text", value: 'TypeScript разработчик' },
-      { type: "text", value: 'JavaScript' },
+      { type: "text", value: 'React разработчик' },
       { type: "text", value: 'JavaScript разработчик' },
-      // Fullstack
+      { type: "text", value: 'TypeScript разработчик' },
+      { type: "text", value: 'Фронтенд' },
       { type: "text", value: 'Fullstack' },
-      { type: "text", value: 'Full-stack' },
-      { type: "text", value: 'Fullstack разработчик' },
-      // Английские варианты
-      { type: "text", value: 'Frontend engineer' },
-      { type: "text", value: 'Frontend developer' },
-      { type: "text", value: 'Web developer' },
+      { type: "text", value: 'Next.js' },
       { type: "text", value: 'Web разработчик' },
-      // Уровни
-      { type: "text", value: 'ReactJS' },
-      { type: "text", value: 'Frontend программист' },
-      { type: "text", value: 'Frontend специалист' },
-      { type: "text", value: 'Senior Frontend' },
-      { type: "text", value: 'Middle Frontend' },
-      { type: "text", value: 'Junior Frontend' },
-      { type: "text", value: 'Senior React' },
-      { type: "text", value: 'Middle React' },
-      { type: "text", value: 'Junior React' },
-      // Дополнительные технологии
-      { type: "text", value: 'Redux' },
-      { type: "text", value: 'Vue.js' },
-      { type: "text", value: 'Angular' },
-      { type: "text", value: 'Node.js' },
-      { type: "text", value: 'HTML CSS JavaScript' },
+      { type: "text", value: 'Веб-разработчик' },
+      { type: "text", value: 'Node.js разработчик' },
       { type: "text", value: 'Верстальщик' },
+      // Дополнительные технологии
+      { type: "text", value: 'Vue.js разработчик' },
+      { type: "text", value: 'Angular разработчик' },
+      { type: "text", value: 'Redux' },
+      { type: "text", value: 'GraphQL разработчик' },
+      // Уровни
+      { type: "text", value: 'Junior Frontend' },
+      { type: "text", value: 'Middle Frontend' },
+      { type: "text", value: 'Senior Frontend' },
+      { type: "text", value: 'Junior React' },
+      { type: "text", value: 'Middle React' },
+      // Английские варианты
+      { type: "text", value: 'Frontend developer' },
+      { type: "text", value: 'Frontend engineer' },
+      { type: "text", value: 'React developer' },
+      { type: "text", value: 'JavaScript developer' },
+      // Удалённая работа
+      { type: "text", value: 'Frontend удаленно' },
+      { type: "text", value: 'React удаленная работа' },
+      { type: "text", value: 'JavaScript remote' },
+      { type: "text", value: 'Фронтенд удаленно' },
+      // Специализации
       { type: "text", value: 'UI разработчик' },
+      { type: "text", value: 'HTML верстальщик' },
+      { type: "text", value: 'CSS верстка' },
+      { type: "text", value: 'Программист JavaScript' },
+      { type: "text", value: 'Разработчик интерфейсов' },
     ],
     keywords: [
       { word: "React", weight: 10 },
@@ -168,19 +168,19 @@ export const config = {
   // Настройки Puppeteer
   puppeteer: {
     headless: false,
-    slowMo: 200,
+    slowMo: 0, // Убираем замедление для максимальной скорости
     defaultViewport: {
       width: 1920,
       height: 1080
     }
   },
   
-  // Настройки задержек
+  // Настройки задержек - минимальные для скорости
   delays: {
-    pageLoad: 500,
-    afterClick: 200,
-    betweenActions: 200,
-    afterTyping: 100,
-    beforeClose: 200
+    pageLoad: 100,
+    afterClick: 50,
+    betweenActions: 50,
+    afterTyping: 30,
+    beforeClose: 100
   }
 };

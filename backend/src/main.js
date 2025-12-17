@@ -29,34 +29,39 @@ async function checkAuthorization(page) {
   
   const result = await page.evaluate(() => {
     try {
-      // Ищем элементы, которые есть только у залогиненного пользователя
+      // Проверяем что НЕТ кнопки входа (главный признак неавторизованности)
+      const loginButton = document.querySelector('[data-qa="login"]') || 
+                          document.querySelector('[data-qa="account-login-button"]') ||
+                          document.querySelector('button[data-qa="login"]');
+      
+      // Ищем элементы авторизованного пользователя
       const accountSwitcher = document.querySelector('[data-qa="account-switcher"]');
-      const userMenu = document.querySelector('[data-qa="user-menu"]');
-      const profileLink = document.querySelector('a[href*="/applicant"]') || 
-                         document.querySelector('a[href*="/resume"]');
-      
-      // Дополнительные селекторы для проверки авторизации
-      const myResumes = document.querySelector('[data-qa="mainmenu_myResumes"]');
-      const logoutLink = document.querySelector('a[href*="logout"]');
       const userName = document.querySelector('[data-qa="account-switcher-name"]');
+      const userAvatar = document.querySelector('[data-qa="account-switcher-avatar"]');
+      const myResumes = document.querySelector('[data-qa="mainmenu_myResumes"]');
+      const applicantProfile = document.querySelector('[data-qa="mainmenu_applicantProfile"]');
+      const responses = document.querySelector('[data-qa="mainmenu_responses"]');
       
-      // Проверяем по тексту страницы
-      const pageText = document.body.innerText || '';
-      const hasAuthText = pageText.includes('Мои резюме') || 
-                          pageText.includes('Выход') || 
-                          pageText.includes('Профиль') ||
-                          pageText.includes('Мои отклики');
+      // Проверяем ссылки на профиль
+      const profileLinks = document.querySelectorAll('a[href*="/applicant/"]');
+      const hasProfileLink = profileLinks.length > 0;
       
-      const isAuthorized = !!(accountSwitcher || userMenu || profileLink || myResumes || logoutLink || userName || hasAuthText);
+      // Проверяем наличие аватара или иконки пользователя в хедере
+      const headerUserIcon = document.querySelector('.supernova-navi-item_user') ||
+                             document.querySelector('[data-qa="supernova-navi-item-user"]');
       
-      // Для отладки выводим информацию
+      const hasAuthElements = !!(accountSwitcher || userName || userAvatar || myResumes || 
+                                 applicantProfile || responses || hasProfileLink || headerUserIcon);
+      
+      // Авторизован если: нет кнопки входа И есть элементы авторизации
+      const isAuthorized = !loginButton && hasAuthElements;
+      
+      console.log(`   - Login Button: ${!!loginButton}`);
       console.log(`   - Account Switcher: ${!!accountSwitcher}`);
-      console.log(`   - User Menu: ${!!userMenu}`);
-      console.log(`   - Profile Link: ${!!profileLink}`);
-      console.log(`   - My Resumes: ${!!myResumes}`);
-      console.log(`   - Logout Link: ${!!logoutLink}`);
       console.log(`   - User Name: ${!!userName}`);
-      console.log(`   - Auth Text: ${hasAuthText}`);
+      console.log(`   - My Resumes: ${!!myResumes}`);
+      console.log(`   - Profile Links: ${hasProfileLink}`);
+      console.log(`   - Header User Icon: ${!!headerUserIcon}`);
       console.log(`   - Авторизован: ${isAuthorized}`);
       
       return isAuthorized;
@@ -69,22 +74,37 @@ async function checkAuthorization(page) {
   return result;
 }
 
-// Функция для ожидания завершения таймера авторизации
-async function waitForAuthTimer(resumeId) {
-  console.log(`⏳ Ожидание завершения таймера авторизации для резюме ${resumeId}...`);
-  
-  // Отправляем сигнал о начале периода авторизации
+// Функция для ожидания авторизации (проверяет каждые 2 секунды)
+async function waitForAuth(page) {
   console.log("AUTHORIZATION_PERIOD_START: true");
+  console.log("⏳ Ожидание авторизации... Войдите в аккаунт HH.ru");
   
-  // Ждем 5 минут (300 секунд) с пошаговым отображением
-  for (let i = 300; i > 0; i -= 5) {
-    console.log(`⏳ Осталось ${i} секунд для авторизации...`);
-    await sleep(5000);
+  const MAX_WAIT = 600; // Максимум 10 минут
+  let waited = 0;
+  
+  while (waited < MAX_WAIT) {
+    await sleep(2000);
+    waited += 2;
+    
+    try {
+      const isAuth = await checkAuthorization(page);
+      if (isAuth) {
+        console.log("AUTHORIZATION_PERIOD_END: true");
+        console.log("✅ Авторизация обнаружена! Начинаем работу...");
+        return true;
+      }
+    } catch (e) {
+      // Игнорируем ошибки проверки - страница может перезагружаться
+    }
+    
+    if (waited % 10 === 0) {
+      console.log(`⏳ Ожидание авторизации... (${waited} сек)`);
+    }
   }
   
-  // Отправляем сигнал о завершении периода авторизации
   console.log("AUTHORIZATION_PERIOD_END: true");
-  console.log("✅ Период авторизации завершен. Начинаем парсинг...");
+  console.log("❌ Время ожидания авторизации истекло");
+  return false;
 }
 
 // Функция для автоматической авторизации по email/password
@@ -215,7 +235,7 @@ async function main() {
     console.log("\n🌐 Открываем браузер...");
     browser = await puppeteer.launch({
       headless: false,
-      slowMo: 100,
+      slowMo: 0, // Убираем замедление для максимальной скорости парсинга
       args: [
         '--no-sandbox', 
         '--disable-setuid-sandbox',
@@ -359,29 +379,19 @@ async function main() {
       console.log("\n⏳ НЕОБХОДИМА РУЧНАЯ АВТОРИЗАЦИЯ");
       console.log("=====================================");
       console.log("👉 ВОЙДИ В АККАУНТ HH.RU В ОТКРЫВШЕМСЯ БРАУЗЕРЕ");
-      console.log("👉 Используй форму входа на сайте");
-      console.log("👉 У тебя есть 300 секунд для авторизации...\n");
+      console.log("👉 Парсинг начнётся автоматически после входа\n");
       
-      // Ожидаем завершения таймера авторизации (5 минут)
-      await waitForAuthTimer(resumeId);
+      // Ожидаем авторизации (проверяем каждые 3 секунды)
+      authorized = await waitForAuth(page);
       
-      // После завершения таймера проверяем авторизацию
-      console.log("🔍 Проверяем авторизацию после завершения таймера...");
-      authorized = await checkAuthorization(page);
-      
-      // Если авторизация прошла успешно, извлекаем токены для будущего использования
+      // Если авторизация прошла успешно, извлекаем токены
       if (authorized) {
         const tokens = await extractTokens(page);
         if (tokens) {
-          // Здесь можно сохранить токены для следующего запуска (опционально)
-          console.log("🔒 Токены готовы к использованию при следующем запуске");
+          console.log("🔒 Токены сохранены");
         }
       }
     }
-    
-    // Проверяем авторизацию после завершения таймера
-    console.log("🔍 Проверяем авторизацию после завершения таймера...");
-    authorized = await checkAuthorization(page);
     
     if (!authorized) {
       console.log("\n❌ ❌ ❌ АВТОРИЗАЦИЯ НЕ ВЫПОЛНЕНА! ❌ ❌ ❌");
@@ -427,12 +437,7 @@ async function main() {
     console.log("CURRENT_PHASE: parsing");
 
     console.log("🔧 Вызываем функцию парсинга...");
-    console.log("🔧 Browser перед вызовом:", !!browser);
-    console.log("🔧 Page перед вызовом:", !!page);
     await parseHHVacanciesWithBrowser(browser, page);
-
-    // Ждем немного, чтобы убедиться, что все сообщения обработаны
-    await sleep(1000);
 
     console.log("\n✅ Парсинг завершён");
 

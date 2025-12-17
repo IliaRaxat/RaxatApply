@@ -25,7 +25,7 @@ const DEFAULT_RESUMES: Resume[] = [
     geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
     coverLetter: DEFAULT_COVER_LETTER,
     status: 'idle',
-    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 2000, applied: 0 },
+    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 5000, applied: 0 },
     topVacancies: [],
   },
   {
@@ -35,7 +35,7 @@ const DEFAULT_RESUMES: Resume[] = [
     geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
     coverLetter: DEFAULT_COVER_LETTER,
     status: 'idle',
-    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 2000, applied: 0 },
+    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 5000, applied: 0 },
     topVacancies: [],
   },
   {
@@ -45,7 +45,7 @@ const DEFAULT_RESUMES: Resume[] = [
     geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
     coverLetter: DEFAULT_COVER_LETTER,
     status: 'idle',
-    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 2000, applied: 0 },
+    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 5000, applied: 0 },
     topVacancies: [],
   },
 ];
@@ -61,7 +61,7 @@ export default function Home() {
       geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
       coverLetter: DEFAULT_COVER_LETTER,
       status: 'idle',
-      progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 2000, applied: 0 },
+      progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 5000, applied: 0 },
       topVacancies: [],
     };
     setResumes([...resumes, newResume]);

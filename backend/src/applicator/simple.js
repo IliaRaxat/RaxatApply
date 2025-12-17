@@ -9,11 +9,16 @@ function sleep(ms) {
 // Сопроводительное письмо по умолчанию
 const DEFAULT_COVER_LETTER = `Здравствуйте!
 
-Меня заинтересовала ваша вакансия. Имею опыт работы с React, Next.js, TypeScript и современным frontend стеком.
+Меня зовут Илья, я frontend-разработчик с более чем 4 годами опыта работы в финтехе и high-load проектах. В своей работе я уделяю особое внимание стабильности продукта, удобству интерфейсов и оптимизации производительности.
 
-Готов обсудить детали сотрудничества.
+За время работы я разрабатывал и улучшал пользовательские интерфейсы для систем с высокой нагрузкой, автоматизировал процессы и внедрял решения, повышающие эффективность бизнеса. Хорошо понимаю, как строить удобные и масштабируемые продукты, и умею работать как в команде, так и самостоятельно.
 
-С уважением`;
+Я открыт к новым вызовам и уверен, что мой опыт и навыки будут полезны вашей компании. Буду рад обсудить детали и ответить на вопросы на собеседовании.
+
+Спасибо за внимание к моей кандидатуре.
+
+С уважением,
+Илья`;
 
 export async function applyToVacancySimple(vacancy, browser, page) {
   console.log(`\n🚀 ${vacancy.title}`);
@@ -144,7 +149,38 @@ export async function applyToVacancySimple(vacancy, browser, page) {
     }
 
     // 3. Ждём реакции
-    await sleep(2000); // Увеличиваем время ожидания
+    await sleep(1500);
+
+    // 3.5. СНАЧАЛА проверяем и обрабатываем ВСЕ модалки (предупреждения, иностранные вакансии)
+    const initialModalCheck = await page.evaluate(() => {
+      const text = document.body?.innerText || '';
+      return {
+        hasRelocationWarning: text.includes('другой стран') || text.includes('another country') || 
+                              text.includes('переезд') || text.includes('relocation') ||
+                              document.querySelector('[data-qa="relocation-warning"]') !== null,
+        hasForeignWarning: text.includes('иностранн') || text.includes('foreign') ||
+                          text.includes('за рубеж') || text.includes('abroad'),
+        hasAnyModal: document.querySelector('.bloko-modal, [class*="modal"], .popup') !== null
+      };
+    });
+    
+    if (initialModalCheck.hasRelocationWarning || initialModalCheck.hasForeignWarning) {
+      console.log('⚠️ Предупреждение о релокации/иностранной вакансии - подтверждаем...');
+      await page.evaluate(() => {
+        const buttons = document.querySelectorAll('.bloko-modal button, button');
+        for (const btn of buttons) {
+          const text = (btn.innerText || '').toLowerCase();
+          if ((text.includes('подтвер') || text.includes('продолж') || text.includes('откликнуться') ||
+               text.includes('confirm') || text.includes('continue') || text.includes('accept')) &&
+              !text.includes('отмен') && !text.includes('cancel')) {
+            btn.click();
+            return true;
+          }
+        }
+        return false;
+      });
+      await sleep(1500);
+    }
 
     // 4. Проверяем опросник
     const hasQuiz = await page.evaluate(() => {
@@ -205,102 +241,111 @@ export async function applyToVacancySimple(vacancy, browser, page) {
     console.log(`Состояние модального окна: ${JSON.stringify(needsLetter)}`);
 
     if (needsLetter.hasField || needsLetter.isRequired) {
-      console.log('📝 Нужно сопроводительное письмо...');
+      console.log('📝 Модалка с сопроводительным письмом...');
       
-      // Вводим сопроводительное письмо
+      // Получаем сопроводительное письмо
       const letterText = process.env.COVER_LETTER || DEFAULT_COVER_LETTER;
+      console.log(`📝 Текст письма (первые 100 символов): ${letterText.substring(0, 100)}...`);
       
-      await page.evaluate((text) => {
-        const letterField = document.querySelector('[data-qa="vacancy-response-letter-text"]') ||
-                            document.querySelector('textarea[name="letter"]') ||
-                            document.querySelector('[data-qa="vacancy-response-popup-form-letter-input"]') ||
-                            document.querySelector('textarea[data-qa*="letter"]') ||
-                            document.querySelector('.vacancy-response-popup-form textarea') ||
-                            document.querySelector('textarea[placeholder*="Сопроводительное"]') ||
-                            document.querySelector('textarea[placeholder*="Cover"]') ||
-                            document.querySelector('textarea');
-        
-        console.log(`Поле для письма найдено: ${!!letterField}`);
-        if (letterField) {
-          console.log(`Заполняем поле письма: ${text.substring(0, 100)}...`);
-          letterField.value = text;
-          letterField.dispatchEvent(new Event('input', { bubbles: true }));
-          letterField.dispatchEvent(new Event('change', { bubbles: true }));
-          
-          // Дополнительно проверяем значение
-          console.log(`Значение поля после заполнения: ${letterField.value.substring(0, 100)}...`);
-        } else {
-          console.log('Поле для сопроводительного письма не найдено');
-          
-          // Пытаемся найти любое текстовое поле в модальном окне
-          const textAreas = Array.from(document.querySelectorAll('textarea'));
-          console.log(`Найдено текстовых полей: ${textAreas.length}`);
-          if (textAreas.length > 0) {
-            const firstTextArea = textAreas[0];
-            console.log(`Заполняем первое текстовое поле`);
-            firstTextArea.value = text;
-            firstTextArea.dispatchEvent(new Event('input', { bubbles: true }));
-            firstTextArea.dispatchEvent(new Event('change', { bubbles: true }));
-          }
-        }
-      }, letterText);
-      
-      console.log('✅ Письмо введено');
-      await sleep(1000);
-      
-      // После заполнения письма ищем и нажимаем кнопку отправки
-      console.log('🔍 Ищем кнопку отправки после заполнения письма...');
-      const letterSubmitResult = await page.evaluate(() => {
-        // Ждем немного, чтобы форма обработалась
+      // ШАГ 1: Заполняем поле письма через type (более надёжно чем value)
+      const fieldFound = await page.evaluate(() => {
         const selectors = [
-          'button[data-qa="vacancy-response-letter-submit"]',
-          'button[data-qa="vacancy-response-submit-popup"]',
-          'button[type="submit"]',
-          '.bloko-modal-footer button:not([data-qa*="cancel"]):not([data-qa*="close"])',
-          'button[class*="send"], button[class*="submit"], button[class*="отправить"]',
-          '.bloko-button_kind-success',
-          '.bloko-button_kind-primary',
-          // Дополнительные селекторы для модальных окон с письмами
-          '[data-qa="vacancy-response-form"] button[type="submit"]',
-          '.vacancy-response-popup-form button[type="submit"]',
-          '.bloko-modal-footer .bloko-button',
-          '.popup-actions button'
+          '[data-qa="vacancy-response-letter-text"]',
+          'textarea[name="letter"]',
+          '[data-qa="vacancy-response-popup-form-letter-input"]',
+          'textarea[data-qa*="letter"]',
+          '.bloko-modal textarea',
+          '.vacancy-response-popup textarea',
+          'textarea'
         ];
         
-        // Сначала ищем активную кнопку отправки
         for (const sel of selectors) {
-          const btn = document.querySelector(sel);
-          if (btn && btn.offsetParent !== null) {
-            // Дополнительно проверяем, что кнопка не отключена
-            if (!btn.disabled && !btn.hasAttribute('disabled')) {
+          const field = document.querySelector(sel);
+          if (field && field.offsetParent !== null) {
+            field.focus();
+            field.value = ''; // Очищаем
+            return { found: true, selector: sel };
+          }
+        }
+        return { found: false };
+      });
+      
+      if (fieldFound.found) {
+        console.log(`✅ Поле найдено: ${fieldFound.selector}`);
+        // Вводим текст через keyboard.type - это более надёжно
+        await page.keyboard.type(letterText, { delay: 5 });
+        console.log('✅ Письмо введено');
+        await sleep(500);
+      } else {
+        console.log('❌ Поле для письма не найдено');
+      }
+      
+      // ШАГ 2: Нажимаем кнопку отправки
+      console.log('🔍 Ищем кнопку отправки...');
+      await sleep(300);
+      
+      // Пробуем несколько раз
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const submitResult = await page.evaluate(() => {
+          // Ищем кнопку в модальном окне
+          const modal = document.querySelector('.bloko-modal, .bloko-modal-window');
+          const container = modal || document;
+          
+          // Приоритетные селекторы
+          const selectors = [
+            'button[data-qa="vacancy-response-letter-submit"]',
+            'button[data-qa="vacancy-response-submit-popup"]',
+            'button[data-qa="vacancy-response-submit"]',
+            '[data-qa="vacancy-response-letter-submit"]',
+            '[data-qa="vacancy-response-submit-popup"]',
+          ];
+          
+          for (const sel of selectors) {
+            const btn = container.querySelector(sel);
+            if (btn && !btn.disabled) {
               btn.click();
               return { clicked: true, selector: sel };
             }
           }
-        }
-        
-        // Если не нашли, пробуем найти любую кнопку "Отправить" в модальном окне
-        const allButtons = Array.from(document.querySelectorAll('.bloko-modal button, .popup button'));
-        for (const btn of allButtons) {
-          const text = (btn.innerText || btn.textContent || '').toLowerCase();
-          if ((text.includes('отправить') || text.includes('send') || text.includes('submit')) && 
-              !btn.disabled && !btn.hasAttribute('disabled') && 
-              btn.offsetParent !== null) {
-            btn.click();
-            return { clicked: true, selector: 'generic_send_button' };
+          
+          // Ищем по тексту кнопки в модалке
+          const buttons = container.querySelectorAll('button');
+          for (const btn of buttons) {
+            const text = (btn.innerText || '').trim().toLowerCase();
+            // Ищем кнопку "Откликнуться" или "Отправить"
+            if ((text === 'откликнуться' || text === 'отправить' || text.includes('откликнуться')) && 
+                !btn.disabled && btn.offsetParent !== null) {
+              btn.click();
+              return { clicked: true, selector: `text:${text}` };
+            }
           }
-        }
+          
+          // Ищем любую primary кнопку в footer модалки
+          const footerBtn = container.querySelector('.bloko-modal-footer button:not([data-qa*="cancel"])');
+          if (footerBtn && !footerBtn.disabled) {
+            footerBtn.click();
+            return { clicked: true, selector: 'footer_button' };
+          }
+          
+          return { clicked: false, buttonsFound: buttons.length };
+        });
         
-        return { clicked: false };
-      });
-      
-      if (letterSubmitResult.clicked) {
-        console.log(`✅ Нажали отправить после заполнения письма: ${letterSubmitResult.selector}`);
-        await sleep(3000); // Увеличиваем время ожидания после отправки
-      } else {
-        console.log('❌ Не удалось найти кнопку отправки после заполнения письма');
-        // Пробуем закрыть модальное окно и продолжить
-        await page.keyboard.press('Escape');
+        if (submitResult.clicked) {
+          console.log(`✅ Кнопка нажата (попытка ${attempt + 1}): ${submitResult.selector}`);
+          await sleep(2000);
+          
+          // Проверяем успех
+          const success = await checkSuccess(page);
+          if (success) {
+            console.log('✅ Отклик с письмом отправлен!');
+            await updateVacancyStatus(vacancy.vacancy_id, 'applied');
+            return { success: true };
+          }
+          break;
+        } else {
+          console.log(`⚠️ Попытка ${attempt + 1}: кнопка не найдена (кнопок на странице: ${submitResult.buttonsFound})`);
+          await sleep(300);
+        }
       }
     }
 
@@ -341,31 +386,54 @@ export async function applyToVacancySimple(vacancy, browser, page) {
     
     // Если есть предупреждение о другой стране или международная вакансия, подтверждаем
     if (modalCheck.hasRelocationWarning || modalCheck.hasInternationalModal) {
-      console.log('⚠️ Обнаружено предупреждение о другой стране или международная вакансия, подтверждаем...');
-      const confirmResult = await page.evaluate(() => {
-        const confirmSelectors = [
-          '[data-qa="relocation-warning-confirm"]',
-          '[data-qa*="confirm"]',
-          '[data-qa*="accept"]',
-          'button[class*="confirm"], button[class*="continue"], button[class*="далее"], button[class*="принять"], button[class*="accept"]',
-          'button:contains("Подтверждаю"), button:contains("Продолжить"), button:contains("Confirm"), button:contains("Принимаю"), button:contains("Accept")',
-          '.bloko-button_kind-primary',
-          'button[type="button"]:not([data-qa*="cancel"]):not([data-qa*="close"])'
-        ];
-        
-        for (const sel of confirmSelectors) {
-          const btn = document.querySelector(sel);
-          if (btn && btn.offsetParent !== null) {
-            btn.click();
-            return { clicked: true, selector: sel };
-          }
-        }
-        return { clicked: false };
-      });
+      console.log('⚠️ Обнаружено предупреждение о другой стране, подтверждаем...');
       
-      if (confirmResult.clicked) {
-        console.log(`✅ Подтвердили действие: ${confirmResult.selector}`);
-        await sleep(1500); // Уменьшаем время ожидания после подтверждения для ускорения
+      // Несколько попыток подтвердить
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const confirmResult = await page.evaluate(() => {
+          // Ищем модальное окно
+          const modal = document.querySelector('.bloko-modal, .bloko-modal-window, [class*="modal"], .popup');
+          
+          // Приоритетные селекторы для кнопки подтверждения
+          const confirmSelectors = [
+            '[data-qa="relocation-warning-confirm"]',
+            '[data-qa="vacancy-response-submit-popup"]',
+            '[data-qa*="confirm"]',
+            '[data-qa*="accept"]',
+            'button[data-qa*="submit"]',
+          ];
+          
+          for (const sel of confirmSelectors) {
+            const btn = document.querySelector(sel);
+            if (btn && !btn.disabled && btn.offsetParent !== null) {
+              btn.click();
+              return { clicked: true, selector: sel };
+            }
+          }
+          
+          // Ищем по тексту в модальном окне
+          const buttons = modal ? modal.querySelectorAll('button') : document.querySelectorAll('.bloko-modal button, button');
+          for (const btn of buttons) {
+            const text = (btn.innerText || '').toLowerCase();
+            if ((text.includes('подтвер') || text.includes('продолж') || text.includes('confirm') || 
+                 text.includes('accept') || text.includes('откликнуться') || text.includes('отправить')) && 
+                !btn.disabled && btn.offsetParent !== null &&
+                !text.includes('отмен') && !text.includes('cancel') && !text.includes('закрыть')) {
+              btn.click();
+              return { clicked: true, selector: 'text_confirm' };
+            }
+          }
+          
+          return { clicked: false };
+        });
+        
+        if (confirmResult.clicked) {
+          console.log(`✅ Подтвердили (попытка ${attempt + 1}): ${confirmResult.selector}`);
+          await sleep(1500);
+          break;
+        } else {
+          await sleep(300);
+        }
       }
     }
     

@@ -44,8 +44,9 @@ export async function POST(request: NextRequest) {
       // Логируем весь вывод для отладки
       console.log(`[${resumeId}] STDOUT: ${output}`);
 
-      // Парсим сообщения о прогрессе из парсинга (удаляем дублирующуюся проверку)
-      const parsingProgressMatch = output.match(/Прогресс: (\d+)\/(\d+)/);
+      // Парсим сообщения о прогрессе из парсинга - несколько форматов
+      const parsingProgressMatch = output.match(/Прогресс: (\d+)\/(\d+)/) || 
+                                   output.match(/Всего: (\d+)\/(\d+)/);
       if (parsingProgressMatch) {
         const parsed = parseInt(parsingProgressMatch[1]);
         const target = parseInt(parsingProgressMatch[2]);
@@ -55,7 +56,7 @@ export async function POST(request: NextRequest) {
           ...current,
           parsed: parsed,
           target: target,
-          status: 'parsing'
+          status: current.status || 'parsing'
         });
         
         console.log(`📊 Парсинг прогресс: ${parsed}/${target}`);

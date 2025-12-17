@@ -129,7 +129,6 @@ export async function waitForResponseCompletion(page, finalSubmitButtonSelector 
 }
 
 export async function delay(ms) {
-  // Минимальная задержка 100 мс для стабильности
-  const actualDelay = Math.max(ms, 100);
-  return new Promise(resolve => setTimeout(resolve, actualDelay));
+  // Убираем минимальную задержку для максимальной скорости
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

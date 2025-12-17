@@ -15,6 +15,23 @@ import {
 import { calculateVacancyRelevance, isVacancySuitable } from "../services/filter.js";
 import { delay } from "../services/puppeteer.js";
 
+// Кэш ID вакансий в памяти для быстрой проверки дублей
+const vacancyIdCache = new Set();
+let cacheInitialized = false;
+
+// Инициализация кэша из БД
+async function initVacancyCache() {
+  if (cacheInitialized) return;
+  try {
+    const existing = await dbAll(`SELECT vacancy_id FROM vacancies`, []);
+    existing.forEach(v => vacancyIdCache.add(v.vacancy_id));
+    cacheInitialized = true;
+    console.log(`📦 Кэш инициализирован: ${vacancyIdCache.size} вакансий`);
+  } catch (e) {
+    console.warn("⚠️ Ошибка инициализации кэша:", e.message);
+  }
+}
+
 // Функция для подсчета вакансий в БД
 async function countVacancies() {
   try {
@@ -51,7 +68,8 @@ export async function parseHHVacanciesWithBrowser(browser, page) {
     
     console.log("🔧 Инициализация базы данных...");
     await initializeDatabase();
-    console.log("✅ База данных инициализирована");
+    await initVacancyCache();
+    console.log("✅ База данных и кэш инициализированы");
     
     // Получаем количество вакансий из переменной окружения или используем значение по умолчанию
     const TARGET_VACANCIES = parseInt(process.env.VACANCY_COUNT) || (process.env.TEST_MODE === 'true' ? 30 : 2000);
@@ -81,11 +99,8 @@ export async function parseHHVacanciesWithBrowser(browser, page) {
       
     // Обрабатываем каждый поисковый запрос
     for (const queryObj of config.search.queries) {
-      console.log("🔧 Обрабатываем поисковый запрос:", queryObj.value);
       currentCount = await countVacancies();
-      
-      // Отправляем прогресс ДО обработки каждого запроса
-      console.log(`Прогресс: ${currentCount}/${TARGET_VACANCIES}`);
+      console.log(`🔧 Запрос: ${queryObj.value} | ${currentCount}/${TARGET_VACANCIES}`);
       
       // Проверяем достижение цели
       if (currentCount >= TARGET_VACANCIES) {
@@ -109,103 +124,57 @@ export async function parseHHVacanciesWithBrowser(browser, page) {
       console.log(`\n🌐 Обрабатываем запрос: "${queryObj.value || queryObj.resumeId}"`);
       console.log(`📊 Текущий прогресс: ${currentCount}/${TARGET_VACANCIES}`);
 
-      // Увеличиваем количество страниц для большего охвата
-      const MAX_PAGES = process.env.TEST_MODE === 'true' ? 10 : 50; // Увеличиваем для большего охвата
+      // HH показывает максимум 20 страниц по 100 вакансий = 2000 вакансий на запрос
+      const MAX_PAGES = process.env.TEST_MODE === 'true' ? 10 : 20;
       let currentPage = 0;
-      let hasMorePages = true;
+      let emptyPagesInRow = 0; // Только пустые страницы прерывают
+      let queryNewVacancies = 0; // Новых вакансий по этому запросу
 
-      while (hasMorePages && currentPage < MAX_PAGES && currentCount < TARGET_VACANCIES) {
+      while (currentPage < MAX_PAGES && currentCount < TARGET_VACANCIES && emptyPagesInRow < 2) {
         const pageUrl = `${baseUrl}&page=${currentPage}`;
-        const progressMsg = `🔄 Страница ${currentPage + 1} | Прогресс: ${currentCount}/${TARGET_VACANCIES}`;
-        console.log(`\n${progressMsg}`);
         
-        // Отправляем прогресс для фронтенда КАЖДУЮ страницу
-        console.log(`Прогресс: ${currentCount}/${TARGET_VACANCIES}`);
-        
-        let retryCount = 0;
-        const maxRetries = 3; // Уменьшаем количество попыток
-        
-        while (retryCount <= maxRetries) {
-          try {
-            console.log("🔧 Переход на страницу:", pageUrl);
-            // Увеличиваем скорость загрузки страницы
-            await page.goto(pageUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
-            console.log("✅ Страница загружена");
-            // Минимальная задержка после загрузки страницы
-            await delay(300);
+        try {
+          await page.goto(pageUrl, { waitUntil: "domcontentloaded", timeout: 15000 });
+          
+          const vacancies = await parseVacanciesListPage(page);
+          
+          if (vacancies.length === 0) {
+            emptyPagesInRow++;
+            console.log(`📄 Стр.${currentPage + 1} | Пустая страница (${emptyPagesInRow}/2)`);
+          } else {
+            emptyPagesInRow = 0;
             
-            console.log("🔧 Парсинг списка вакансий...");
-            const vacancies = await parseVacanciesListPage(page);
-            console.log("🔧 Найдено вакансий:", vacancies.length);
+            // Считаем сколько НОВЫХ вакансий на странице
+            const newOnPage = vacancies.filter(v => 
+              v.vacancy_id && !v.status_on_list_page && !vacancyIdCache.has(v.vacancy_id)
+            ).length;
             
-            if (vacancies.length === 0) {
-              console.log(`ℹ️ Больше нет вакансий для этого запроса.`);
-              hasMorePages = false;
-            } else {
-              console.log(`💾 Найдено ${vacancies.length} вакансий.`);
-              await processAndSaveVacancies(vacancies);
-              currentPage++;
-              
-              // Обновляем счетчик после добавления вакансий
-              currentCount = await countVacancies();
-              console.log(`📊 Обновленный счетчик: ${currentCount}`);
-              if (currentCount >= TARGET_VACANCIES) {
-                console.log(`\n🎉 ЦЕЛЬ ДОСТИГНУТА! Собрано ${currentCount} вакансий!`);
-                hasMorePages = false;
-                // Отправляем прогресс сразу
-                console.log(`Прогресс: ${currentCount}/${TARGET_VACANCIES}`);
-                break;
-              }
-              
-              // Отправляем промежуточный прогресс
-              console.log(`Прогресс: ${currentCount}/${TARGET_VACANCIES}`);
-            }
-
-            // Минимальная задержка между страницами
-            await delay(500);
-            break; // Успешно - выходим из retry цикла
+            await processAndSaveVacancies(vacancies);
+            queryNewVacancies += newOnPage;
+            currentCount = await countVacancies();
             
-          } catch (e) {
-            retryCount++;
-            console.warn(`⚠️ Ошибка при парсинге страницы ${currentPage + 1} (попытка ${retryCount}/${maxRetries + 1}): ${e.message}`);
-            
-            // Если это ошибка сети, пробуем подождать дольше
-            if (e.message.includes('net::ERR_NAME_NOT_RESOLVED') || 
-                e.message.includes('net::ERR_CONNECTION_RESET') || 
-                e.message.includes('net::ERR_NETWORK_CHANGED') ||
-                e.message.includes('Timeout') ||
-                e.message.includes('net::ERR_CONNECTION_TIMED_OUT')) {
-              console.log('📡 Сетевая ошибка, увеличиваем паузу...');
-              await delay(2000); // Уменьшаем паузу при сетевых ошибках
-            }
-            
-            if (retryCount > maxRetries) {
-              // Исчерпали попытки - переходим к следующему запросу
-              console.log(`❌ Пропускаем этот поисковый запрос после ${maxRetries + 1} неудачных попыток`);
-              hasMorePages = false;
-              break;
-            }
-            
-            // Минимальная задержка перед повторной попыткой
-            await delay(1000);
+            console.log(`📄 Стр.${currentPage + 1} | +${newOnPage} новых | Всего: ${currentCount}/${TARGET_VACANCIES}`);
           }
+          
+          currentPage++;
+          console.log(`Прогресс: ${currentCount}/${TARGET_VACANCIES}`);
+          
+          // Минимальная задержка (50мс) - защита от бана
+          await delay(50);
+          
+        } catch (e) {
+          console.warn(`⚠️ Ошибка стр.${currentPage}: ${e.message.slice(0, 50)}`);
+          currentPage++;
+          await delay(500);
         }
       }
-
-      // Если мы дошли до конца страниц, прекращаем
-      if (hasMorePages && currentPage >= MAX_PAGES) {
-        console.log(`ℹ️ Достигнут лимит страниц (${MAX_PAGES}) для запроса "${queryObj.value || queryObj.resumeId}"`);
-      }
       
-      // Отправляем промежуточный прогресс после каждого запроса
+      console.log(`📊 Запрос "${queryObj.value}" завершён: +${queryNewVacancies} новых вакансий за ${currentPage} страниц`);
+
+      // Проверяем достижение цели
       const finalCount = await countVacancies();
       console.log(`Прогресс: ${finalCount}/${TARGET_VACANCIES}`);
-      
-      // Проверяем достижение цели
-      if (finalCount >= TARGET_VACANCIES) {
-        console.log(`✅ ЦЕЛЬ ДОСТИГНУТА! Собрано ${finalCount} вакансий`);
-        break;
-      }
+      if (finalCount >= TARGET_VACANCIES) break;
     }
     
     // Обновляем счётчик после прохода
@@ -298,48 +267,26 @@ async function parseVacanciesListPage(page) {
 }
 
 async function processAndSaveVacancies(vacancies) {
-  console.log("🔧 Обработка вакансий:", vacancies.length);
-  let newAddedCount = 0;
-  let skippedAlreadyApplied = 0;
-  let skippedDuplicates = 0;
-  let skippedFiltered = 0;
+  let added = 0;
   
-  // Последовательная обработка для стабильности
-  for (const vacancy of vacancies) {
+  // Фильтруем сразу по кэшу - без запросов к БД
+  const newVacancies = vacancies.filter(v => {
+    if (!v.link || !v.vacancy_id) return false;
+    if (v.status_on_list_page) return false;
+    if (vacancyIdCache.has(v.vacancy_id)) return false;
+    return true;
+  });
+  
+  // Сохраняем только новые
+  for (const vacancy of newVacancies) {
     try {
-      if (!vacancy.link || !vacancy.vacancy_id) {
-        console.log("⚠️ Пропущена вакансия без ссылки или ID");
-        continue;
-      }
-      
-      const exists = await checkVacancyExists(vacancy.vacancy_id);
-      if (exists) {
-        skippedDuplicates++;
-        continue;
-      }
-      
-      if (vacancy.status_on_list_page) {
-        skippedAlreadyApplied++;
-        continue;
-      }
-      
-      // Сохраняем вакансию
       await addVacancy(vacancy);
-      newAddedCount++;
-      
-      // Отправляем прогресс после каждой добавленной вакансии
-      const TARGET_VACANCIES = parseInt(process.env.VACANCY_COUNT) || (process.env.TEST_MODE === 'true' ? 30 : 2000);
-      const currentCount = await countVacancies();
-      console.log(`Прогресс: ${currentCount}/${TARGET_VACANCIES}`);
-      
-    } catch (error) {
-      console.warn(`⚠️ Ошибка при обработке вакансии ${vacancy.vacancy_id}: ${error.message}`);
+      vacancyIdCache.add(vacancy.vacancy_id); // Добавляем в кэш
+      added++;
+    } catch (e) {
+      // Игнорируем ошибки (дубли и т.д.)
     }
   }
   
-  console.log(`\n✅ Обработка завершена:`);
-  console.log(`   Новых вакансий: ${newAddedCount}`);
-  console.log(`   Пропущено (уже откликались): ${skippedAlreadyApplied}`);
-  console.log(`   Пропущено (дубликаты): ${skippedDuplicates}`);
-  console.log(`   Пропущено (фильтры): ${skippedFiltered}`);
+  if (added > 0) console.log(`💾 +${added} вакансий`);
 }
