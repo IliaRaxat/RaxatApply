@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { spawn } from 'child_process';
 import path from 'path';
-import { progressStore, updateProgress } from '@/lib/progressStore';
+import { progressStore, updateProgress } from '@/shared/lib/progressStore';
 
 const activeProcesses = new Map<string, any>();
 
@@ -10,9 +10,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { resumeId, hhtoken, xsrf, geminiKey, coverLetter, vacancyCount } = body;
 
-    // Gemini ключ обязателен
-    if (!resumeId || !geminiKey) {
-      return NextResponse.json({ error: 'Resume ID и Gemini ключ обязательны' }, { status: 400 });
+    if (!resumeId) {
+      return NextResponse.json({ error: 'Resume ID обязателен' }, { status: 400 });
     }
 
     // Путь к backend с таймером авторизации

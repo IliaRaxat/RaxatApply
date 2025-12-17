@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import ResumeCard from '@/components/ResumeCard';
-import { Resume } from '@/types';
+import { ResumeCard } from '@/widgets/resume-card';
+import { Resume } from '@/shared/types';
 
 const DEFAULT_COVER_LETTER = `Здравствуйте!
 
@@ -20,32 +20,42 @@ const DEFAULT_COVER_LETTER = `Здравствуйте!
 const DEFAULT_RESUMES: Resume[] = [
   {
     id: '1',
-    hhtoken: '', // Токены теперь будут получены автоматически
-    xsrf: '',    // Токены теперь будут получены автоматически
-    geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
+    hhtoken: '',
+    xsrf: '',
+    geminiKey: '',
     coverLetter: DEFAULT_COVER_LETTER,
     status: 'idle',
-    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 5000, applied: 0 },
+    progress: { parsed: 0, target: 4000, applied: 0 },
     topVacancies: [],
   },
   {
     id: '2',
-    hhtoken: '', // Токены теперь будут получены автоматически
-    xsrf: '',    // Токены теперь будут получены автоматически
-    geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
+    hhtoken: '',
+    xsrf: '',
+    geminiKey: '',
     coverLetter: DEFAULT_COVER_LETTER,
     status: 'idle',
-    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 5000, applied: 0 },
+    progress: { parsed: 0, target: 4000, applied: 0 },
     topVacancies: [],
   },
   {
     id: '3',
-    hhtoken: '', // Токены теперь будут получены автоматически
-    xsrf: '',    // Токены теперь будут получены автоматически
-    geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
+    hhtoken: '',
+    xsrf: '',
+    geminiKey: '',
     coverLetter: DEFAULT_COVER_LETTER,
     status: 'idle',
-    progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 5000, applied: 0 },
+    progress: { parsed: 0, target: 4000, applied: 0 },
+    topVacancies: [],
+  },
+  {
+    id: '4',
+    hhtoken: '',
+    xsrf: '',
+    geminiKey: '',
+    coverLetter: DEFAULT_COVER_LETTER,
+    status: 'idle',
+    progress: { parsed: 0, target: 4000, applied: 0 },
     topVacancies: [],
   },
 ];
@@ -56,12 +66,12 @@ export default function Home() {
   const addResume = () => {
     const newResume: Resume = {
       id: Date.now().toString(),
-      hhtoken: '', // Токены теперь будут получены автоматически
-      xsrf: '',    // Токены теперь будут получены автоматически
-      geminiKey: 'AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik',
+      hhtoken: '',
+      xsrf: '',
+      geminiKey: '',
       coverLetter: DEFAULT_COVER_LETTER,
       status: 'idle',
-      progress: { parsed: 0, target: process.env.NEXT_PUBLIC_TEST_MODE === 'true' ? 30 : 5000, applied: 0 },
+      progress: { parsed: 0, target: 4000, applied: 0 },
       topVacancies: [],
     };
     setResumes([...resumes, newResume]);
@@ -95,7 +105,6 @@ export default function Home() {
           <p className="text-gray-600 text-lg">
             Автоматизация откликов на вакансии HH.ru
           </p>
-          {/* Убрано назойливое сообщение о режиме */}
         </header>
 
         <div className="space-y-6">

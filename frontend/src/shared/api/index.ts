@@ -1,4 +1,4 @@
-import { StartProcessParams } from '@/types';
+import { StartProcessParams } from '../types';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || '';
 
@@ -31,7 +31,6 @@ export async function startProcess(params: StartProcessParams) {
   }
 }
 
-// Новая функция для управления таймером авторизации
 export async function controlAuthTimer(resumeId: string, action: 'start' | 'stop') {
   try {
     const response = await fetch(`${API_BASE}/api/auth-timer`, {
@@ -89,4 +88,9 @@ export async function getVacancies(resumeId: string) {
     console.error('API Error:', error);
     throw new Error(error.message || 'Ошибка сети');
   }
+}
+
+export async function fetchProgress(resumeId: string) {
+  const response = await fetch(`/api/progress/${resumeId}`);
+  return response.json();
 }

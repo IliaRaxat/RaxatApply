@@ -33,7 +33,7 @@ export interface StartProcessParams {
   xsrf: string;
   geminiKey: string;
   coverLetter: string;
-  vacancyCount?: number; // Добавляем опциональный параметр
+  vacancyCount?: number;
 }
 
 export interface ProgressData {

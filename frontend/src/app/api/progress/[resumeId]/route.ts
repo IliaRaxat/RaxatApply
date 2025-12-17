@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getProgress } from '@/lib/progressStore';
+import { getProgress } from '@/shared/lib/progressStore';
 
 // GET endpoint для polling прогресса
 export async function GET(

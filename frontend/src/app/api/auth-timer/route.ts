@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { progressStore, updateProgress } from '@/lib/progressStore';
+import { progressStore, updateProgress } from '@/shared/lib/progressStore';
 
 // Хранилище для таймеров авторизации
 const authTimers = new Map<string, NodeJS.Timeout>();
