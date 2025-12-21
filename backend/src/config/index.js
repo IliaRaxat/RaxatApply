@@ -1,51 +1,8 @@
 // config/index.js
 
 export const config = {
-  // Данные для авторизации - 3 резюме
-  resumes: [
-    {
-      id: 1,
-      name: "Резюме 1",
-      email: "ilshih@mail.ru",
-      password: "твой_пароль_1",
-      cookies: {
-        HHTOKEN: "",
-        XSRF: "",
-      },
-      geminiApiKey: "AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik"
-    },
-    {
-      id: 2,
-      name: "Резюме 2",
-      email: "ilshih2@mail.ru",
-      password: "твой_пароль_2",
-      cookies: {
-        HHTOKEN: "",
-        XSRF: "",
-      },
-      geminiApiKey: "AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik"
-    },
-    {
-      id: 3,
-      name: "Резюме 3",
-      email: "ishikhakhmedoa@mail.ru",
-      password: "твой_пароль_3",
-      cookies: {
-        HHTOKEN: "",
-        XSRF: "",
-      },
-      geminiApiKey: "AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik"
-    }
-  ],
-  
-  // Для обратной совместимости
-  cookies: {
-    HHTOKEN: "htOnjNQOTRdz_3u1mOs_429ZBsIz",
-    XSRF: "542c53b2e77ebcfd19b96b024ac0208d",
-  },
-  geminiApiKeys: [
-    "AIzaSyAMmvCu3iiPNVLk2UInbNAlpLZ-vwWZzik"
-  ],
+  // Авторизация происходит вручную через браузер
+  // Gemini API ключ передаётся через UI
 
   // Параметры поиска вакансий - РАСШИРЕННЫЙ СПИСОК для большего охвата
   search: {

@@ -14,6 +14,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Resume ID обязателен' }, { status: 400 });
     }
 
+    // Очищаем старый прогресс для этого резюме
+    const { clearProgress } = await import('@/shared/lib/progressStore');
+    clearProgress(resumeId);
+
     // Путь к backend с таймером авторизации
     const mainPath = path.join(process.cwd(), '..', 'backend', 'src', 'main.js');
 
@@ -21,6 +25,8 @@ export async function POST(request: NextRequest) {
     console.log(`[API] Запуск процесса для резюме ${resumeId}`);
     console.log(`[API] Путь к main.js: ${mainPath}`);
     console.log(`[API] vacancyCount: ${vacancyCount}`);
+    console.log(`[API] hhtoken: ${hhtoken ? 'present (' + hhtoken.substring(0, 30) + '...)' : 'EMPTY'}`);
+    console.log(`[API] xsrf: ${xsrf ? 'present' : 'EMPTY'}`);
 
     const childProcess = spawn('node', [mainPath], {
       env: {
@@ -137,6 +143,49 @@ export async function POST(request: NextRequest) {
       if (output.includes('AUTHORIZATION_PERIOD_END: true')) {
         const current = progressStore.get(resumeId) || {};
         updateProgress(resumeId, { ...current, status: 'auth_completed' });
+      }
+      
+      // Парсим извлечённые токены для сохранения
+      if (output.includes('EXTRACTED_TOKENS:')) {
+        try {
+          // Находим начало JSON после EXTRACTED_TOKENS:
+          const markerIndex = output.indexOf('EXTRACTED_TOKENS:');
+          const jsonStart = output.indexOf('{', markerIndex);
+          if (jsonStart !== -1) {
+            // Ищем конец JSON - считаем скобки
+            let depth = 0;
+            let jsonEnd = -1;
+            for (let i = jsonStart; i < output.length; i++) {
+              if (output[i] === '{') depth++;
+              if (output[i] === '}') depth--;
+              if (depth === 0) {
+                jsonEnd = i;
+                break;
+              }
+            }
+            
+            if (jsonEnd !== -1) {
+              const jsonStr = output.substring(jsonStart, jsonEnd + 1);
+              console.log(`[${resumeId}] Parsing tokens JSON:`, jsonStr.substring(0, 100));
+              const tokens = JSON.parse(jsonStr);
+              const current = progressStore.get(resumeId) || {};
+              
+              // Сохраняем токены (используем allCookies если основные пустые)
+              updateProgress(resumeId, { 
+                ...current, 
+                extractedTokens: {
+                  hhtoken: tokens.HHTOKEN || tokens.allCookies || '',
+                  xsrf: tokens.XSRF || '',
+                  userName: tokens.userName || null,
+                  userEmail: tokens.userEmail || null
+                }
+              });
+              console.log(`[${resumeId}] Токены извлечены и сохранены в progress`);
+            }
+          }
+        } catch (e) {
+          console.error(`[${resumeId}] Ошибка парсинга токенов:`, e);
+        }
       }
       
       // Обработка завершения фаз

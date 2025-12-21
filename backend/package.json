@@ -17,11 +17,13 @@
   },
   "dependencies": {
     "@google/genai": "^1.9.0",
+    "bcryptjs": "^3.0.3",
     "cheerio": "^1.1.2",
     "cli-progress": "^3.12.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "inquirer": "^12.7.0",
+    "jsonwebtoken": "^9.0.3",
     "log-update": "^6.1.0",
     "node-fetch": "^3.3.2",
     "puppeteer": "^24.12.1",

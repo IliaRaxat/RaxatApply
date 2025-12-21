@@ -147,7 +147,7 @@ async function autoLogin(page, email, password) {
   }
 }
 
-// Функция для извлечения токенов из браузера после ручной авторизации
+// Функция для извлечения токенов и данных пользователя из браузера после ручной авторизации
 async function extractTokens(page) {
   try {
     console.log("🔍 Извлекаем токены из браузера...");
@@ -155,25 +155,77 @@ async function extractTokens(page) {
     // Получаем все куки
     const cookies = await page.cookies();
     
-    // Ищем нужные токены
-    const hhTokenCookie = cookies.find(cookie => cookie.name === 'HHTOKEN');
-    const xsrfTokenCookie = cookies.find(cookie => cookie.name === 'XSRF-TOKEN');
+    // Логируем все куки для отладки
+    console.log("🍪 Все куки:");
+    cookies.forEach(c => {
+      console.log(`   ${c.name}: ${c.value.substring(0, 30)}...`);
+    });
     
-    if (hhTokenCookie && xsrfTokenCookie) {
-      const tokens = {
-        HHTOKEN: hhTokenCookie.value,
-        XSRF: xsrfTokenCookie.value
-      };
+    // Ищем нужные токены (проверяем разные варианты названий)
+    const hhTokenCookie = cookies.find(cookie => 
+      cookie.name === 'hhtoken' || 
+      cookie.name === 'HHTOKEN' || 
+      cookie.name === 'hh_token' ||
+      cookie.name === '_xsrf'
+    );
+    const xsrfTokenCookie = cookies.find(cookie => 
+      cookie.name === 'XSRF-TOKEN' || 
+      cookie.name === 'xsrf' || 
+      cookie.name === '_xsrf' ||
+      cookie.name === 'csrftoken'
+    );
+    
+    // Также ищем hhuid и другие важные куки
+    const hhuidCookie = cookies.find(cookie => cookie.name === 'hhuid');
+    const hhtokenCookie = cookies.find(cookie => cookie.name.toLowerCase().includes('token'));
+    
+    console.log(`🔍 Найденные токены:`);
+    console.log(`   hhtoken: ${hhTokenCookie ? 'найден' : 'НЕ найден'}`);
+    console.log(`   xsrf: ${xsrfTokenCookie ? 'найден' : 'НЕ найден'}`);
+    console.log(`   hhuid: ${hhuidCookie ? 'найден' : 'НЕ найден'}`);
+    
+    // Собираем все куки в строку для сохранения
+    const allCookiesStr = cookies.map(c => `${c.name}=${c.value}`).join('; ');
+    
+    const tokens = {
+      HHTOKEN: hhTokenCookie?.value || hhuidCookie?.value || '',
+      XSRF: xsrfTokenCookie?.value || '',
+      allCookies: allCookiesStr,
+      userName: null,
+      userEmail: null
+    };
+    
+    // Пробуем извлечь email/имя пользователя со страницы
+    try {
+      const userData = await page.evaluate(() => {
+        // Ищем имя пользователя в разных местах
+        const nameEl = document.querySelector('[data-qa="account-switcher-name"]') ||
+                       document.querySelector('.supernova-navi-item_user-name') ||
+                       document.querySelector('[data-qa="mainmenu_applicantProfile"]');
+        
+        // Ищем email в меню или профиле
+        const emailEl = document.querySelector('[data-qa="account-switcher-email"]') ||
+                        document.querySelector('.account-switcher-email');
+        
+        return {
+          name: nameEl?.textContent?.trim() || null,
+          email: emailEl?.textContent?.trim() || null
+        };
+      });
       
-      console.log("✅ Токены успешно извлечены:");
-      console.log(`   HHTOKEN: ${tokens.HHTOKEN.substring(0, 20)}...`);
-      console.log(`   XSRF: ${tokens.XSRF.substring(0, 20)}...`);
-      
-      return tokens;
-    } else {
-      console.log("⚠️ Не удалось найти нужные токены в куках");
-      return null;
+      tokens.userName = userData.name;
+      tokens.userEmail = userData.email;
+    } catch (e) {
+      console.log("⚠️ Не удалось извлечь данные пользователя:", e.message);
     }
+    
+    console.log("✅ Токены извлечены:");
+    console.log(`   HHTOKEN: ${tokens.HHTOKEN ? tokens.HHTOKEN.substring(0, 20) + '...' : 'пусто'}`);
+    console.log(`   XSRF: ${tokens.XSRF ? tokens.XSRF.substring(0, 20) + '...' : 'пусто'}`);
+    if (tokens.userName) console.log(`   Имя: ${tokens.userName}`);
+    if (tokens.userEmail) console.log(`   Email: ${tokens.userEmail}`);
+    
+    return tokens;
   } catch (error) {
     console.log(`❌ Ошибка извлечения токенов: ${error.message}`);
     return null;
@@ -192,24 +244,12 @@ async function main() {
   console.log("");
   
   // Получаем количество вакансий из переменной окружения или используем значение по умолчанию
-  // Установим значение по умолчанию 2000 для production режима
-  const vacancyCount = parseInt(process.env.VACANCY_COUNT) || (process.env.TEST_MODE === 'true' ? 30 : 2000);
+  // Установим значение по умолчанию 4000 для production режима
+  const vacancyCount = parseInt(process.env.VACANCY_COUNT) || (process.env.TEST_MODE === 'true' ? 30 : 4000);
   
   // Получаем ID резюме из переменной окружения
   const resumeId = process.env.RESUME_ID || '1';
-  
-  // Находим конфигурацию для текущего резюме
-  const resumeConfig = config.resumes.find(r => r.id == resumeId) || config.resumes[0];
-  console.log(`📋 Работаем с резюме: ${resumeConfig.name} (ID: ${resumeConfig.id})`);
-  
-  // Специальная проверка для первого резюме
-  if (resumeId === '1') {
-    console.log("🔧 Особая диагностика для первого резюме:");
-    console.log(`   Email: ${resumeConfig.email || '[НЕ УКАЗАН]'}`);
-    console.log(`   Password: ${resumeConfig.password ? '[УКАЗАН]' : '[НЕ УКАЗАН]'}`);
-    console.log(`   HHTOKEN: "${resumeConfig.cookies.HHTOKEN}"`);
-    console.log(`   XSRF: "${resumeConfig.cookies.XSRF}"`);
-  }
+  console.log(`📋 Работаем с резюме ID: ${resumeId}`);
   
   console.log(process.env.TEST_MODE === 'true' ? "⚠️ ТЕСТОВЫЙ РЕЖИМ: Будет собрано только 30 вакансий" : `🚀 ПРОДАКШН РЕЖИМ: Будет собрано ${vacancyCount} вакансий`);
   console.log("");
@@ -231,24 +271,54 @@ async function main() {
     
     console.log("✅ База данных очищена и инициализирована");
 
-    // 3. Запуск браузера
+    // 3. Запуск браузера с сохранением профиля для каждого резюме
     console.log("\n🌐 Открываем браузер...");
-    browser = await puppeteer.launch({
-      headless: false,
-      slowMo: 0, // Убираем замедление для максимальной скорости парсинга
-      args: [
-        '--no-sandbox', 
-        '--disable-setuid-sandbox',
-        '--disable-blink-features=AutomationControlled',
-        '--disable-features=IsolateOrigins,site-per-process',
-        '--disable-web-security',
-        '--disable-features=BlockInsecurePrivateNetworkRequests',
-        '--allow-running-insecure-content',
-        '--ignore-certificate-errors',
-        '--ignore-ssl-errors'
-      ],
-      defaultViewport: { width: 1920, height: 1080 }
-    });
+    
+    // Создаём отдельную папку профиля для каждого резюме
+    const resumeId = process.env.RESUME_ID || '1';
+    const userDataDir = `./chrome-profiles/resume_${resumeId}`;
+    console.log(`📁 Профиль браузера: ${userDataDir}`);
+    
+    // Пробуем запустить браузер, если профиль занят - ждём и пробуем снова
+    let launchAttempts = 0;
+    const maxAttempts = 3;
+    
+    while (launchAttempts < maxAttempts) {
+      try {
+        browser = await puppeteer.launch({
+          headless: false,
+          slowMo: 0,
+          userDataDir: userDataDir,
+          args: [
+            '--no-sandbox', 
+            '--disable-setuid-sandbox',
+            '--disable-blink-features=AutomationControlled',
+            '--disable-features=IsolateOrigins,site-per-process',
+            '--disable-web-security',
+            '--disable-features=BlockInsecurePrivateNetworkRequests',
+            '--allow-running-insecure-content',
+            '--ignore-certificate-errors',
+            '--ignore-ssl-errors'
+          ],
+          defaultViewport: { width: 1920, height: 1080 }
+        });
+        console.log("✅ Браузер запущен");
+        break;
+      } catch (launchError) {
+        launchAttempts++;
+        if (launchError.message.includes('already running')) {
+          console.log(`⚠️ Профиль занят, попытка ${launchAttempts}/${maxAttempts}...`);
+          // Ждём 3 секунды и пробуем снова
+          await sleep(3000);
+        } else {
+          throw launchError;
+        }
+      }
+    }
+    
+    if (!browser) {
+      throw new Error('Не удалось запустить браузер - профиль занят другим процессом. Закройте все окна Chrome и попробуйте снова.');
+    }
 
     page = await browser.newPage();
     await page.setViewport({ width: 1920, height: 1080 });
@@ -304,74 +374,24 @@ async function main() {
     const currentUrl = page.url();
     console.log(`📍 Текущий URL: ${currentUrl}`);
     
-    // Проверяем, переданы ли токены через переменные окружения
-    const hhToken = process.env.HH_TOKEN;
-    const xsrf = process.env.XSRF;
-    
+    // Проверяем авторизацию в сохранённом профиле браузера
     let authorized = false;
     
-    // Если переданы токены, пробуем авторизоваться через них
-    if (hhToken && xsrf && hhToken.trim() !== '' && xsrf.trim() !== '') {
-      console.log("🔑 Обнаружены токены авторизации");
-      console.log("   HH_TOKEN: " + (hhToken ? "[ПРИСУТСТВУЕТ]" : "[ОТСУТСТВУЕТ]"));
-      console.log("   XSRF: " + (xsrf ? "[ПРИСУТСТВУЕТ]" : "[ОТСУТСТВУЕТ]"));
-      
-      // Для первого резюме принудительно игнорируем токены и требуем ручную авторизацию
-      if (process.env.RESUME_ID === '1') {
-        console.log("🔧 Первое резюме: принудительная ручная авторизация (токены игнорируются)");
-        authorized = false;
-      } else {
-        // Для других резюме используем токены
-        
-        // Для первого резюме добавляем дополнительную проверку токенов
-        if (process.env.RESUME_ID === '1') {
-          console.log("🔧 Первое резюме: проверка действительности токенов...");
-        }
-        
-        // Устанавливаем куки
-        await page.setCookie(
-          { name: 'HHTOKEN', value: hhToken, domain: '.hh.ru', path: '/' },
-          { name: 'XSRF-TOKEN', value: xsrf, domain: '.hh.ru', path: '/' }
-        );
-        console.log("🍪 Куки установлены");
-        
-        // Ждем немного, чтобы куки применились
-        await sleep(3000);
-        
-        // Проверяем авторизацию
-        console.log("🔍 Проверяем авторизацию через токены...");
-        try {
-          authorized = await checkAuthorization(page);
-          console.log(`📊 Результат проверки авторизации: ${authorized ? 'УСПЕХ' : 'НЕУДАЧА'}`);
-          
-          // Для первого резюме добавляем дополнительную диагностику
-          if (process.env.RESUME_ID === '1' && !authorized) {
-            console.log("🔧 Первое резюме: токены недействительны, требуется ручная авторизация");
-          }
-        } catch (authError) {
-          console.log(`❌ Ошибка проверки авторизации: ${authError.message}`);
-          authorized = false;
-        }
-        
-        if (authorized) {
-          console.log("✅ Авторизация через токены успешна!");
-        } else {
-          console.log("❌ Авторизация через токены не удалась");
-        }
-      }
+    console.log("🔍 Проверяем авторизацию в сохранённом профиле...");
+    await sleep(2000); // Даём странице загрузиться
+    
+    try {
+      authorized = await checkAuthorization(page);
+      console.log(`📊 Результат проверки: ${authorized ? 'АВТОРИЗОВАН' : 'НЕ АВТОРИЗОВАН'}`);
+    } catch (authError) {
+      console.log(`❌ Ошибка проверки авторизации: ${authError.message}`);
+      authorized = false;
+    }
+    
+    if (authorized) {
+      console.log("✅ Авторизация из сохранённого профиля успешна!");
     } else {
-      console.log("⚠️ Токены авторизации не переданы или пустые");
-      console.log("   HH_TOKEN: " + (hhToken ? "[ПРИСУТСТВУЕТ]" : "[ОТСУТСТВУЕТ]"));
-      console.log("   XSRF: " + (xsrf ? "[ПРИСУТСТВУЕТ]" : "[ОТСУТСТВУЕТ]"));
-      
-      // Если токены не переданы, пробуем автоматическую авторизацию по email/password
-      if (resumeConfig.email && resumeConfig.password) {
-        console.log(`🤖 Пробуем автоматическую авторизацию для ${resumeConfig.email}...`);
-        const autoLoginSuccess = await autoLogin(page, resumeConfig.email, resumeConfig.password);
-        if (autoLoginSuccess) {
-          authorized = true;
-        }
-      }
+      console.log("⚠️ Требуется ручная авторизация");
     }
     
     // Если авторизация через токены не удалась или токены не переданы
@@ -384,11 +404,13 @@ async function main() {
       // Ожидаем авторизации (проверяем каждые 3 секунды)
       authorized = await waitForAuth(page);
       
-      // Если авторизация прошла успешно, извлекаем токены
+      // Если авторизация прошла успешно, извлекаем токены и отправляем на фронтенд
       if (authorized) {
         const tokens = await extractTokens(page);
         if (tokens) {
           console.log("🔒 Токены сохранены");
+          // Отправляем токены на фронтенд для сохранения (всегда, даже если частично пустые)
+          console.log(`EXTRACTED_TOKENS: ${JSON.stringify(tokens)}`);
         }
       }
     }

@@ -21,6 +21,7 @@ export function updateProgress(resumeId: string, updates: any) {
 
 export function clearProgress(resumeId: string) {
   progressStore.delete(resumeId);
+  console.log(`[ProgressStore] Cleared progress for ${resumeId}`);
 }
 
 export { progressStore };

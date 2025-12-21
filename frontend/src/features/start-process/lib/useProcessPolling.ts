@@ -9,14 +9,17 @@ interface UseProcessPollingProps {
   vacancyCount: number;
   onUpdate: (id: string, updates: Partial<Resume>) => void;
   onComplete: () => void;
+  onTokensExtracted?: (tokens: { hhtoken: string; xsrf: string }) => void;
 }
 
-export function useProcessPolling({ resumeId, vacancyCount, onUpdate, onComplete }: UseProcessPollingProps) {
+export function useProcessPolling({ resumeId, vacancyCount, onUpdate, onComplete, onTokensExtracted }: UseProcessPollingProps) {
   const pollingRef = useRef<boolean>(false);
+  const tokensExtractedRef = useRef<boolean>(false);
 
   const startPolling = useCallback(() => {
     if (pollingRef.current) return;
     pollingRef.current = true;
+    tokensExtractedRef.current = false;
 
     const pollProgress = async () => {
       if (!pollingRef.current) return;
@@ -44,6 +47,23 @@ export function useProcessPolling({ resumeId, vacancyCount, onUpdate, onComplete
         if (data.topVacancies && data.topVacancies.length > 0) {
           updates.topVacancies = data.topVacancies;
         }
+        
+        // Сохраняем извлечённые токены
+        if (data.extractedTokens && !tokensExtractedRef.current) {
+          console.log('[Polling] Extracted tokens received:', data.extractedTokens);
+          tokensExtractedRef.current = true;
+          updates.hhtoken = data.extractedTokens.hhtoken;
+          updates.xsrf = data.extractedTokens.xsrf;
+          if (data.extractedTokens.userName) {
+            updates.hhUserName = data.extractedTokens.userName;
+          }
+          if (data.extractedTokens.userEmail) {
+            updates.hhUserEmail = data.extractedTokens.userEmail;
+          }
+          if (onTokensExtracted) {
+            onTokensExtracted(data.extractedTokens);
+          }
+        }
 
         if (Object.keys(updates).length > 0) {
           onUpdate(resumeId, updates);
@@ -63,7 +83,7 @@ export function useProcessPolling({ resumeId, vacancyCount, onUpdate, onComplete
     };
 
     pollProgress();
-  }, [resumeId, vacancyCount, onUpdate, onComplete]);
+  }, [resumeId, vacancyCount, onUpdate, onComplete, onTokensExtracted]);
 
   const stopPolling = useCallback(() => {
     pollingRef.current = false;

@@ -2,6 +2,8 @@ export interface Resume {
   id: string;
   hhtoken: string;
   xsrf: string;
+  hhUserName?: string;
+  hhUserEmail?: string;
   geminiKey: string;
   coverLetter: string;
   status: 'idle' | 'waiting_for_auth' | 'auth_completed' | 'parsing' | 'rating' | 'applying' | 'completed' | 'error';
@@ -46,4 +48,10 @@ export interface ProgressData {
   failedCount?: number;
   totalCount?: number;
   topVacancies?: Vacancy[];
+  extractedTokens?: {
+    hhtoken: string;
+    xsrf: string;
+    userName?: string;
+    userEmail?: string;
+  };
 }

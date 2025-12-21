@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Resume } from '@/shared/types';
 import { startProcess } from '@/shared/api';
-import { InputField } from '@/shared/ui';
 import { ProgressSection, useResumeStatus } from '@/entities/resume';
 import { VacanciesList } from '@/entities/vacancy';
 import { useProcessPolling } from '@/features/start-process';
@@ -36,12 +35,10 @@ export function ResumeCard({ resume, onUpdate, onDelete }: ResumeCardProps) {
 
   const handleStart = async () => {
     if (isRunning || resume.status !== 'idle') return;
-
     setIsRunning(true);
 
     try {
       onUpdate(resume.id, { status: 'parsing', error: undefined });
-
       await startProcess({
         resumeId: resume.id,
         hhtoken: resume.hhtoken || '',
@@ -50,14 +47,10 @@ export function ResumeCard({ resume, onUpdate, onDelete }: ResumeCardProps) {
         coverLetter: resume.coverLetter || '',
         vacancyCount: vacancyCount,
       });
-
       startPolling();
     } catch (error: any) {
       setIsRunning(false);
-      onUpdate(resume.id, {
-        status: 'error',
-        error: error.message || 'Ошибка запуска',
-      });
+      onUpdate(resume.id, { status: 'error', error: error.message || 'Ошибка запуска' });
     }
   };
 
@@ -71,121 +64,214 @@ export function ResumeCard({ resume, onUpdate, onDelete }: ResumeCardProps) {
     });
   };
 
+  const isHHAuthorized = !!(resume.hhtoken && resume.xsrf);
+  const hhDisplayName = resume.hhUserName || resume.hhUserEmail || null;
+
   const showSpinner = resume.status === 'parsing' || 
                       resume.status === 'rating' || 
                       resume.status === 'waiting_for_auth' || 
                       resume.status === 'applying';
 
   const getProgressText = () => {
-    if (resume.status === 'waiting_for_auth') {
-      return 'Войдите в аккаунт HH.ru в браузере';
-    }
-    if (resume.status === 'applying') {
-      return `Отклики: ${resume.progress?.applied ?? 0} / ${resume.progress?.parsed ?? 0}`;
-    }
+    if (resume.status === 'waiting_for_auth') return 'Войдите в HH.ru в браузере';
+    if (resume.status === 'applying') return `Отклики: ${resume.progress?.applied ?? 0} / ${resume.progress?.parsed ?? 0}`;
     return `Парсинг: ${resume.progress?.parsed ?? 0} / ${resume.progress?.target ?? vacancyCount}`;
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl p-6 hover:shadow-2xl transition-shadow duration-300">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center space-x-4">
-          <div className={`px-4 py-2 rounded-full text-sm font-semibold ${getStatusColor()}`}>
-            {getStatusText()}
-          </div>
-          {showSpinner && (
-            <div className="flex items-center space-x-2">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500" />
-              <span className="text-sm text-gray-600 font-semibold">
-                {getProgressText()}
+    <div className="
+      relative overflow-hidden
+      bg-white/5 backdrop-blur-2xl
+      border border-white/10
+      rounded-3xl
+      shadow-[0_8px_32px_rgba(0,0,0,0.3)]
+      hover:shadow-[0_16px_48px_rgba(0,0,0,0.4)]
+      hover:border-white/20
+      transition-all duration-500
+      p-6
+    ">
+      {/* Glass reflection */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-transparent pointer-events-none rounded-3xl" />
+      
+      <div className="relative z-10">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="
+              px-4 py-2 rounded-2xl
+              bg-gradient-to-r from-violet-500/20 to-fuchsia-500/20
+              border border-violet-500/30
+              backdrop-blur-sm
+            ">
+              <span className="text-lg font-bold bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text text-transparent">
+                Резюме #{resume.id}
               </span>
             </div>
-          )}
+            
+            <div className={`
+              px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm border
+              ${isHHAuthorized 
+                ? 'bg-emerald-500/20 border-emerald-500/30 text-emerald-400' 
+                : 'bg-amber-500/20 border-amber-500/30 text-amber-400'
+              }
+            `}>
+              {isHHAuthorized ? `✓ ${hhDisplayName || 'HH авторизован'}` : '○ Требуется вход'}
+            </div>
+            
+            <div className={`px-3 py-1.5 rounded-xl text-xs font-semibold backdrop-blur-sm border ${getStatusColor()}`}>
+              {getStatusText()}
+            </div>
+            
+            {showSpinner && (
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-violet-500/20 rounded-xl border border-violet-500/30">
+                <div className="w-4 h-4 border-2 border-violet-400 border-t-transparent rounded-full animate-spin" />
+                <span className="text-xs text-violet-300 font-medium">{getProgressText()}</span>
+              </div>
+            )}
+          </div>
+          
+          <button
+            onClick={() => onDelete(resume.id)}
+            className="
+              p-2 rounded-xl
+              text-gray-500 hover:text-red-400
+              bg-white/5 hover:bg-red-500/20
+              border border-white/10 hover:border-red-500/30
+              backdrop-blur-sm
+              transition-all duration-300
+            "
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-        <button
-          onClick={() => onDelete(resume.id)}
-          className="text-red-500 hover:text-red-700 transition-colors"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <InputField
-          label="Gemini API Key *"
-          value={resume.geminiKey}
-          onChange={v => onUpdate(resume.id, { geminiKey: v })}
-          disabled={resume.status !== 'idle'}
-          placeholder="AIzaSyAMmvC..."
-        />
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Количество вакансий</label>
-          <input
-            type="number"
-            value={vacancyCount}
-            onChange={e => setVacancyCount(parseInt(e.target.value) || 100)}
-            min={10}
-            max={10000}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        {/* Form */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">Gemini API Key</label>
+            <input
+              type="text"
+              value={resume.geminiKey}
+              onChange={e => onUpdate(resume.id, { geminiKey: e.target.value })}
+              disabled={resume.status !== 'idle'}
+              placeholder="AIzaSyAMmvC..."
+              className="
+                w-full px-4 py-3
+                bg-white/5 backdrop-blur-sm
+                border border-white/10
+                rounded-2xl
+                text-gray-200 placeholder-gray-600
+                focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50
+                disabled:opacity-50 disabled:cursor-not-allowed
+                transition-all duration-300
+              "
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-400 mb-2">Количество вакансий</label>
+            <input
+              type="number"
+              value={vacancyCount}
+              onChange={e => setVacancyCount(parseInt(e.target.value) || 100)}
+              min={10}
+              max={10000}
+              className="
+                w-full px-4 py-3
+                bg-white/5 backdrop-blur-sm
+                border border-white/10
+                rounded-2xl
+                text-gray-200
+                focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50
+                disabled:opacity-50 disabled:cursor-not-allowed
+                transition-all duration-300
+              "
+              disabled={resume.status !== 'idle'}
+            />
+          </div>
+        </div>
+
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-400 mb-2">Сопроводительное письмо</label>
+          <textarea
+            value={resume.coverLetter}
+            onChange={e => onUpdate(resume.id, { coverLetter: e.target.value })}
+            placeholder="Здравствуйте! Меня заинтересовала ваша вакансия..."
+            rows={4}
+            className="
+              w-full px-4 py-3
+              bg-white/5 backdrop-blur-sm
+              border border-white/10
+              rounded-2xl
+              text-gray-200 placeholder-gray-600
+              focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50
+              disabled:opacity-50 disabled:cursor-not-allowed
+              resize-y
+              transition-all duration-300
+            "
             disabled={resume.status !== 'idle'}
           />
         </div>
-      </div>
 
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Сопроводительное письмо
-        </label>
-        <textarea
-          value={resume.coverLetter}
-          onChange={e => onUpdate(resume.id, { coverLetter: e.target.value })}
-          placeholder="Здравствуйте! Меня заинтересовала ваша вакансия..."
-          rows={5}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y"
-          disabled={resume.status !== 'idle'}
-        />
-        <p className="text-xs text-gray-500 mt-1">
-          Используется для вакансий с обязательным сопроводительным письмом
-        </p>
-      </div>
-
-      <div className="flex gap-4">
-        <button
-          onClick={handleStart}
-          disabled={isRunning || resume.status !== 'idle'}
-          className="flex-1 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-        >
-          {isRunning || resume.status !== 'idle' ? 'Выполняется...' : 'Запустить'}
-        </button>
-        {(resume.status !== 'idle' || isRunning) && (
+        {/* Buttons */}
+        <div className="flex gap-3">
           <button
-            onClick={handleReset}
-            className="px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold shadow-md hover:bg-gray-600 transition-all duration-200"
+            onClick={handleStart}
+            disabled={isRunning || resume.status !== 'idle'}
+            className="
+              flex-1 py-3 px-6
+              bg-gradient-to-r from-violet-600 to-fuchsia-600
+              hover:from-violet-500 hover:to-fuchsia-500
+              text-white font-semibold
+              rounded-2xl
+              shadow-lg shadow-violet-500/25
+              hover:shadow-xl hover:shadow-violet-500/40
+              disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none
+              transform hover:scale-[1.02] active:scale-[0.98]
+              transition-all duration-300
+            "
           >
-            Сбросить
+            {isRunning || resume.status !== 'idle' ? 'Выполняется...' : '🚀 Запустить'}
           </button>
+          
+          {(resume.status !== 'idle' || isRunning) && (
+            <button
+              onClick={handleReset}
+              className="
+                px-6 py-3
+                bg-white/5 hover:bg-white/10
+                backdrop-blur-sm
+                text-gray-300 font-semibold
+                rounded-2xl
+                border border-white/10
+                transition-all duration-300
+              "
+            >
+              Сбросить
+            </button>
+          )}
+        </div>
+
+        {/* Error */}
+        {resume.error && (
+          <div className="mt-4 p-4 bg-red-500/20 backdrop-blur-sm border border-red-500/30 rounded-2xl text-red-400 text-sm">
+            {resume.error}
+          </div>
+        )}
+
+        {/* Progress */}
+        {resume.status !== 'idle' && resume.status !== 'error' && (
+          <div className="mt-6"><ProgressSection resume={resume} /></div>
+        )}
+
+        {/* Vacancies */}
+        {resume.topVacancies.length > 0 && (
+          <div className="mt-6">
+            <VacanciesList vacancies={resume.topVacancies} isExpanded={isExpanded} onToggle={() => setIsExpanded(!isExpanded)} />
+          </div>
         )}
       </div>
-
-      {resume.error && (
-        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-          {resume.error}
-        </div>
-      )}
-
-      {resume.status !== 'idle' && resume.status !== 'error' && (
-        <ProgressSection resume={resume} />
-      )}
-
-      {resume.topVacancies.length > 0 && (
-        <VacanciesList
-          vacancies={resume.topVacancies}
-          isExpanded={isExpanded}
-          onToggle={() => setIsExpanded(!isExpanded)}
-        />
-      )}
     </div>
   );
 }

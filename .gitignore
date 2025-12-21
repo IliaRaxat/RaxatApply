@@ -11,6 +11,10 @@ frontend/out/
 backend/data/
 db/
 
+# Chrome profiles (contain personal session data)
+backend/chrome-profiles/
+chrome-profiles/
+
 # Environment
 .env
 .env.local
