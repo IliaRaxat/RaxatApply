@@ -3,7 +3,19 @@ import { spawn } from 'child_process';
 import path from 'path';
 import { progressStore, updateProgress } from '@/shared/lib/progressStore';
 
-const activeProcesses = new Map<string, any>();
+export const dynamic = 'force-dynamic';
+
+// Глобальный Map для отслеживания активных процессов
+// Экспортируем через глобальный объект для доступа из других API routes
+declare global {
+  var activeProcesses: Map<string, any>;
+}
+
+if (!global.activeProcesses) {
+  global.activeProcesses = new Map<string, any>();
+}
+
+const activeProcesses = global.activeProcesses;
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,9 +26,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Resume ID обязателен' }, { status: 400 });
     }
 
-    // Очищаем старый прогресс для этого резюме
+    // Очищаем старый прогресс для этого резюме и устанавливаем начальный статус
     const { clearProgress } = await import('@/shared/lib/progressStore');
     clearProgress(resumeId);
+    
+    // Сразу устанавливаем начальный статус parsing
+    updateProgress(resumeId, { 
+      status: 'parsing', 
+      parsed: 0, 
+      target: vacancyCount || 2000 
+    });
 
     // Путь к backend с таймером авторизации
     const mainPath = path.join(process.cwd(), '..', 'backend', 'src', 'main.js');
@@ -68,17 +87,20 @@ export async function POST(request: NextRequest) {
       }
 
       // Определяем фазы - более точная проверка
-      if (output.includes('ФАЗА ПАРСИНГА') && output.includes('СЕЙЧАС СОБИРАЕМ ВАКАНСИИ')) {
+      if (output.includes('CURRENT_PHASE: parsing') || 
+          (output.includes('ФАЗА ПАРСИНГА') && output.includes('СЕЙЧАС СОБИРАЕМ ВАКАНСИИ'))) {
         const current = progressStore.get(resumeId) || {};
         updateProgress(resumeId, { ...current, status: 'parsing' });
       }
       
-      if (output.includes('ФАЗА РЕЙТИНГА') && output.includes('СЕЙЧАС СОРТИРУЕМ ВАКАНСИИ')) {
+      if (output.includes('CURRENT_PHASE: rating') ||
+          (output.includes('ФАЗА РЕЙТИНГА') && output.includes('СЕЙЧАС СОРТИРУЕМ ВАКАНСИИ'))) {
         const current = progressStore.get(resumeId) || {};
         updateProgress(resumeId, { ...current, status: 'rating' });
       }
       
-      if (output.includes('ФАЗА ОТКЛИКА') && output.includes('СЕЙЧАС БУДУТ ОТПРАВЛЯТЬСЯ ОТКЛИКИ')) {
+      if (output.includes('CURRENT_PHASE: applying') ||
+          (output.includes('ФАЗА ОТКЛИКА') && output.includes('СЕЙЧАС БУДУТ ОТПРАВЛЯТЬСЯ ОТКЛИКИ'))) {
         const current = progressStore.get(resumeId) || {};
         updateProgress(resumeId, { ...current, status: 'applying' });
       }
@@ -140,9 +162,13 @@ export async function POST(request: NextRequest) {
         updateProgress(resumeId, { ...current, status: 'waiting_for_auth' });
       }
       
+      // auth_completed только если ещё не начался парсинг/рейтинг/отклики
       if (output.includes('AUTHORIZATION_PERIOD_END: true')) {
         const current = progressStore.get(resumeId) || {};
-        updateProgress(resumeId, { ...current, status: 'auth_completed' });
+        const activeStatuses = ['parsing', 'rating', 'applying', 'completed', 'error'];
+        if (!activeStatuses.includes(current.status)) {
+          updateProgress(resumeId, { ...current, status: 'auth_completed' });
+        }
       }
       
       // Парсим извлечённые токены для сохранения

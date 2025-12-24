@@ -17,6 +17,7 @@ export interface Resume {
   };
   topVacancies: Vacancy[];
   error?: string;
+  hasBrowserProfile?: boolean; // Есть сохранённый профиль браузера (возможно авторизован)
 }
 
 export interface Vacancy {

@@ -130,17 +130,34 @@ export async function parseHHVacanciesWithBrowser(browser, page) {
       let emptyPagesInRow = 0; // Только пустые страницы прерывают
       let queryNewVacancies = 0; // Новых вакансий по этому запросу
 
-      while (currentPage < MAX_PAGES && currentCount < TARGET_VACANCIES && emptyPagesInRow < 2) {
+      while (currentPage < MAX_PAGES && currentCount < TARGET_VACANCIES && emptyPagesInRow < 5) {
         const pageUrl = `${baseUrl}&page=${currentPage}`;
         
         try {
-          await page.goto(pageUrl, { waitUntil: "domcontentloaded", timeout: 15000 });
+          // Увеличиваем таймаут и добавляем retry
+          let retries = 3;
+          let pageLoaded = false;
+          
+          while (retries > 0 && !pageLoaded) {
+            try {
+              await page.goto(pageUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
+              pageLoaded = true;
+            } catch (navError) {
+              retries--;
+              if (retries > 0) {
+                console.log(`⚠️ Retry стр.${currentPage + 1} (осталось ${retries})...`);
+                await delay(2000);
+              } else {
+                throw navError;
+              }
+            }
+          }
           
           const vacancies = await parseVacanciesListPage(page);
           
           if (vacancies.length === 0) {
             emptyPagesInRow++;
-            console.log(`📄 Стр.${currentPage + 1} | Пустая страница (${emptyPagesInRow}/2)`);
+            console.log(`📄 Стр.${currentPage + 1} | Пустая страница (${emptyPagesInRow}/5)`);
           } else {
             emptyPagesInRow = 0;
             
@@ -159,13 +176,13 @@ export async function parseHHVacanciesWithBrowser(browser, page) {
           currentPage++;
           console.log(`Прогресс: ${currentCount}/${TARGET_VACANCIES}`);
           
-          // Минимальная задержка (50мс) - защита от бана
-          await delay(50);
+          // Задержка между страницами - защита от бана
+          await delay(200);
           
         } catch (e) {
           console.warn(`⚠️ Ошибка стр.${currentPage}: ${e.message.slice(0, 50)}`);
           currentPage++;
-          await delay(500);
+          await delay(1000);
         }
       }
       

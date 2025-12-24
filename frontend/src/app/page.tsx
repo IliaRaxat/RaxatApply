@@ -59,6 +59,18 @@ export default function Home() {
         const savedResumes: SavedResume[] = data.resumes || [];
         const newResumes = createDefaultResumes();
         
+        // Загружаем информацию о профилях браузера
+        let browserProfiles: Record<string, boolean> = {};
+        try {
+          const profilesResponse = await fetch('/api/check-profiles');
+          if (profilesResponse.ok) {
+            const profilesData = await profilesResponse.json();
+            browserProfiles = profilesData.profiles || {};
+          }
+        } catch (e) {
+          console.error('Failed to load browser profiles:', e);
+        }
+        
         savedResumes.forEach((saved: SavedResume) => {
           const index = saved.resume_slot - 1;
           if (index >= 0 && index < newResumes.length) {
@@ -75,6 +87,44 @@ export default function Home() {
             if (saved.cover_letter) newResumes[index].coverLetter = saved.cover_letter;
           }
         });
+        
+        // Помечаем резюме с профилями браузера
+        newResumes.forEach((resume, index) => {
+          const slot = String(index + 1);
+          if (browserProfiles[slot] && !resume.hhtoken) {
+            resume.hasBrowserProfile = true;
+          }
+        });
+        
+        // Загружаем прогресс для всех резюме
+        for (let i = 0; i < newResumes.length; i++) {
+          const resumeId = String(i + 1);
+          
+          try {
+            const progressResponse = await fetch(`/api/progress/${resumeId}`);
+            if (progressResponse.ok) {
+              const progress = await progressResponse.json();
+              
+              // Загружаем только если есть реальные данные
+              if (progress.status && progress.status !== 'idle') {
+                newResumes[i].status = progress.status;
+                if (progress.parsed !== undefined) {
+                  newResumes[i].progress = {
+                    parsed: progress.parsed || 0,
+                    target: progress.target || 4000,
+                    applied: progress.applied || 0,
+                  };
+                }
+                if (progress.topVacancies) {
+                  newResumes[i].topVacancies = progress.topVacancies;
+                }
+              }
+            }
+          } catch (e) {
+            console.error(`Failed to load progress for resume ${resumeId}:`, e);
+          }
+        }
+        
         setResumes(newResumes);
       }
     } catch (error) {
@@ -135,10 +185,22 @@ export default function Home() {
   }, []);
 
   const updateResume = useCallback((id: string, updates: Partial<Resume>) => {
+    console.log(`[updateResume ${id}] Updates:`, JSON.stringify(updates));
     setResumes(prev => {
-      const newResumes = prev.map(r =>
-        r.id === id ? { ...r, ...updates, progress: updates.progress ? { ...updates.progress } : r.progress } : r
-      );
+      const newResumes = prev.map(r => {
+        if (r.id !== id) return r;
+        
+        // Мержим progress правильно
+        const newProgress = updates.progress 
+          ? { ...r.progress, ...updates.progress }
+          : r.progress;
+        
+        return { 
+          ...r, 
+          ...updates, 
+          progress: newProgress 
+        };
+      });
       
       const shouldSave = 'hhtoken' in updates || 'xsrf' in updates || 'hhUserName' in updates ||
         'hhUserEmail' in updates || 'geminiKey' in updates || 'coverLetter' in updates;

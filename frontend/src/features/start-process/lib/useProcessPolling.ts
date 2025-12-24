@@ -2,92 +2,97 @@
 
 import { useCallback, useRef } from 'react';
 import { Resume } from '@/shared/types';
-import { fetchProgress } from '@/shared/api';
 
 interface UseProcessPollingProps {
   resumeId: string;
   vacancyCount: number;
   onUpdate: (id: string, updates: Partial<Resume>) => void;
   onComplete: () => void;
-  onTokensExtracted?: (tokens: { hhtoken: string; xsrf: string }) => void;
 }
 
-export function useProcessPolling({ resumeId, vacancyCount, onUpdate, onComplete, onTokensExtracted }: UseProcessPollingProps) {
-  const pollingRef = useRef<boolean>(false);
-  const tokensExtractedRef = useRef<boolean>(false);
+export function useProcessPolling({ resumeId, vacancyCount, onUpdate, onComplete }: UseProcessPollingProps) {
+  const isPollingRef = useRef(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const stopPolling = useCallback(() => {
+    console.log(`[useProcessPolling ${resumeId}] STOP`);
+    isPollingRef.current = false;
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, [resumeId]);
 
   const startPolling = useCallback(() => {
-    if (pollingRef.current) return;
-    pollingRef.current = true;
-    tokensExtractedRef.current = false;
+    if (isPollingRef.current) {
+      console.log(`[useProcessPolling ${resumeId}] Already running, skip`);
+      return;
+    }
+    
+    console.log(`[useProcessPolling ${resumeId}] START polling`);
+    isPollingRef.current = true;
 
-    const pollProgress = async () => {
-      if (!pollingRef.current) return;
+    const poll = async () => {
+      if (!isPollingRef.current) {
+        console.log(`[useProcessPolling ${resumeId}] Polling stopped, skip fetch`);
+        return;
+      }
 
       try {
-        const data = await fetchProgress(resumeId);
-
-        const updates: Partial<Resume> = {};
+        console.log(`[useProcessPolling ${resumeId}] Fetching...`);
+        const response = await fetch(`/api/progress/${resumeId}?t=${Date.now()}`);
+        const data = await response.json();
         
-        if (data.status && data.status !== 'idle') {
+        console.log(`[useProcessPolling ${resumeId}] Got data:`, JSON.stringify(data));
+
+        if (!isPollingRef.current) return;
+
+        // Формируем updates
+        const updates: Partial<Resume> = {};
+
+        if (data.status) {
           updates.status = data.status;
         }
-        
-        if (data.parsed !== undefined || data.target !== undefined) {
-          updates.progress = {
-            parsed: data.parsed ?? 0,
-            target: data.target ?? vacancyCount,
-            applied: data.applied ?? 0,
-            successCount: data.successCount ?? 0,
-            failedCount: data.failedCount ?? 0,
-            totalCount: data.totalCount ?? 0,
-          };
-        }
-        
-        if (data.topVacancies && data.topVacancies.length > 0) {
+
+        updates.progress = {
+          parsed: data.parsed ?? 0,
+          target: data.target ?? vacancyCount,
+          applied: data.applied ?? 0,
+          successCount: data.successCount ?? 0,
+          failedCount: data.failedCount ?? 0,
+          totalCount: data.totalCount ?? 0,
+        };
+
+        if (data.topVacancies?.length > 0) {
           updates.topVacancies = data.topVacancies;
         }
-        
-        // Сохраняем извлечённые токены
-        if (data.extractedTokens && !tokensExtractedRef.current) {
-          console.log('[Polling] Extracted tokens received:', data.extractedTokens);
-          tokensExtractedRef.current = true;
+
+        if (data.extractedTokens) {
           updates.hhtoken = data.extractedTokens.hhtoken;
           updates.xsrf = data.extractedTokens.xsrf;
-          if (data.extractedTokens.userName) {
-            updates.hhUserName = data.extractedTokens.userName;
-          }
-          if (data.extractedTokens.userEmail) {
-            updates.hhUserEmail = data.extractedTokens.userEmail;
-          }
-          if (onTokensExtracted) {
-            onTokensExtracted(data.extractedTokens);
-          }
+          if (data.extractedTokens.userName) updates.hhUserName = data.extractedTokens.userName;
+          if (data.extractedTokens.userEmail) updates.hhUserEmail = data.extractedTokens.userEmail;
         }
 
-        if (Object.keys(updates).length > 0) {
-          onUpdate(resumeId, updates);
-        }
+        console.log(`[useProcessPolling ${resumeId}] Calling onUpdate with:`, JSON.stringify(updates));
+        onUpdate(resumeId, updates);
 
         if (data.status === 'completed' || data.status === 'error') {
-          pollingRef.current = false;
+          console.log(`[useProcessPolling ${resumeId}] Process ended: ${data.status}`);
+          stopPolling();
           onComplete();
-          return;
         }
-
-        setTimeout(pollProgress, 500);
       } catch (error) {
-        console.error('Polling error:', error);
-        setTimeout(pollProgress, 1000);
+        console.error(`[useProcessPolling ${resumeId}] Fetch error:`, error);
       }
     };
 
-    pollProgress();
-  }, [resumeId, vacancyCount, onUpdate, onComplete, onTokensExtracted]);
-
-  const stopPolling = useCallback(() => {
-    pollingRef.current = false;
-  }, []);
+    // Первый запрос сразу
+    poll();
+    
+    // Потом каждую секунду
+    intervalRef.current = setInterval(poll, 1000);
+  }, [resumeId, vacancyCount, onUpdate, onComplete, stopPolling]);
 
   return { startPolling, stopPolling };
 }
