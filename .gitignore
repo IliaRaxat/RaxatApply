@@ -15,11 +15,6 @@ db/
 backend/chrome-profiles/
 chrome-profiles/
 
-# Environment
-.env
-.env.local
-.env.*.local
-
 # IDE
 .idea/
 *.swp
@@ -35,3 +30,6 @@ npm-debug.log*
 
 # Cache
 .cache/
+
+# Progress store (runtime data)
+.progress-store.json

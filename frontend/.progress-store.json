@@ -1,24 +1,3619 @@
 {
   "1": {
-    "status": "parsing",
-    "parsed": 1733,
+    "status": "completed",
+    "parsed": 1588,
     "target": 2000,
     "extractedTokens": {
       "hhtoken": "61dc51a9e99a34c0cf9ba5076849ee1a",
       "xsrf": "61dc51a9e99a34c0cf9ba5076849ee1a",
       "userName": null,
       "userEmail": null
-    }
-  },
-  "3": {
-    "status": "parsing",
-    "parsed": 1784,
-    "target": 2000,
-    "extractedTokens": {
-      "hhtoken": "bim34fISVBrWOJkvrbwArTk1eG6V",
-      "xsrf": "29f3b8e788aeac21bf304e2e047cd05d",
-      "userName": null,
-      "userEmail": null
-    }
+    },
+    "topVacancies": [
+      {
+        "position": 1,
+        "vacancy_id": 128789291,
+        "title": "Middle Frontend developer (React, Next.js)",
+        "company": "ООО NETTOSOFT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128789291",
+        "relevance_score": 118000
+      },
+      {
+        "position": 2,
+        "vacancy_id": 128230325,
+        "title": "Frontend-разработчик (React/Next.js) | Etamin IT Solutions",
+        "company": "ООО ETAMIN IT SOLUTIONS",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128230325",
+        "relevance_score": 117000
+      },
+      {
+        "position": 3,
+        "vacancy_id": 128164295,
+        "title": "Frontend-разработчик (React / Next.js)",
+        "company": "ИП Козырев Артем Сергеевич",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128164295",
+        "relevance_score": 117000
+      },
+      {
+        "position": 4,
+        "vacancy_id": 129031069,
+        "title": "Frontend-разработчик (TypeScript,React)",
+        "company": "Лига Цифровой Экономики",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129031069",
+        "relevance_score": 100000
+      },
+      {
+        "position": 5,
+        "vacancy_id": 128931861,
+        "title": "Frontend-Разработчик (React, TypeScript)",
+        "company": "СТС Медиа",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128931861",
+        "relevance_score": 100000
+      },
+      {
+        "position": 6,
+        "vacancy_id": 128249416,
+        "title": "Frontend-разработчик (React / TypeScript)",
+        "company": "ООО Октопустех",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128249416",
+        "relevance_score": 100000
+      },
+      {
+        "position": 7,
+        "vacancy_id": 129021622,
+        "title": "Senior Frontend/Разработчик фронтенд(React/реакт)",
+        "company": "ООО Стэл",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129021622",
+        "relevance_score": 96500
+      },
+      {
+        "position": 8,
+        "vacancy_id": 129000626,
+        "title": "Frontend Lead (React)",
+        "company": "ООО Карма",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129000626",
+        "relevance_score": 96500
+      },
+      {
+        "position": 9,
+        "vacancy_id": 128836127,
+        "title": "Frontend разработчик/Tech Lead (React, Canvas)",
+        "company": "ООО КРАФТТЕК",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128836127",
+        "relevance_score": 96500
+      },
+      {
+        "position": 10,
+        "vacancy_id": 128823711,
+        "title": "Front-End Lead (React)",
+        "company": "T2. IT и Digital",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128823711",
+        "relevance_score": 96500
+      },
+      {
+        "position": 11,
+        "vacancy_id": 128236589,
+        "title": "Frontend-разработчик React (middle+/senior)",
+        "company": "Т-Банк. Работа с клиентами",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128236589",
+        "relevance_score": 96500
+      },
+      {
+        "position": 12,
+        "vacancy_id": 128063055,
+        "title": "Senior Frontend Developer (react.js)",
+        "company": "Employcity",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128063055",
+        "relevance_score": 96500
+      },
+      {
+        "position": 13,
+        "vacancy_id": 128531151,
+        "title": "Lead Frontend Developer (React.js)",
+        "company": "ООО Mad Devs",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128531151",
+        "relevance_score": 96500
+      },
+      {
+        "position": 14,
+        "vacancy_id": 128755053,
+        "title": "Middle Frontend (React) Developer",
+        "company": "ООО ПикселПлекс Лабс",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128755053",
+        "relevance_score": 96000
+      },
+      {
+        "position": 15,
+        "vacancy_id": 125152430,
+        "title": "Frontend-разработчик Middle / React.js",
+        "company": "Altcraft",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/125152430",
+        "relevance_score": 96000
+      },
+      {
+        "position": 16,
+        "vacancy_id": 129008979,
+        "title": "Frontend-разработчик (React), Middle",
+        "company": "Centec",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129008979",
+        "relevance_score": 96000
+      },
+      {
+        "position": 17,
+        "vacancy_id": 129004093,
+        "title": "Middle Frontend Developer (React)",
+        "company": "ТОО Platonus",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129004093",
+        "relevance_score": 96000
+      },
+      {
+        "position": 18,
+        "vacancy_id": 128931394,
+        "title": "Frontend-разработчик React (junior)",
+        "company": "Т-Банк. ИТ. Разработка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128931394",
+        "relevance_score": 95500
+      },
+      {
+        "position": 19,
+        "vacancy_id": 119867578,
+        "title": "Frontend-разработчик React (junior)",
+        "company": "Т-Банк. ИТ. Разработка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/119867578",
+        "relevance_score": 95500
+      },
+      {
+        "position": 20,
+        "vacancy_id": 128994929,
+        "title": "Intern/Junior Frontend React Developer",
+        "company": "ООО IDT Technologies",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128994929",
+        "relevance_score": 95500
+      },
+      {
+        "position": 21,
+        "vacancy_id": 128764088,
+        "title": "Frontend-разработчик (React/Node.js)",
+        "company": "ООО Реюнико",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128764088",
+        "relevance_score": 95200
+      },
+      {
+        "position": 22,
+        "vacancy_id": 129014773,
+        "title": "Frontend Developer (React)",
+        "company": "ТОО Транслайн Интернэшнл",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129014773",
+        "relevance_score": 95000
+      },
+      {
+        "position": 23,
+        "vacancy_id": 129033912,
+        "title": "Frontend разработчик (React)",
+        "company": "ООО АМИКОН",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129033912",
+        "relevance_score": 95000
+      },
+      {
+        "position": 24,
+        "vacancy_id": 128941727,
+        "title": "Frontend-разработчик React",
+        "company": "Т-Банк. ИТ. Разработка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128941727",
+        "relevance_score": 95000
+      },
+      {
+        "position": 25,
+        "vacancy_id": 128931398,
+        "title": "Frontend-разработчик (React)",
+        "company": "Т-Банк. ИТ. Разработка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128931398",
+        "relevance_score": 95000
+      },
+      {
+        "position": 26,
+        "vacancy_id": 128931396,
+        "title": "Frontend-разработчик (React)",
+        "company": "Т-Банк. ИТ. Разработка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128931396",
+        "relevance_score": 95000
+      },
+      {
+        "position": 27,
+        "vacancy_id": 128547501,
+        "title": "Frontend React разработчик",
+        "company": "ФинГрад",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128547501",
+        "relevance_score": 95000
+      },
+      {
+        "position": 28,
+        "vacancy_id": 128680652,
+        "title": "Frontend Engineer (React)",
+        "company": "ООО Софтнетикс",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128680652",
+        "relevance_score": 95000
+      },
+      {
+        "position": 29,
+        "vacancy_id": 128750267,
+        "title": "Frontend-разработчик React",
+        "company": "Т-Банк. ИТ. Разработка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128750267",
+        "relevance_score": 95000
+      },
+      {
+        "position": 30,
+        "vacancy_id": 128152221,
+        "title": "Frontend - разработчик React",
+        "company": "Академия Data-Diving",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128152221",
+        "relevance_score": 95000
+      },
+      {
+        "position": 31,
+        "vacancy_id": 128444648,
+        "title": "Frontend JS / React Developer",
+        "company": "ООО Единая Информационная Система ЖКХ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128444648",
+        "relevance_score": 95000
+      },
+      {
+        "position": 32,
+        "vacancy_id": 126766740,
+        "title": "Trainee Frontend (React.js) developer",
+        "company": "Крым Диджитал Груп",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/126766740",
+        "relevance_score": 95000
+      },
+      {
+        "position": 33,
+        "vacancy_id": 128757858,
+        "title": "Frontend Developer (React) в команду НКПЗН",
+        "company": "Домклик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128757858",
+        "relevance_score": 95000
+      },
+      {
+        "position": 34,
+        "vacancy_id": 123573154,
+        "title": "Frontend-разработчик React",
+        "company": "Т-Банк. ИТ. Разработка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/123573154",
+        "relevance_score": 95000
+      },
+      {
+        "position": 35,
+        "vacancy_id": 123573025,
+        "title": "Frontend-разработчик React",
+        "company": "Т-Банк. ИТ. Разработка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/123573025",
+        "relevance_score": 95000
+      },
+      {
+        "position": 36,
+        "vacancy_id": 128705377,
+        "title": "Frontend Developer (React)",
+        "company": "Andersen",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128705377",
+        "relevance_score": 95000
+      },
+      {
+        "position": 37,
+        "vacancy_id": 128177884,
+        "title": "Frontend-разработчик React",
+        "company": "ПАО Московская Биржа",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128177884",
+        "relevance_score": 95000
+      },
+      {
+        "position": 38,
+        "vacancy_id": 128279530,
+        "title": "Frontend-разработчик (React)",
+        "company": "ООО ДИСЕНТ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128279530",
+        "relevance_score": 95000
+      },
+      {
+        "position": 39,
+        "vacancy_id": 122175022,
+        "title": "Frontend-разработчик React",
+        "company": "Т-Банк. ИТ. Разработка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/122175022",
+        "relevance_score": 95000
+      },
+      {
+        "position": 40,
+        "vacancy_id": 129004960,
+        "title": "Frontend-разработчик (React)",
+        "company": "ООО Интеграция Дистрибуция Проекты",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129004960",
+        "relevance_score": 95000
+      },
+      {
+        "position": 41,
+        "vacancy_id": 128982126,
+        "title": "Frontend-разработчик (React)",
+        "company": "ООО Мир технологий",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128982126",
+        "relevance_score": 95000
+      },
+      {
+        "position": 42,
+        "vacancy_id": 128705378,
+        "title": "Frontend Developer (React)",
+        "company": "Andersen",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128705378",
+        "relevance_score": 95000
+      },
+      {
+        "position": 43,
+        "vacancy_id": 128679954,
+        "title": "Frontend-разработчик (React)",
+        "company": "Донской государственный технический университет",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128679954",
+        "relevance_score": 95000
+      },
+      {
+        "position": 44,
+        "vacancy_id": 128942646,
+        "title": "Frontend разработчик (React)",
+        "company": "ТОО Profit services",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128942646",
+        "relevance_score": 95000
+      },
+      {
+        "position": 45,
+        "vacancy_id": 128391926,
+        "title": "Frontend / Full-Stack Developer (React + Vue / React + Node)",
+        "company": "УП Аймедиа Солюшнс",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128391926",
+        "relevance_score": 94500
+      },
+      {
+        "position": 46,
+        "vacancy_id": 128072092,
+        "title": "Senior Fullstack Developer (.NET + React)",
+        "company": "Velvetech LLC",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128072092",
+        "relevance_score": 91500
+      },
+      {
+        "position": 47,
+        "vacancy_id": 128916316,
+        "title": "Senior Full-Stack (Nest.js+React) Engineer",
+        "company": "ООО Эдельсофт",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128916316",
+        "relevance_score": 91500
+      },
+      {
+        "position": 48,
+        "vacancy_id": 128913897,
+        "title": "Senior Front End Engineer (React) + AI (вне РФ)",
+        "company": "КвантумСофт",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128913897",
+        "relevance_score": 91500
+      },
+      {
+        "position": 49,
+        "vacancy_id": 128383392,
+        "title": "Senior Fullstack Developer (Back: FastAPI + Front: React)",
+        "company": "Simplenight",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128383392",
+        "relevance_score": 91500
+      },
+      {
+        "position": 50,
+        "vacancy_id": 128630832,
+        "title": "Ведущий разработчик React + C# (Full Stack)",
+        "company": "Велес Капитал, ИК",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128630832",
+        "relevance_score": 91500
+      },
+      {
+        "position": 51,
+        "vacancy_id": 123396911,
+        "title": "React Native Senior Developer",
+        "company": "Itransition",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/123396911",
+        "relevance_score": 91500
+      },
+      {
+        "position": 52,
+        "vacancy_id": 128669447,
+        "title": "React Native Senior Developer",
+        "company": "Itransition",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128669447",
+        "relevance_score": 91500
+      },
+      {
+        "position": 53,
+        "vacancy_id": 120689865,
+        "title": "React Native Senior Developer",
+        "company": "Itransition",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/120689865",
+        "relevance_score": 91500
+      },
+      {
+        "position": 54,
+        "vacancy_id": 128096988,
+        "title": "Senior/Middle+ React Native разработчик (UI-kit)",
+        "company": "СОГАЗ: г. Москва",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128096988",
+        "relevance_score": 91500
+      },
+      {
+        "position": 55,
+        "vacancy_id": 128427246,
+        "title": "Middle+ Fullstack Engineer (Node.js + React) (Medtech)",
+        "company": "evrone.ru",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128427246",
+        "relevance_score": 91200
+      },
+      {
+        "position": 56,
+        "vacancy_id": 128998369,
+        "title": "Middle React Native Developer",
+        "company": "ТОО HJ Platform",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128998369",
+        "relevance_score": 91000
+      },
+      {
+        "position": 57,
+        "vacancy_id": 123712878,
+        "title": "JavaScript Разработчик (React) (Middle)",
+        "company": "Инфомаксимум",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/123712878",
+        "relevance_score": 91000
+      },
+      {
+        "position": 58,
+        "vacancy_id": 128157138,
+        "title": "Middle React Native Developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128157138",
+        "relevance_score": 91000
+      },
+      {
+        "position": 59,
+        "vacancy_id": 128691388,
+        "title": "Front End Developer (React+HTML, Middle\\Middle+)",
+        "company": "KingBoost",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128691388",
+        "relevance_score": 91000
+      },
+      {
+        "position": 60,
+        "vacancy_id": 128691389,
+        "title": "Front End Developer (React+HTML, Middle\\Middle+)",
+        "company": "KingBoost",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128691389",
+        "relevance_score": 91000
+      },
+      {
+        "position": 61,
+        "vacancy_id": 128691390,
+        "title": "Front End Developer (React+HTML, Middle\\Middle+)",
+        "company": "KingBoost",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128691390",
+        "relevance_score": 91000
+      },
+      {
+        "position": 62,
+        "vacancy_id": 128691387,
+        "title": "Front End Developer (React+HTML, Middle\\Middle+)",
+        "company": "KingBoost",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128691387",
+        "relevance_score": 91000
+      },
+      {
+        "position": 63,
+        "vacancy_id": 128792208,
+        "title": "Junior React Developer",
+        "company": "Emphasoft",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128792208",
+        "relevance_score": 90500
+      },
+      {
+        "position": 64,
+        "vacancy_id": 128754290,
+        "title": "Trainee\\Junior JavaScript React программист\\ React developer",
+        "company": "ООО СенамаСофт",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128754290",
+        "relevance_score": 90500
+      },
+      {
+        "position": 65,
+        "vacancy_id": 128792207,
+        "title": "Junior React Developer",
+        "company": "Emphasoft",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128792207",
+        "relevance_score": 90500
+      },
+      {
+        "position": 66,
+        "vacancy_id": 128792209,
+        "title": "Junior React Developer",
+        "company": "Emphasoft",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128792209",
+        "relevance_score": 90500
+      },
+      {
+        "position": 67,
+        "vacancy_id": 128328727,
+        "title": "FullStack Engineer (React+ Node.js)",
+        "company": "Andersen",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128328727",
+        "relevance_score": 90200
+      },
+      {
+        "position": 68,
+        "vacancy_id": 128976052,
+        "title": "Фуллстек разработчик React Native + Firebase",
+        "company": "ООО ВЕНАДАТРАНС",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128976052",
+        "relevance_score": 90000
+      },
+      {
+        "position": 69,
+        "vacancy_id": 128756108,
+        "title": "Разработчик JavaScript React.js",
+        "company": "Devs Universe",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128756108",
+        "relevance_score": 90000
+      },
+      {
+        "position": 70,
+        "vacancy_id": 124012934,
+        "title": "Javascript fullstack (React. js, Node. js) разработчик",
+        "company": "АО Медиа Эффект",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/124012934",
+        "relevance_score": 90000
+      },
+      {
+        "position": 71,
+        "vacancy_id": 128791131,
+        "title": "React Native Разработчик",
+        "company": "ООО Цифровые Инвестиции",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128791131",
+        "relevance_score": 90000
+      },
+      {
+        "position": 72,
+        "vacancy_id": 128567384,
+        "title": "React Developer",
+        "company": "ООО Коллектив Интеллидженс Системс",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128567384",
+        "relevance_score": 90000
+      },
+      {
+        "position": 73,
+        "vacancy_id": 128567385,
+        "title": "React Developer",
+        "company": "ООО Коллектив Интеллидженс Системс",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128567385",
+        "relevance_score": 90000
+      },
+      {
+        "position": 74,
+        "vacancy_id": 128557202,
+        "title": "React Native разработчик",
+        "company": "Bfriendz",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128557202",
+        "relevance_score": 90000
+      },
+      {
+        "position": 75,
+        "vacancy_id": 128905185,
+        "title": "Trainee React Native developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128905185",
+        "relevance_score": 90000
+      },
+      {
+        "position": 76,
+        "vacancy_id": 128905137,
+        "title": "Trainee React Native developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128905137",
+        "relevance_score": 90000
+      },
+      {
+        "position": 77,
+        "vacancy_id": 128969381,
+        "title": "React native developer",
+        "company": "ТОО TIZIMAPP",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128969381",
+        "relevance_score": 90000
+      },
+      {
+        "position": 78,
+        "vacancy_id": 128905758,
+        "title": "Intern React Native developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128905758",
+        "relevance_score": 90000
+      },
+      {
+        "position": 79,
+        "vacancy_id": 128905759,
+        "title": "Intern React Native developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128905759",
+        "relevance_score": 90000
+      },
+      {
+        "position": 80,
+        "vacancy_id": 128267716,
+        "title": "Frontend-разработчик (TypeScript, PWA) — Middle/Senior",
+        "company": "CrocoGroup",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128267716",
+        "relevance_score": 66500
+      },
+      {
+        "position": 81,
+        "vacancy_id": 128386108,
+        "title": "Frontend-разработчик (Nuxt, Tailwind, Firebase, TypeScript)",
+        "company": "Wash Inn Technologies",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128386108",
+        "relevance_score": 65200
+      },
+      {
+        "position": 82,
+        "vacancy_id": 128376648,
+        "title": "Frontend-разработчик (Vue3, Typescript)",
+        "company": "TirScript",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128376648",
+        "relevance_score": 65000
+      },
+      {
+        "position": 83,
+        "vacancy_id": 128509522,
+        "title": "Senior frontend-разработчик (Backbone.js)",
+        "company": "ООО Смарт консалтинг",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128509522",
+        "relevance_score": 63500
+      },
+      {
+        "position": 84,
+        "vacancy_id": 128579997,
+        "title": "Frontend-разработчик Middle+ (Nuxt.js / Vue 3)",
+        "company": "ИП Дурнев Иван Владимирович",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128579997",
+        "relevance_score": 62500
+      },
+      {
+        "position": 85,
+        "vacancy_id": 128978667,
+        "title": "Frontend-разработчик (JavaScript / HTML / CSS)",
+        "company": "ИП Кульпанова Любовь Михайловна",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128978667",
+        "relevance_score": 62000
+      },
+      {
+        "position": 86,
+        "vacancy_id": 128970126,
+        "title": "Trainee Frontend Developer (JavaScript)",
+        "company": "ООО ФП ТРЭЙД",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128970126",
+        "relevance_score": 62000
+      },
+      {
+        "position": 87,
+        "vacancy_id": 128494040,
+        "title": "Frontend-разработчик (PixiJS)",
+        "company": "HuntIT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128494040",
+        "relevance_score": 62000
+      },
+      {
+        "position": 88,
+        "vacancy_id": 129033217,
+        "title": "Senior Frontend Developer (офис Москва)",
+        "company": "Lenkep recruitment",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129033217",
+        "relevance_score": 61500
+      },
+      {
+        "position": 89,
+        "vacancy_id": 128993753,
+        "title": "Senior Front-end разработчик",
+        "company": "Хогвартс маркетплейсов",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128993753",
+        "relevance_score": 61500
+      },
+      {
+        "position": 90,
+        "vacancy_id": 128961761,
+        "title": "Frontend-разработчик Senior",
+        "company": "ООО ПлатежиТут",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128961761",
+        "relevance_score": 61500
+      },
+      {
+        "position": 91,
+        "vacancy_id": 128680596,
+        "title": "Frontend-разработчик (Middle / Senior)",
+        "company": "ООО ВИРТУ СИСТЕМС",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128680596",
+        "relevance_score": 61500
+      },
+      {
+        "position": 92,
+        "vacancy_id": 128679365,
+        "title": "Middle/Senior Frontend Developer",
+        "company": "MaxLine",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128679365",
+        "relevance_score": 61500
+      },
+      {
+        "position": 93,
+        "vacancy_id": 127960813,
+        "title": "Старший фронтенд разработчик / Team lead",
+        "company": "ООО Леон",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127960813",
+        "relevance_score": 61500
+      },
+      {
+        "position": 94,
+        "vacancy_id": 128150529,
+        "title": "Frontend Team Lead",
+        "company": "FriendWork",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128150529",
+        "relevance_score": 61500
+      },
+      {
+        "position": 95,
+        "vacancy_id": 128880305,
+        "title": "Senior frontend developer",
+        "company": "Тензор",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128880305",
+        "relevance_score": 61500
+      },
+      {
+        "position": 96,
+        "vacancy_id": 115794035,
+        "title": "Senior frontend-разработчик",
+        "company": "ООО Бизнес Технологии",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/115794035",
+        "relevance_score": 61500
+      },
+      {
+        "position": 97,
+        "vacancy_id": 128318995,
+        "title": "Senior Frontend-разработчик",
+        "company": "Веб-студия Круглый Квадрат",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128318995",
+        "relevance_score": 61500
+      },
+      {
+        "position": 98,
+        "vacancy_id": 128808748,
+        "title": "Lead Frontend developer (в г.Новосибирск)",
+        "company": "Кадровое агентство Алексея Сухорукова",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128808748",
+        "relevance_score": 61500
+      },
+      {
+        "position": 99,
+        "vacancy_id": 128571852,
+        "title": "Senior Frontend Developer",
+        "company": "Simplenight",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128571852",
+        "relevance_score": 61500
+      },
+      {
+        "position": 100,
+        "vacancy_id": 129036337,
+        "title": "Middle+/Senior Frontend-разработчик (Sber911)",
+        "company": "Сбер для экспертов",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129036337",
+        "relevance_score": 61500
+      },
+      {
+        "position": 101,
+        "vacancy_id": 127802202,
+        "title": "Frontend Tech Lead",
+        "company": "БЮРО 1440",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127802202",
+        "relevance_score": 61500
+      },
+      {
+        "position": 102,
+        "vacancy_id": 128378295,
+        "title": "Senior Frontend Engineer",
+        "company": "ТОО Armeta KZ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128378295",
+        "relevance_score": 61500
+      },
+      {
+        "position": 103,
+        "vacancy_id": 127188044,
+        "title": "Senior Frontend-разработчик",
+        "company": "Postgres Professional",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127188044",
+        "relevance_score": 61500
+      },
+      {
+        "position": 104,
+        "vacancy_id": 126696289,
+        "title": "Senior Frontend Engineer (Platform Development)",
+        "company": "Galileosky",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/126696289",
+        "relevance_score": 61500
+      },
+      {
+        "position": 105,
+        "vacancy_id": 128259268,
+        "title": "Senior Frontend-разработчик",
+        "company": "Metaratings",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128259268",
+        "relevance_score": 61500
+      },
+      {
+        "position": 106,
+        "vacancy_id": 127616857,
+        "title": "Senior Frontend Software Engineer (DaVinci Project)",
+        "company": "Syberry CIS",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127616857",
+        "relevance_score": 61500
+      },
+      {
+        "position": 107,
+        "vacancy_id": 128173642,
+        "title": "Senior Frontend Developer (разработка игр)",
+        "company": "ITea RS d.o.o.",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128173642",
+        "relevance_score": 61500
+      },
+      {
+        "position": 108,
+        "vacancy_id": 128818680,
+        "title": "Senior Front-end Developer",
+        "company": "ТОО 5 LAB(ФАЙВ ЛАБ)",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128818680",
+        "relevance_score": 61500
+      },
+      {
+        "position": 109,
+        "vacancy_id": 128060804,
+        "title": "Senior Frontend-разработчик",
+        "company": "ООО Орион Технологии",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128060804",
+        "relevance_score": 61500
+      },
+      {
+        "position": 110,
+        "vacancy_id": 126802482,
+        "title": "Frontend-разработчик (middle/middle+)",
+        "company": "Тензор",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/126802482",
+        "relevance_score": 61000
+      },
+      {
+        "position": 111,
+        "vacancy_id": 128376974,
+        "title": "Middle Frontend разработчик",
+        "company": "ООО СУПЕРКАССА",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128376974",
+        "relevance_score": 61000
+      },
+      {
+        "position": 112,
+        "vacancy_id": 125710321,
+        "title": "Senior Frontend Developer (Vue)",
+        "company": "Marfatech",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/125710321",
+        "relevance_score": 61000
+      },
+      {
+        "position": 113,
+        "vacancy_id": 127845978,
+        "title": "Middle frontend developer",
+        "company": "СИГМАКОД",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127845978",
+        "relevance_score": 61000
+      },
+      {
+        "position": 114,
+        "vacancy_id": 128779802,
+        "title": "Middle Frontend-разработчик",
+        "company": "ООО Дивлаб",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128779802",
+        "relevance_score": 61000
+      },
+      {
+        "position": 115,
+        "vacancy_id": 128679632,
+        "title": "Frontend-разработчик (middle)",
+        "company": "ООО Трайб",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128679632",
+        "relevance_score": 61000
+      },
+      {
+        "position": 116,
+        "vacancy_id": 127640185,
+        "title": "Frontend-разработчик (Middle+)",
+        "company": "ОАО Центр банковских технологий",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127640185",
+        "relevance_score": 61000
+      },
+      {
+        "position": 117,
+        "vacancy_id": 128625602,
+        "title": "Front-End Software Engineer (Middle)",
+        "company": "ООО ФронтПоинт",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128625602",
+        "relevance_score": 61000
+      },
+      {
+        "position": 118,
+        "vacancy_id": 128972736,
+        "title": "Frontend-разработчик (Junior frontend developer)",
+        "company": "amoCRM",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128972736",
+        "relevance_score": 60500
+      },
+      {
+        "position": 119,
+        "vacancy_id": 128373738,
+        "title": "Junior Frontend разработчик",
+        "company": "Your CodeReview",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128373738",
+        "relevance_score": 60500
+      },
+      {
+        "position": 120,
+        "vacancy_id": 120899046,
+        "title": "HTML-верстальщик / Junior Frontend-разработчик",
+        "company": "ООО Цифровой элемент",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/120899046",
+        "relevance_score": 60500
+      },
+      {
+        "position": 121,
+        "vacancy_id": 128354133,
+        "title": "Junior Frontend Developer",
+        "company": "ТОО PingOcean (ПингОушен)",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128354133",
+        "relevance_score": 60500
+      },
+      {
+        "position": 122,
+        "vacancy_id": 127999263,
+        "title": "Frontend-разработчик (Junior+)",
+        "company": "Правительство Москвы",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127999263",
+        "relevance_score": 60500
+      },
+      {
+        "position": 123,
+        "vacancy_id": 128936660,
+        "title": "Frontend Developer (Vue / Nuxt 3) — Middle+",
+        "company": "ООО Кодовый Поток",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128936660",
+        "relevance_score": 60500
+      },
+      {
+        "position": 124,
+        "vacancy_id": 129031403,
+        "title": "Frontend-разработчик",
+        "company": "ООО РСХБ-Интех",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129031403",
+        "relevance_score": 50000
+      },
+      {
+        "position": 125,
+        "vacancy_id": 129032727,
+        "title": "Frontend-разработчик (команда SberCommonServices)",
+        "company": "SberTech",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129032727",
+        "relevance_score": 50000
+      },
+      {
+        "position": 126,
+        "vacancy_id": 129011993,
+        "title": "Frontend-разработчик",
+        "company": "ИП Морозова Илона Владимировна",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129011993",
+        "relevance_score": 50000
+      },
+      {
+        "position": 127,
+        "vacancy_id": 129014578,
+        "title": "Frontend-разработчик",
+        "company": "АО Первый канал",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129014578",
+        "relevance_score": 50000
+      },
+      {
+        "position": 128,
+        "vacancy_id": 129002636,
+        "title": "Архитектор frontend и мобильных решений",
+        "company": "ГУП Московский социальный регистр",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129002636",
+        "relevance_score": 50000
+      },
+      {
+        "position": 129,
+        "vacancy_id": 128919106,
+        "title": "Разработчик Front-end WEB",
+        "company": "ПАО «Газпром нефть» ИТ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128919106",
+        "relevance_score": 50000
+      },
+      {
+        "position": 130,
+        "vacancy_id": 128966075,
+        "title": "Frontend-разработчик",
+        "company": "АПТЕКИ ВАША № 1",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128966075",
+        "relevance_score": 50000
+      },
+      {
+        "position": 131,
+        "vacancy_id": 128491540,
+        "title": "Frontend-разработчик",
+        "company": "АО Новый регистратор",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128491540",
+        "relevance_score": 50000
+      },
+      {
+        "position": 132,
+        "vacancy_id": 128095313,
+        "title": "FrontEnd разработчик",
+        "company": "Общероссийская общественно-государственная организация Российский центр оборота прав на результаты творческой деятельности",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128095313",
+        "relevance_score": 50000
+      },
+      {
+        "position": 133,
+        "vacancy_id": 127767477,
+        "title": "Frontend разработчик",
+        "company": "ООО Клауд Солюшенс",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127767477",
+        "relevance_score": 50000
+      },
+      {
+        "position": 134,
+        "vacancy_id": 128744461,
+        "title": "Frontend-разработчик (Vue3)",
+        "company": "Musbooking",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128744461",
+        "relevance_score": 50000
+      },
+      {
+        "position": 135,
+        "vacancy_id": 124202336,
+        "title": "Frontend-разработчик",
+        "company": "ООО РН-КрасноярскНИПИнефть",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/124202336",
+        "relevance_score": 50000
+      },
+      {
+        "position": 136,
+        "vacancy_id": 128402481,
+        "title": "Frontend-разработчик (web-разработчик, по работе с CMS)",
+        "company": "ООО Калининградские информационные технологии",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128402481",
+        "relevance_score": 50000
+      },
+      {
+        "position": 137,
+        "vacancy_id": 128382287,
+        "title": "Frontend-разработчик",
+        "company": "Green City Real Estate",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128382287",
+        "relevance_score": 50000
+      },
+      {
+        "position": 138,
+        "vacancy_id": 128374350,
+        "title": "Frontend-разработчик (Разработка игр)",
+        "company": "Студия Перцы",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128374350",
+        "relevance_score": 50000
+      },
+      {
+        "position": 139,
+        "vacancy_id": 128151977,
+        "title": "Frontend-разработчик",
+        "company": "ТОО FREEDOM MOBILE",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128151977",
+        "relevance_score": 50000
+      },
+      {
+        "position": 140,
+        "vacancy_id": 127393771,
+        "title": "Frontend-разработчик",
+        "company": "Stream Telecom",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127393771",
+        "relevance_score": 50000
+      },
+      {
+        "position": 141,
+        "vacancy_id": 128820383,
+        "title": "Frontend Developer",
+        "company": "ООО Арелаг консалт",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128820383",
+        "relevance_score": 50000
+      },
+      {
+        "position": 142,
+        "vacancy_id": 128817204,
+        "title": "Frontend-разработчик",
+        "company": "ООО ПОСМ.РЦ.",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128817204",
+        "relevance_score": 50000
+      },
+      {
+        "position": 143,
+        "vacancy_id": 128427700,
+        "title": "Frontend-разработчик",
+        "company": "XIAG AG",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128427700",
+        "relevance_score": 50000
+      },
+      {
+        "position": 144,
+        "vacancy_id": 128998388,
+        "title": "Frontend-разработчик",
+        "company": "WONE IT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128998388",
+        "relevance_score": 50000
+      },
+      {
+        "position": 145,
+        "vacancy_id": 128441206,
+        "title": "Frontend-разработчик",
+        "company": "ПАО Ростелеком",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128441206",
+        "relevance_score": 50000
+      },
+      {
+        "position": 146,
+        "vacancy_id": 123942576,
+        "title": "Веб-технолог/Frontend-разработчик",
+        "company": "ООО «ОФИСМАГ», IT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/123942576",
+        "relevance_score": 50000
+      },
+      {
+        "position": 147,
+        "vacancy_id": 128172120,
+        "title": "Front-end разработчик",
+        "company": "ООО UNITEL LLC",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128172120",
+        "relevance_score": 50000
+      },
+      {
+        "position": 148,
+        "vacancy_id": 129022894,
+        "title": "Frontend Web Developer",
+        "company": "ТОО Elite Business Group",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129022894",
+        "relevance_score": 50000
+      },
+      {
+        "position": 149,
+        "vacancy_id": 128121838,
+        "title": "Frontend-разработчик",
+        "company": "ТОО Documentolog",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128121838",
+        "relevance_score": 50000
+      },
+      {
+        "position": 150,
+        "vacancy_id": 128088746,
+        "title": "Frontend-разработчик",
+        "company": "ООО ПрофИТ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128088746",
+        "relevance_score": 50000
+      },
+      {
+        "position": 151,
+        "vacancy_id": 127261190,
+        "title": "Frontend Software Engineer (DaVinci Project)",
+        "company": "Syberry CIS",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127261190",
+        "relevance_score": 50000
+      },
+      {
+        "position": 152,
+        "vacancy_id": 128365730,
+        "title": "Старший разработчик фронтенда в команду скорости и стабильности CI",
+        "company": "Городские сервисы",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128365730",
+        "relevance_score": 50000
+      },
+      {
+        "position": 153,
+        "vacancy_id": 128790840,
+        "title": "Frontend-разработчик",
+        "company": "Тензор",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128790840",
+        "relevance_score": 50000
+      },
+      {
+        "position": 154,
+        "vacancy_id": 127869919,
+        "title": "Frontend-разработчик",
+        "company": "SHiFT AM",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127869919",
+        "relevance_score": 50000
+      },
+      {
+        "position": 155,
+        "vacancy_id": 128560806,
+        "title": "Frontend-разработчик",
+        "company": "ООО Куаликс",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128560806",
+        "relevance_score": 50000
+      },
+      {
+        "position": 156,
+        "vacancy_id": 128559502,
+        "title": "Frontend Developer / фронтенд-разработчик",
+        "company": "АО Кооп",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128559502",
+        "relevance_score": 50000
+      },
+      {
+        "position": 157,
+        "vacancy_id": 128231013,
+        "title": "Frontend Engineer",
+        "company": "ООО ETAMIN IT SOLUTIONS",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128231013",
+        "relevance_score": 50000
+      },
+      {
+        "position": 158,
+        "vacancy_id": 129012353,
+        "title": "Разработчик Frontend, Unity",
+        "company": "ООО Мануфактура",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129012353",
+        "relevance_score": 50000
+      },
+      {
+        "position": 159,
+        "vacancy_id": 128969876,
+        "title": "Frontend-разработчик (Стартап)",
+        "company": "Тихомиров Максим Сергеевич",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128969876",
+        "relevance_score": 50000
+      },
+      {
+        "position": 160,
+        "vacancy_id": 128765526,
+        "title": "Frontend-разработчик / Web-дизайнер (MVP, продуктовый запуск)",
+        "company": "ИП Двигубский Артур Владиславович",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128765526",
+        "relevance_score": 50000
+      },
+      {
+        "position": 161,
+        "vacancy_id": 128222686,
+        "title": "Frontend-разработчик",
+        "company": "ООО Веллдорис",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128222686",
+        "relevance_score": 50000
+      },
+      {
+        "position": 162,
+        "vacancy_id": 129022242,
+        "title": "Фронтенд - разработчик",
+        "company": "ООО MY ORT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129022242",
+        "relevance_score": 50000
+      },
+      {
+        "position": 163,
+        "vacancy_id": 128999688,
+        "title": "Frontend-разработчик",
+        "company": "ИП Мельник Юлия Олеговна",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128999688",
+        "relevance_score": 50000
+      },
+      {
+        "position": 164,
+        "vacancy_id": 121900472,
+        "title": "Frontend Developer",
+        "company": "ООО Секьюрити Лаб",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/121900472",
+        "relevance_score": 50000
+      },
+      {
+        "position": 165,
+        "vacancy_id": 128942328,
+        "title": "Старший Frontend-разработчик (в Офис)",
+        "company": "ООО Диджитал Сектор Поддержка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128942328",
+        "relevance_score": 50000
+      },
+      {
+        "position": 166,
+        "vacancy_id": 128380236,
+        "title": "Frontend-разработчик",
+        "company": "LOOPTAIN LIMITED",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128380236",
+        "relevance_score": 50000
+      },
+      {
+        "position": 167,
+        "vacancy_id": 128174333,
+        "title": "Frontend-разработчик",
+        "company": "ООО SECTOR SOFT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128174333",
+        "relevance_score": 50000
+      },
+      {
+        "position": 168,
+        "vacancy_id": 125665125,
+        "title": "Frontend-разработчик (офис)",
+        "company": "ООО Альтек Проектирование",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/125665125",
+        "relevance_score": 50000
+      },
+      {
+        "position": 169,
+        "vacancy_id": 128922310,
+        "title": "Frontend-разработчик",
+        "company": "TECCOD",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128922310",
+        "relevance_score": 50000
+      },
+      {
+        "position": 170,
+        "vacancy_id": 128194614,
+        "title": "Frontend-разработчик в проектную команду",
+        "company": "КорЛаб",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128194614",
+        "relevance_score": 50000
+      },
+      {
+        "position": 171,
+        "vacancy_id": 128194615,
+        "title": "Frontend-разработчик в проектную команду",
+        "company": "КорЛаб",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128194615",
+        "relevance_score": 50000
+      },
+      {
+        "position": 172,
+        "vacancy_id": 129004491,
+        "title": "Frontend-разработчик",
+        "company": "ООО FURAC ENTERPRICE",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129004491",
+        "relevance_score": 50000
+      },
+      {
+        "position": 173,
+        "vacancy_id": 129003533,
+        "title": "Старший фронтенд-разработчик",
+        "company": "IBS",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129003533",
+        "relevance_score": 50000
+      },
+      {
+        "position": 174,
+        "vacancy_id": 128663530,
+        "title": "HTML-верстальщик / front-end разработчик (web-программист в образовательное учреждение)",
+        "company": "Бала-Сити",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128663530",
+        "relevance_score": 50000
+      },
+      {
+        "position": 175,
+        "vacancy_id": 129037522,
+        "title": "Frontend-разработчик (CRM-система)",
+        "company": "Московский фонд реновации жилой застройки",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129037522",
+        "relevance_score": 50000
+      },
+      {
+        "position": 176,
+        "vacancy_id": 127866551,
+        "title": "Frontend разработчик (Vue, Nuxt)",
+        "company": "idaproject",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127866551",
+        "relevance_score": 49500
+      },
+      {
+        "position": 177,
+        "vacancy_id": 128788871,
+        "title": "Frontend разработчик (Vue)",
+        "company": "Федеральная пассажирская компания (АО ФПК)",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128788871",
+        "relevance_score": 49500
+      },
+      {
+        "position": 178,
+        "vacancy_id": 126045701,
+        "title": "Frontend-разработчик (Vue)",
+        "company": "ООО Единый Расчетный Центр",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/126045701",
+        "relevance_score": 49500
+      },
+      {
+        "position": 179,
+        "vacancy_id": 127206822,
+        "title": "Front-end разработчик (Vue)",
+        "company": "ООО МАКСБИТСОЛЮШЕН",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127206822",
+        "relevance_score": 49500
+      },
+      {
+        "position": 180,
+        "vacancy_id": 128979756,
+        "title": "Frontend-разработчик Vue 3",
+        "company": "Mechta.kz TM ( ТОО Мечта Маркет )",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128979756",
+        "relevance_score": 49500
+      },
+      {
+        "position": 181,
+        "vacancy_id": 128976998,
+        "title": "Frontend-разработчик (Vue)",
+        "company": "Национальный туроператор Алеан",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128976998",
+        "relevance_score": 49500
+      },
+      {
+        "position": 182,
+        "vacancy_id": 128472600,
+        "title": "Frontend-разработчик (1C-Битрикс)",
+        "company": "ПАО «Газпром нефть» ИТ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128472600",
+        "relevance_score": 49000
+      },
+      {
+        "position": 183,
+        "vacancy_id": 128322410,
+        "title": "Unity Technical Artist/Developer на мобильную RTS (Junior)",
+        "company": "Gear Games",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128322410",
+        "relevance_score": 30500
+      },
+      {
+        "position": 184,
+        "vacancy_id": 128683063,
+        "title": "Разработчик JavaScript / TypeScript ( ELMA365 )",
+        "company": "ООО ГАЗИНФОРМСЕРВИС",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128683063",
+        "relevance_score": 30000
+      },
+      {
+        "position": 185,
+        "vacancy_id": 128228590,
+        "title": "Продавец-кассир JUSTSPORT ЦДМ",
+        "company": "ООО А СПОРТ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128228590",
+        "relevance_score": 30000
+      },
+      {
+        "position": 186,
+        "vacancy_id": 128200011,
+        "title": "TS/JS разработчик",
+        "company": "ИП Осипов Владимир Олегович",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128200011",
+        "relevance_score": 30000
+      },
+      {
+        "position": 187,
+        "vacancy_id": 128949182,
+        "title": "Fullstack .NET Core / JS Software Engineer (Crafting, Growth, Real Products)",
+        "company": "ООО Центория Софт",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128949182",
+        "relevance_score": 30000
+      },
+      {
+        "position": 188,
+        "vacancy_id": 128948888,
+        "title": "Fullstack .NET Core / JS Software Engineer (Crafting, Growth, Real Products)",
+        "company": "ООО Центория Софт",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128948888",
+        "relevance_score": 30000
+      },
+      {
+        "position": 189,
+        "vacancy_id": 128312058,
+        "title": "Fullstack-разработчик (TypeScript + .NET 8)",
+        "company": "ООО Институт проектирования, архитектуры и дизайна (ИНПАД)",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128312058",
+        "relevance_score": 30000
+      },
+      {
+        "position": 190,
+        "vacancy_id": 128565978,
+        "title": "Game Designer (Жанр RTS)",
+        "company": "Samustai",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128565978",
+        "relevance_score": 30000
+      },
+      {
+        "position": 191,
+        "vacancy_id": 127931332,
+        "title": "Fullstack разработчик (Next.js + Backend)",
+        "company": "ООО КИПФОРЕСТ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127931332",
+        "relevance_score": 25000
+      },
+      {
+        "position": 192,
+        "vacancy_id": 127111157,
+        "title": "Fullstack Engineer (React/Next.js and Python)",
+        "company": "Satellite",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127111157",
+        "relevance_score": 25000
+      },
+      {
+        "position": 193,
+        "vacancy_id": 127625967,
+        "title": "Senior Node.js (TechLead)",
+        "company": "TrendTech",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127625967",
+        "relevance_score": 16700
+      },
+      {
+        "position": 194,
+        "vacancy_id": 128713413,
+        "title": "Senior Full-Stack Developer (C#,. Net, JS, MS-SQL)",
+        "company": "TradeTheNews.com",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128713413",
+        "relevance_score": 16500
+      },
+      {
+        "position": 195,
+        "vacancy_id": 128994728,
+        "title": "Intern/Junior Node.js Developer",
+        "company": "ООО IDT Technologies",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128994728",
+        "relevance_score": 15700
+      },
+      {
+        "position": 196,
+        "vacancy_id": 128774161,
+        "title": "Strong Junior NodeJS Developer",
+        "company": "ООО UNICAL",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128774161",
+        "relevance_score": 15700
+      },
+      {
+        "position": 197,
+        "vacancy_id": 126722177,
+        "title": "JS-разработчик (Junior)",
+        "company": "Инфомаксимум",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/126722177",
+        "relevance_score": 15500
+      },
+      {
+        "position": 198,
+        "vacancy_id": 129021413,
+        "title": "Разработчик NodeJS",
+        "company": "Сбер для экспертов",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129021413",
+        "relevance_score": 15200
+      },
+      {
+        "position": 199,
+        "vacancy_id": 128978833,
+        "title": "JavaScript разработчик (стажер)",
+        "company": "Aston",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128978833",
+        "relevance_score": 15000
+      },
+      {
+        "position": 200,
+        "vacancy_id": 128978208,
+        "title": "JavaScript разработчик (стажер)",
+        "company": "Aston",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128978208",
+        "relevance_score": 15000
+      },
+      {
+        "position": 201,
+        "vacancy_id": 128973898,
+        "title": "JavaScript разработчик (стажер)",
+        "company": "Aston",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128973898",
+        "relevance_score": 15000
+      },
+      {
+        "position": 202,
+        "vacancy_id": 128503465,
+        "title": "JavaScript разработчик (стажер)",
+        "company": "Aston",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128503465",
+        "relevance_score": 15000
+      },
+      {
+        "position": 203,
+        "vacancy_id": 128831477,
+        "title": "JavaScript разработчик (стажер)",
+        "company": "Aston",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128831477",
+        "relevance_score": 15000
+      },
+      {
+        "position": 204,
+        "vacancy_id": 128831447,
+        "title": "JavaScript разработчик (стажер)",
+        "company": "Aston",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128831447",
+        "relevance_score": 15000
+      },
+      {
+        "position": 205,
+        "vacancy_id": 128820748,
+        "title": "JavaScript разработчик (стажер)",
+        "company": "Aston",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128820748",
+        "relevance_score": 15000
+      },
+      {
+        "position": 206,
+        "vacancy_id": 128928698,
+        "title": "JavaScript разработчик (стажер)",
+        "company": "Aston",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128928698",
+        "relevance_score": 15000
+      },
+      {
+        "position": 207,
+        "vacancy_id": 128910860,
+        "title": "JavaScript разработчик (стажер)",
+        "company": "Aston",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128910860",
+        "relevance_score": 15000
+      },
+      {
+        "position": 208,
+        "vacancy_id": 128323261,
+        "title": "Разработчик FullStack (.net + js)",
+        "company": "ООО Смарт Горизонт",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128323261",
+        "relevance_score": 15000
+      },
+      {
+        "position": 209,
+        "vacancy_id": 129001403,
+        "title": "JavaScript Trainee",
+        "company": "Andersen",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129001403",
+        "relevance_score": 15000
+      },
+      {
+        "position": 210,
+        "vacancy_id": 122521502,
+        "title": "Trainee JS developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/122521502",
+        "relevance_score": 15000
+      },
+      {
+        "position": 211,
+        "vacancy_id": 122521501,
+        "title": "Trainee JS developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/122521501",
+        "relevance_score": 15000
+      },
+      {
+        "position": 212,
+        "vacancy_id": 122521500,
+        "title": "Trainee JS developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/122521500",
+        "relevance_score": 15000
+      },
+      {
+        "position": 213,
+        "vacancy_id": 128578427,
+        "title": "Fullstack-разработчик (JavaScript)",
+        "company": "Таймвэб.Клауд",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128578427",
+        "relevance_score": 15000
+      },
+      {
+        "position": 214,
+        "vacancy_id": 128814878,
+        "title": "JavaScript Trainee",
+        "company": "Andersen",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128814878",
+        "relevance_score": 15000
+      },
+      {
+        "position": 215,
+        "vacancy_id": 128909926,
+        "title": "Преподаватель Javascript developer",
+        "company": "Компьютерная академия TOP (Компьютерная Академия ТОП)",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128909926",
+        "relevance_score": 15000
+      },
+      {
+        "position": 216,
+        "vacancy_id": 128395770,
+        "title": "Старший Backend / Fullstack разработчик (Node. js / React, со знанием английского языка)",
+        "company": "Новео",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128395770",
+        "relevance_score": 10000
+      },
+      {
+        "position": 217,
+        "vacancy_id": 129017652,
+        "title": "Senior Fullstack-разработчик",
+        "company": "VeryIT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129017652",
+        "relevance_score": 6500
+      },
+      {
+        "position": 218,
+        "vacancy_id": 129034354,
+        "title": "Tech Lead / Senior FullStack",
+        "company": "Bodro Coffee",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129034354",
+        "relevance_score": 6500
+      },
+      {
+        "position": 219,
+        "vacancy_id": 129032853,
+        "title": "Senior Fullstack-аналитик",
+        "company": "БКС IT & Digital",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129032853",
+        "relevance_score": 6500
+      },
+      {
+        "position": 220,
+        "vacancy_id": 129020111,
+        "title": "Fullstack TeamLead разработчик",
+        "company": "VeryIT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129020111",
+        "relevance_score": 6500
+      },
+      {
+        "position": 221,
+        "vacancy_id": 127536603,
+        "title": "Senior Fullstack Developer/Team Lead/Tech Lead",
+        "company": "ООО Верста",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127536603",
+        "relevance_score": 6500
+      },
+      {
+        "position": 222,
+        "vacancy_id": 128281460,
+        "title": "Senior Fullstack developer/Веб-разработчик",
+        "company": "АО АСТ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128281460",
+        "relevance_score": 6500
+      },
+      {
+        "position": 223,
+        "vacancy_id": 128393797,
+        "title": "Full Stack .NET Senior Developer",
+        "company": "ООО Элементри",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128393797",
+        "relevance_score": 6500
+      },
+      {
+        "position": 224,
+        "vacancy_id": 128941734,
+        "title": "FullStack Аналитик (Middle+/Senior)",
+        "company": "Holyweb",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128941734",
+        "relevance_score": 6500
+      },
+      {
+        "position": 225,
+        "vacancy_id": 128920684,
+        "title": "Team Lead / Full-stack Developer",
+        "company": "ООО Смарт Лид Солюшенз",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128920684",
+        "relevance_score": 6500
+      },
+      {
+        "position": 226,
+        "vacancy_id": 128664723,
+        "title": "Senior Fullstack Engineer",
+        "company": "ООО Фаброс",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128664723",
+        "relevance_score": 6500
+      },
+      {
+        "position": 227,
+        "vacancy_id": 128538614,
+        "title": "Middle/Senior Fullstack разработчик",
+        "company": "ТОО Qazaq Stroy",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128538614",
+        "relevance_score": 6500
+      },
+      {
+        "position": 228,
+        "vacancy_id": 129021762,
+        "title": "Fullstack разработчик (Middle up)",
+        "company": "ООО Цифровые Решения",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129021762",
+        "relevance_score": 6000
+      },
+      {
+        "position": 229,
+        "vacancy_id": 123673945,
+        "title": "Middle Fullstack-разработчик (.Net)",
+        "company": "Антереал",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/123673945",
+        "relevance_score": 6000
+      },
+      {
+        "position": 230,
+        "vacancy_id": 128050837,
+        "title": "Fullstack аналитик (Middle)",
+        "company": "FINTECH SERVICE",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128050837",
+        "relevance_score": 6000
+      },
+      {
+        "position": 231,
+        "vacancy_id": 128978083,
+        "title": "Fullstack Developer (Junior–Middle)",
+        "company": "j-19 group",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128978083",
+        "relevance_score": 6000
+      },
+      {
+        "position": 232,
+        "vacancy_id": 128408387,
+        "title": "Full-Stack разработчик (junior/middle)",
+        "company": "KIBERNETIKADA INNOVATSIYALAR IT-PARKI",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128408387",
+        "relevance_score": 6000
+      },
+      {
+        "position": 233,
+        "vacancy_id": 128382489,
+        "title": "Middle Fullstack Web Developer / Middle Fullstack - разработчик",
+        "company": "ITooLabs",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128382489",
+        "relevance_score": 6000
+      },
+      {
+        "position": 234,
+        "vacancy_id": 128252667,
+        "title": "Middle Fullstack Developer",
+        "company": "SAGIROV.com",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128252667",
+        "relevance_score": 6000
+      },
+      {
+        "position": 235,
+        "vacancy_id": 128711825,
+        "title": "Middle Full-Stack Developer",
+        "company": "ООО Смарт Лид Солюшенз",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128711825",
+        "relevance_score": 6000
+      },
+      {
+        "position": 236,
+        "vacancy_id": 128823705,
+        "title": "Pre-Middle Full-Stack Developer (.NET + Vue)",
+        "company": "ProSpace",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128823705",
+        "relevance_score": 5500
+      },
+      {
+        "position": 237,
+        "vacancy_id": 128533911,
+        "title": "Full Stack junior разработчик",
+        "company": "ООО КОРТЕОС",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128533911",
+        "relevance_score": 5500
+      },
+      {
+        "position": 238,
+        "vacancy_id": 128445142,
+        "title": "Fullstack-разработчик (Junior\\Junior+)",
+        "company": "\"МТС\", Технический блок",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128445142",
+        "relevance_score": 5500
+      },
+      {
+        "position": 239,
+        "vacancy_id": 128128209,
+        "title": "Middle Full Stack Developer (.NET + Vue)",
+        "company": "ProSpace",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128128209",
+        "relevance_score": 5500
+      },
+      {
+        "position": 240,
+        "vacancy_id": 128961602,
+        "title": "Fullstack-разработчик",
+        "company": "Волкова Анастасия Дмитриевна",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128961602",
+        "relevance_score": 5000
+      },
+      {
+        "position": 241,
+        "vacancy_id": 128946370,
+        "title": "Fullstack-разработчик (в офисе)",
+        "company": "ООО ОптоМониторинг",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128946370",
+        "relevance_score": 5000
+      },
+      {
+        "position": 242,
+        "vacancy_id": 128439333,
+        "title": "FullStack-разработчик в Gramax",
+        "company": "ics-it",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128439333",
+        "relevance_score": 5000
+      },
+      {
+        "position": 243,
+        "vacancy_id": 128975791,
+        "title": "Frontend разработчик (Flutter + React)",
+        "company": "ООО РСХБ-Интех",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128975791",
+        "relevance_score": 5000
+      },
+      {
+        "position": 244,
+        "vacancy_id": 128955909,
+        "title": "Fullstack-разработчик",
+        "company": "ТОО KaspiNet",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128955909",
+        "relevance_score": 5000
+      },
+      {
+        "position": 245,
+        "vacancy_id": 128098804,
+        "title": "Бэкенд / Фулстек разработчик",
+        "company": "ООО ВЕЛЕС РИСЕРЧ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128098804",
+        "relevance_score": 5000
+      },
+      {
+        "position": 246,
+        "vacancy_id": 128748280,
+        "title": "Full-stack разработчик AI продуктов",
+        "company": "Double-B Robotics",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128748280",
+        "relevance_score": 5000
+      },
+      {
+        "position": 247,
+        "vacancy_id": 129029811,
+        "title": "Программист Fullstack разработчик",
+        "company": "Данцер",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129029811",
+        "relevance_score": 5000
+      },
+      {
+        "position": 248,
+        "vacancy_id": 128439948,
+        "title": "FullStack-разработчик C#",
+        "company": "АО ТРАССА-Фин Тех",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128439948",
+        "relevance_score": 5000
+      },
+      {
+        "position": 249,
+        "vacancy_id": 125903532,
+        "title": "Fullstack разработчик C#/.NET",
+        "company": "ООО РТ-ИНФОРМ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/125903532",
+        "relevance_score": 5000
+      },
+      {
+        "position": 250,
+        "vacancy_id": 125614115,
+        "title": "Trainee Fullstack Developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/125614115",
+        "relevance_score": 5000
+      },
+      {
+        "position": 251,
+        "vacancy_id": 128878046,
+        "title": "Web-разработчик (Full-Stack)",
+        "company": "Баггаж",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128878046",
+        "relevance_score": 5000
+      },
+      {
+        "position": 252,
+        "vacancy_id": 128421414,
+        "title": "Fullstack аналитик данных",
+        "company": "билайн: ИТ, Data, Digital",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128421414",
+        "relevance_score": 5000
+      },
+      {
+        "position": 253,
+        "vacancy_id": 128152589,
+        "title": "FullStack Developer",
+        "company": "ООО WEB THEMES DEVELOPMENT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128152589",
+        "relevance_score": 5000
+      },
+      {
+        "position": 254,
+        "vacancy_id": 126836794,
+        "title": "Fullstack developer (Python, React/Typescript)",
+        "company": "Леста Игры",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/126836794",
+        "relevance_score": 5000
+      },
+      {
+        "position": 255,
+        "vacancy_id": 128313812,
+        "title": "Fullstack-аналитик",
+        "company": "Notamedia",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128313812",
+        "relevance_score": 5000
+      },
+      {
+        "position": 256,
+        "vacancy_id": 128127786,
+        "title": "Fullstack тестировщик",
+        "company": "ООО Р2С Технологии",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128127786",
+        "relevance_score": 5000
+      },
+      {
+        "position": 257,
+        "vacancy_id": 128438609,
+        "title": "Fullstack-разработчик",
+        "company": "ООО Стрекоза, оптовый центр",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128438609",
+        "relevance_score": 5000
+      },
+      {
+        "position": 258,
+        "vacancy_id": 128127878,
+        "title": "Fullstack-аналитик",
+        "company": "Domeo",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128127878",
+        "relevance_score": 5000
+      },
+      {
+        "position": 259,
+        "vacancy_id": 128074082,
+        "title": "Партнёр по ИТ (Sr Fullstack)",
+        "company": "ТОО ИТИМАС",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128074082",
+        "relevance_score": 5000
+      },
+      {
+        "position": 260,
+        "vacancy_id": 128060531,
+        "title": "Fullstack-разработчик",
+        "company": "ООО COSCOM ТМ Ucell",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128060531",
+        "relevance_score": 5000
+      },
+      {
+        "position": 261,
+        "vacancy_id": 128943446,
+        "title": "Web-разработчик (Fullstack)",
+        "company": "Kalinka - Realty",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128943446",
+        "relevance_score": 5000
+      },
+      {
+        "position": 262,
+        "vacancy_id": 128938941,
+        "title": "Fullstack-разработчик",
+        "company": "ТОО KeyHorse",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128938941",
+        "relevance_score": 5000
+      },
+      {
+        "position": 263,
+        "vacancy_id": 128865438,
+        "title": "Fullstack-разработчик / Web-программист",
+        "company": "ООО ODIL SOFT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128865438",
+        "relevance_score": 5000
+      },
+      {
+        "position": 264,
+        "vacancy_id": 126959278,
+        "title": "Fullstack-разработчик",
+        "company": "ОсОО Стар Сити Групп",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/126959278",
+        "relevance_score": 5000
+      },
+      {
+        "position": 265,
+        "vacancy_id": 128879742,
+        "title": "Системный аналитик / Fullstack-аналитик",
+        "company": "ВТБ Факторинг",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128879742",
+        "relevance_score": 5000
+      },
+      {
+        "position": 266,
+        "vacancy_id": 129016246,
+        "title": "Fullstack Аналитик",
+        "company": "Prooftech IT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129016246",
+        "relevance_score": 5000
+      },
+      {
+        "position": 267,
+        "vacancy_id": 128308325,
+        "title": "Full Stack Engineer",
+        "company": "ООО HAAS PLATFORM",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128308325",
+        "relevance_score": 5000
+      },
+      {
+        "position": 268,
+        "vacancy_id": 128678286,
+        "title": "Fullstack-разработчик",
+        "company": "ИП Ахунзянов Марат Асхатович",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128678286",
+        "relevance_score": 5000
+      },
+      {
+        "position": 269,
+        "vacancy_id": 129006895,
+        "title": "Full Stack Vibe-Coding/Вайб-кодер разработчик",
+        "company": "MSTech L.L.C-FZ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129006895",
+        "relevance_score": 5000
+      },
+      {
+        "position": 270,
+        "vacancy_id": 128948573,
+        "title": "Fullstack-разработчик",
+        "company": "Legend Group",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128948573",
+        "relevance_score": 5000
+      },
+      {
+        "position": 271,
+        "vacancy_id": 120237352,
+        "title": ".NET FullStack Developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/120237352",
+        "relevance_score": 5000
+      },
+      {
+        "position": 272,
+        "vacancy_id": 120237351,
+        "title": ".NET FullStack Developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/120237351",
+        "relevance_score": 5000
+      },
+      {
+        "position": 273,
+        "vacancy_id": 120237350,
+        "title": ".NET FullStack Developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/120237350",
+        "relevance_score": 5000
+      },
+      {
+        "position": 274,
+        "vacancy_id": 125274435,
+        "title": "Fullstack Web-разработчик",
+        "company": "ООО Типография Индустрия Цвета",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/125274435",
+        "relevance_score": 5000
+      },
+      {
+        "position": 275,
+        "vacancy_id": 123908496,
+        "title": ".NET FullStack Developer",
+        "company": "Innowise Group / Фабрика инноваций и решений",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/123908496",
+        "relevance_score": 5000
+      },
+      {
+        "position": 276,
+        "vacancy_id": 128560958,
+        "title": "Fullstack-разработчик",
+        "company": "ООО STROY DOMIK",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128560958",
+        "relevance_score": 5000
+      },
+      {
+        "position": 277,
+        "vacancy_id": 123586937,
+        "title": "Инженер по тестированию Fullstack",
+        "company": "Т-Банк. ИТ. QA",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/123586937",
+        "relevance_score": 5000
+      },
+      {
+        "position": 278,
+        "vacancy_id": 128272345,
+        "title": "Full Stack Developer",
+        "company": "STARTRIBE LTD",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128272345",
+        "relevance_score": 5000
+      },
+      {
+        "position": 279,
+        "vacancy_id": 128736437,
+        "title": "Fullstack-разработчик / Программист",
+        "company": "ООО Kelyanmedia",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128736437",
+        "relevance_score": 5000
+      },
+      {
+        "position": 280,
+        "vacancy_id": 128308746,
+        "title": "Full stack разработчик",
+        "company": "ЮниВеб",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128308746",
+        "relevance_score": 5000
+      },
+      {
+        "position": 281,
+        "vacancy_id": 128278926,
+        "title": "Fullstack-разработчик",
+        "company": "ООО Тэксод Технолоджиз",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128278926",
+        "relevance_score": 5000
+      },
+      {
+        "position": 282,
+        "vacancy_id": 128586863,
+        "title": "Fullstack-разработчик",
+        "company": "ООО GUDVIL",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128586863",
+        "relevance_score": 5000
+      },
+      {
+        "position": 283,
+        "vacancy_id": 128439731,
+        "title": "FullStack-разработчик в Gramax",
+        "company": "ics-it",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128439731",
+        "relevance_score": 5000
+      },
+      {
+        "position": 284,
+        "vacancy_id": 128901731,
+        "title": "Системный аналитик (Fullstack-аналитик)",
+        "company": "ББР Банк",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128901731",
+        "relevance_score": 5000
+      },
+      {
+        "position": 285,
+        "vacancy_id": 128743109,
+        "title": "Fullstack Developer",
+        "company": "AYA Group",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128743109",
+        "relevance_score": 5000
+      },
+      {
+        "position": 286,
+        "vacancy_id": 128505055,
+        "title": "Full-stack разработчик / AI-разработчик / Вайбкодер / No-code разработчик",
+        "company": "BIRCH",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128505055",
+        "relevance_score": 5000
+      },
+      {
+        "position": 287,
+        "vacancy_id": 128069450,
+        "title": "Разработчик Битрикс24 Fullstack",
+        "company": "ЕВРАЗ. ИТ-специалисты",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128069450",
+        "relevance_score": 4000
+      },
+      {
+        "position": 288,
+        "vacancy_id": 128853191,
+        "title": "Web-разработчик (Fullstack/bitrix)",
+        "company": "ООО М Партс",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128853191",
+        "relevance_score": 4000
+      },
+      {
+        "position": 289,
+        "vacancy_id": 128904033,
+        "title": "Full-stack разработчик Bitrix",
+        "company": "ООО Торговый Дом Лотос",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128904033",
+        "relevance_score": 4000
+      },
+      {
+        "position": 290,
+        "vacancy_id": 128946400,
+        "title": "Frontend разработчик, VueJS, Middle",
+        "company": "ТОО SUCCESS INITIATIVE GROUP(SIG)",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128946400",
+        "relevance_score": 3000
+      },
+      {
+        "position": 291,
+        "vacancy_id": 128777291,
+        "title": "Middle Frontend Game Developer Vue.js / Pixi.js",
+        "company": "Employcity",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128777291",
+        "relevance_score": 2500
+      },
+      {
+        "position": 292,
+        "vacancy_id": 128999599,
+        "title": "Программист Front-end vue.js",
+        "company": "Научно-исследовательский центр Системы управления",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128999599",
+        "relevance_score": 1500
+      },
+      {
+        "position": 293,
+        "vacancy_id": 128378790,
+        "title": "Frontend разработчик Vue.js",
+        "company": "ООО Совкомбанк Технологии",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128378790",
+        "relevance_score": 1500
+      },
+      {
+        "position": 294,
+        "vacancy_id": 128378791,
+        "title": "Frontend разработчик Vue.js",
+        "company": "ООО Совкомбанк Технологии",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128378791",
+        "relevance_score": 1500
+      },
+      {
+        "position": 295,
+        "vacancy_id": 128811786,
+        "title": "Frontend-разработчик (Vue.js, GPT-first)",
+        "company": "ООО Авгуро Технолоджис",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128811786",
+        "relevance_score": 1500
+      },
+      {
+        "position": 296,
+        "vacancy_id": 129021304,
+        "title": "Frontend Developer / Vue.JS Developer",
+        "company": "ООО АйтиМедиаСервис",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129021304",
+        "relevance_score": 1500
+      },
+      {
+        "position": 297,
+        "vacancy_id": 127249684,
+        "title": "Frontend-разработчик Vue.js",
+        "company": "UZUM TECHNOLOGIES. IT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127249684",
+        "relevance_score": 1500
+      },
+      {
+        "position": 298,
+        "vacancy_id": 128915921,
+        "title": "Frontend-разработчик (Vue.js)",
+        "company": "ALSECO, АО",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128915921",
+        "relevance_score": 1500
+      },
+      {
+        "position": 299,
+        "vacancy_id": 127563532,
+        "title": "Senior Full Stack Engineer (Python/React) + AI (Вне РФ)",
+        "company": "КвантумСофт",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127563532",
+        "relevance_score": 1500
+      },
+      {
+        "position": 300,
+        "vacancy_id": 128573565,
+        "title": "Lead Mobile Developer | React Native",
+        "company": "ООО Токентех",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128573565",
+        "relevance_score": 1500
+      },
+      {
+        "position": 301,
+        "vacancy_id": 128791002,
+        "title": "Senior Mobile Developer (Flutter / React Native)",
+        "company": "ООО Mukarrama Muallima",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128791002",
+        "relevance_score": 1500
+      },
+      {
+        "position": 302,
+        "vacancy_id": 128981521,
+        "title": "Senior Frontend Developer (Angular, Ionic)",
+        "company": "Mellow",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128981521",
+        "relevance_score": 1000
+      },
+      {
+        "position": 303,
+        "vacancy_id": 122561925,
+        "title": "Senior Frontend (Angular) Developer (Тула)",
+        "company": "Смартек",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/122561925",
+        "relevance_score": 1000
+      },
+      {
+        "position": 304,
+        "vacancy_id": 128624632,
+        "title": "Senior Frontend Angular Developer",
+        "company": "MANGO OFFICE",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128624632",
+        "relevance_score": 1000
+      },
+      {
+        "position": 305,
+        "vacancy_id": 127651605,
+        "title": "Middle Full-Stack разработчик (PHP/Laravel + React)",
+        "company": "Московский Технологический Институт",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127651605",
+        "relevance_score": 1000
+      },
+      {
+        "position": 306,
+        "vacancy_id": 128780423,
+        "title": "Frontend Angular Developer Middle+/Senior",
+        "company": "SaM Solutions Самсолюшнс",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128780423",
+        "relevance_score": 1000
+      },
+      {
+        "position": 307,
+        "vacancy_id": 128734517,
+        "title": "Team Lead Frontend (Angular)",
+        "company": "Лига Цифровой Экономики",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128734517",
+        "relevance_score": 1000
+      },
+      {
+        "position": 308,
+        "vacancy_id": 128177164,
+        "title": "Lead Frontend (Angular)",
+        "company": "evrone.ru",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128177164",
+        "relevance_score": 1000
+      },
+      {
+        "position": 309,
+        "vacancy_id": 128960244,
+        "title": "Middle Frontend developer (Angular)",
+        "company": "ООО Эвотор",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128960244",
+        "relevance_score": 500
+      },
+      {
+        "position": 310,
+        "vacancy_id": 127948154,
+        "title": "Middle Frontend-разработчик (Angular)",
+        "company": "ООО Смарт консалтинг",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127948154",
+        "relevance_score": 500
+      },
+      {
+        "position": 311,
+        "vacancy_id": 128972808,
+        "title": "Backend-разработчик (Node.js)",
+        "company": "Kaiten",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128972808",
+        "relevance_score": 1
+      },
+      {
+        "position": 312,
+        "vacancy_id": 128878666,
+        "title": "Младший разработчик (fullstack: javascript, java)",
+        "company": "Doczilla",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128878666",
+        "relevance_score": 1
+      },
+      {
+        "position": 313,
+        "vacancy_id": 128910692,
+        "title": "Backend PHP/Fullstack",
+        "company": "ТОО Kulenkov Group",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128910692",
+        "relevance_score": 1
+      },
+      {
+        "position": 314,
+        "vacancy_id": 128778287,
+        "title": "Middle PHP / Web разработчик (Fullstack)",
+        "company": "Международная сеть ЯФотограф",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128778287",
+        "relevance_score": 1
+      },
+      {
+        "position": 315,
+        "vacancy_id": 128160919,
+        "title": "Senior Fullstack разработчик Python/Vue",
+        "company": "ООО Тх Решения",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128160919",
+        "relevance_score": 1
+      },
+      {
+        "position": 316,
+        "vacancy_id": 128916918,
+        "title": "Frontend разработчик (Angular 13+,. net core)",
+        "company": "ООО РСХБ-Интех",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128916918",
+        "relevance_score": 1
+      },
+      {
+        "position": 317,
+        "vacancy_id": 128254567,
+        "title": "Fullstack-разработчик (PHP/Laravel + React)",
+        "company": "ООО ПиДжей Проджект",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128254567",
+        "relevance_score": 1
+      },
+      {
+        "position": 318,
+        "vacancy_id": 122209474,
+        "title": "Frontend-разработчик Angular",
+        "company": "Т-Банк. ИТ. Разработка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/122209474",
+        "relevance_score": 1
+      },
+      {
+        "position": 319,
+        "vacancy_id": 122209585,
+        "title": "Frontend-разработчик Angular",
+        "company": "Т-Банк. ИТ. Разработка",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/122209585",
+        "relevance_score": 1
+      },
+      {
+        "position": 320,
+        "vacancy_id": 128150413,
+        "title": "Node.js backend разработчик (Middle+/Senior)",
+        "company": "DataLouna",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128150413",
+        "relevance_score": 1
+      },
+      {
+        "position": 321,
+        "vacancy_id": 128150414,
+        "title": "Node.js backend разработчик (Middle+/Senior)",
+        "company": "DataLouna",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128150414",
+        "relevance_score": 1
+      },
+      {
+        "position": 322,
+        "vacancy_id": 128150415,
+        "title": "Node.js backend разработчик (Middle+/Senior)",
+        "company": "DataLouna",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128150415",
+        "relevance_score": 1
+      },
+      {
+        "position": 323,
+        "vacancy_id": 128150416,
+        "title": "Node.js backend разработчик (Middle+/Senior)",
+        "company": "DataLouna",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128150416",
+        "relevance_score": 1
+      },
+      {
+        "position": 324,
+        "vacancy_id": 128150417,
+        "title": "Node.js backend разработчик (Middle+/Senior)",
+        "company": "DataLouna",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128150417",
+        "relevance_score": 1
+      },
+      {
+        "position": 325,
+        "vacancy_id": 128150419,
+        "title": "Node.js backend разработчик (Middle+/Senior)",
+        "company": "DataLouna",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128150419",
+        "relevance_score": 1
+      },
+      {
+        "position": 326,
+        "vacancy_id": 128150420,
+        "title": "Node.js backend разработчик (Middle+/Senior)",
+        "company": "DataLouna",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128150420",
+        "relevance_score": 1
+      },
+      {
+        "position": 327,
+        "vacancy_id": 128830914,
+        "title": "PHP Full-Stack разработчик (backend-first, Laravel/Yii2 + React/Next.js)",
+        "company": "ИП LEGKO company",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128830914",
+        "relevance_score": 1
+      },
+      {
+        "position": 328,
+        "vacancy_id": 126785562,
+        "title": "Ведущий React Native - разработчик, SRE департамент",
+        "company": "Ozon Tech",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/126785562",
+        "relevance_score": 1
+      },
+      {
+        "position": 329,
+        "vacancy_id": 128999420,
+        "title": "Backend Nest.js разработчик в IT-компанию",
+        "company": "ИП Натфуллин Рушан Рустемович",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128999420",
+        "relevance_score": 1
+      },
+      {
+        "position": 330,
+        "vacancy_id": 128537269,
+        "title": "Team Lead Backend (Node.js / NestJS)",
+        "company": "MarketGuru",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128537269",
+        "relevance_score": 1
+      },
+      {
+        "position": 331,
+        "vacancy_id": 126890739,
+        "title": "Team Lead Backend (Node.js / NestJS)",
+        "company": "MarketGuru",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/126890739",
+        "relevance_score": 1
+      },
+      {
+        "position": 332,
+        "vacancy_id": 126912192,
+        "title": "Backend-разработчик (Node.js / NestJS)",
+        "company": "MarketGuru",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/126912192",
+        "relevance_score": 1
+      },
+      {
+        "position": 333,
+        "vacancy_id": 128698679,
+        "title": "Web-программист (PHP, JS, MySQL, CSS, HTML)",
+        "company": "SEOpremier",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128698679",
+        "relevance_score": 1
+      },
+      {
+        "position": 334,
+        "vacancy_id": 128692832,
+        "title": "Middle+/Senior Node.js backend -разработчик (Nest.js)",
+        "company": "ЭР-Телеком Холдинг",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128692832",
+        "relevance_score": 1
+      },
+      {
+        "position": 335,
+        "vacancy_id": 128517747,
+        "title": "Middle+/Senior PHP Fullstack Developer (Symfony)",
+        "company": "ТОО Freedom Holding Operations",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128517747",
+        "relevance_score": 1
+      },
+      {
+        "position": 336,
+        "vacancy_id": 128516682,
+        "title": "Frontend developer (Angular)",
+        "company": "Лайт Вел Организейшн",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128516682",
+        "relevance_score": 1
+      },
+      {
+        "position": 337,
+        "vacancy_id": 122797553,
+        "title": "Senior Backend-разработчик (Node.js, Nest.js)",
+        "company": "ООО ONESEC",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/122797553",
+        "relevance_score": 1
+      },
+      {
+        "position": 338,
+        "vacancy_id": 128945836,
+        "title": "Fullstack QA Engineer",
+        "company": "Aston",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128945836",
+        "relevance_score": 1
+      },
+      {
+        "position": 339,
+        "vacancy_id": 129021992,
+        "title": "Senior Fullstack-разработчик Developer (PHP Yii2/JS/HTML)",
+        "company": "ИП Малыгин Владислав Артемович",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129021992",
+        "relevance_score": 1
+      },
+      {
+        "position": 340,
+        "vacancy_id": 128337521,
+        "title": "Fullstack QA инженер (Создание заказа и сплитование)",
+        "company": "Ozon Tech",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128337521",
+        "relevance_score": 1
+      },
+      {
+        "position": 341,
+        "vacancy_id": 128314564,
+        "title": "Fullstack C# developer (Angular)",
+        "company": "X5 Tech",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128314564",
+        "relevance_score": 1
+      },
+      {
+        "position": 342,
+        "vacancy_id": 127376574,
+        "title": "Fullstack QA (Java/Трайб POS)",
+        "company": "АО «ОТП Банк» (JSC «OTP Bank»)",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127376574",
+        "relevance_score": 1
+      },
+      {
+        "position": 343,
+        "vacancy_id": 127228522,
+        "title": "PHP – разработчик FullStack (Middle+/Senior)",
+        "company": "Страховая группа МАКС",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127228522",
+        "relevance_score": 1
+      },
+      {
+        "position": 344,
+        "vacancy_id": 128255909,
+        "title": "Fullstack QA (Kotlin)",
+        "company": "Offer Now",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128255909",
+        "relevance_score": 1
+      },
+      {
+        "position": 345,
+        "vacancy_id": 127229823,
+        "title": "PHP – разработчик Backend/FullStack",
+        "company": "Страховая группа МАКС",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127229823",
+        "relevance_score": 1
+      },
+      {
+        "position": 346,
+        "vacancy_id": 128159466,
+        "title": "Senior Fullstack QA инженер",
+        "company": "UZUM TECHNOLOGIES. IT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128159466",
+        "relevance_score": 1
+      },
+      {
+        "position": 347,
+        "vacancy_id": 128445955,
+        "title": "Fullstack Developer PHP/JS (Senior)",
+        "company": "ИП Соколова Марина Юрьевна",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128445955",
+        "relevance_score": 1
+      },
+      {
+        "position": 348,
+        "vacancy_id": 115792803,
+        "title": "Senior fullstack java developer",
+        "company": "ООО Бизнес Технологии",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/115792803",
+        "relevance_score": 1
+      },
+      {
+        "position": 349,
+        "vacancy_id": 128097113,
+        "title": "Fullstack - разработчик (PHP)",
+        "company": "ООО Ит Франчайзинг",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128097113",
+        "relevance_score": 1
+      },
+      {
+        "position": 350,
+        "vacancy_id": 128131176,
+        "title": "Fullstack-разработчик (JS(React), PHP(Laravel))",
+        "company": "Учебный центр Лаборатория программирования",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128131176",
+        "relevance_score": 1
+      },
+      {
+        "position": 351,
+        "vacancy_id": 128706395,
+        "title": "QA Engineer Manual + Auto / Fullstack QA / Инженер по тестированию",
+        "company": "ООО Форвард",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128706395",
+        "relevance_score": 1
+      },
+      {
+        "position": 352,
+        "vacancy_id": 127282834,
+        "title": "Fullstack-разработчик (Java Core+JS)",
+        "company": "Т1 Иннотех",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127282834",
+        "relevance_score": 1
+      },
+      {
+        "position": 353,
+        "vacancy_id": 128715745,
+        "title": "Fullstack web-разработчик (PHP, Yii1)",
+        "company": "ООО Центр защиты информации Гриф",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128715745",
+        "relevance_score": 1
+      },
+      {
+        "position": 354,
+        "vacancy_id": 129026347,
+        "title": "Full-stack разработчик (PHP / Python / Node)",
+        "company": "Администрация муниципального образования город Новороссийск",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129026347",
+        "relevance_score": 1
+      },
+      {
+        "position": 355,
+        "vacancy_id": 129026348,
+        "title": "Full-stack разработчик (PHP / Python / Node)",
+        "company": "Администрация муниципального образования город Новороссийск",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129026348",
+        "relevance_score": 1
+      },
+      {
+        "position": 356,
+        "vacancy_id": 123096783,
+        "title": "Senior Backend Developer (Node.js), Billing Team",
+        "company": "Fundraise Up",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/123096783",
+        "relevance_score": 1
+      },
+      {
+        "position": 357,
+        "vacancy_id": 127971562,
+        "title": "Full-Stack Developer (PHP + MySQL)",
+        "company": "ООО Subscrible",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127971562",
+        "relevance_score": 1
+      },
+      {
+        "position": 358,
+        "vacancy_id": 128238650,
+        "title": "Backend Developer (Node.js)",
+        "company": "ООО Р-Софт",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128238650",
+        "relevance_score": 1
+      },
+      {
+        "position": 359,
+        "vacancy_id": 129003032,
+        "title": "Fullstack Laravel + VueJS Developer (Узбекистан)",
+        "company": "Новео",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129003032",
+        "relevance_score": 1
+      },
+      {
+        "position": 360,
+        "vacancy_id": 128255342,
+        "title": "Team Lead | Руководитель группы разработки | NodeJS/VueJS (Senior)",
+        "company": "ООО Ареал",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128255342",
+        "relevance_score": 1
+      },
+      {
+        "position": 361,
+        "vacancy_id": 128909808,
+        "title": "Full Stack Developer (.NET+Angular)",
+        "company": "Andersen",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128909808",
+        "relevance_score": 1
+      },
+      {
+        "position": 362,
+        "vacancy_id": 129032178,
+        "title": "Tech lead Backend Developer (Node.js)",
+        "company": "StormWall™",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129032178",
+        "relevance_score": 1
+      },
+      {
+        "position": 363,
+        "vacancy_id": 129032118,
+        "title": "Senior Backend Developer (Node.js)",
+        "company": "StormWall™",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/129032118",
+        "relevance_score": 1
+      },
+      {
+        "position": 364,
+        "vacancy_id": 128239152,
+        "title": "Front-End разработчик (Angular)",
+        "company": "Клируэй Текнолоджис",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128239152",
+        "relevance_score": 1
+      },
+      {
+        "position": 365,
+        "vacancy_id": 128420895,
+        "title": "Frontend Разработчик (Angular)",
+        "company": "Федеральное автономное учреждение «Национальный институт аккредитации» (ФАУ НИА)",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128420895",
+        "relevance_score": 1
+      },
+      {
+        "position": 366,
+        "vacancy_id": 128412478,
+        "title": "JS Angular developer",
+        "company": "Модсен // MODSEN",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128412478",
+        "relevance_score": 1
+      },
+      {
+        "position": 367,
+        "vacancy_id": 128785796,
+        "title": "Backend разработчик (NestJS)",
+        "company": "Федеральная пассажирская компания (АО ФПК)",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128785796",
+        "relevance_score": 1
+      },
+      {
+        "position": 368,
+        "vacancy_id": 128327836,
+        "title": "Мобильный разработчик (Flutter/React Native) | Affiliate",
+        "company": "RM",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128327836",
+        "relevance_score": 1
+      },
+      {
+        "position": 369,
+        "vacancy_id": 128918043,
+        "title": "Full Stack Developer (Java / React)",
+        "company": "Lenkep recruitment",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128918043",
+        "relevance_score": 1
+      },
+      {
+        "position": 370,
+        "vacancy_id": 128177048,
+        "title": "Backend разработчик Node.js",
+        "company": "ИП Полянский Герман Игоревич",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128177048",
+        "relevance_score": 1
+      },
+      {
+        "position": 371,
+        "vacancy_id": 125474915,
+        "title": "Fullstack QA Automation Engineer Python",
+        "company": "МТС Банк. IT",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/125474915",
+        "relevance_score": 1
+      },
+      {
+        "position": 372,
+        "vacancy_id": 128795344,
+        "title": "JavaScript fullstack developer vue.js",
+        "company": "Fora Soft (Фора Софт)",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128795344",
+        "relevance_score": 1
+      },
+      {
+        "position": 373,
+        "vacancy_id": 125618109,
+        "title": "Стажер по направлению frontend разработки (Angular)",
+        "company": "ООО Датаджайл",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/125618109",
+        "relevance_score": 1
+      },
+      {
+        "position": 374,
+        "vacancy_id": 128738432,
+        "title": "Backend-разработчик Node.js (ERP для авиационной отрасли)",
+        "company": "DA ENTERPRISES LLC",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128738432",
+        "relevance_score": 1
+      },
+      {
+        "position": 375,
+        "vacancy_id": 128734109,
+        "title": "Fullstack PHP-разработчик",
+        "company": "ООО 7 Видео",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128734109",
+        "relevance_score": 1
+      },
+      {
+        "position": 376,
+        "vacancy_id": 127641674,
+        "title": "Python Developer/Fullstack (FastApi, Angular)",
+        "company": "Okko",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127641674",
+        "relevance_score": 1
+      },
+      {
+        "position": 377,
+        "vacancy_id": 128710159,
+        "title": "Программист (PHP/JS)",
+        "company": "ЭР-Телеком Холдинг",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128710159",
+        "relevance_score": 1
+      },
+      {
+        "position": 378,
+        "vacancy_id": 128413953,
+        "title": "Senior Backend Developer (Node.js, Yandex Cloud)",
+        "company": "Hr-formula",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128413953",
+        "relevance_score": 1
+      },
+      {
+        "position": 379,
+        "vacancy_id": 128171595,
+        "title": "Fullstack O'qtuvchilar (HTML/CSS/JS/React & Python/Bot/Aiogram)",
+        "company": "ООО Mars IT School",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128171595",
+        "relevance_score": 1
+      },
+      {
+        "position": 380,
+        "vacancy_id": 128925912,
+        "title": "Fullstack PHP разработчик",
+        "company": "ИП Федорченко А. Ю.",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128925912",
+        "relevance_score": 1
+      },
+      {
+        "position": 381,
+        "vacancy_id": 127953354,
+        "title": "Java - разработчик c ExtJS",
+        "company": "ООО ВОДОРОБОТ",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127953354",
+        "relevance_score": 1
+      },
+      {
+        "position": 382,
+        "vacancy_id": 128835412,
+        "title": "QA Automation Engineer (JavaScript)",
+        "company": "Andersen",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128835412",
+        "relevance_score": 1
+      },
+      {
+        "position": 383,
+        "vacancy_id": 128746341,
+        "title": "Fullstack разработчик Oracle (PL\\SQL)+java",
+        "company": "Т1 Иннотех",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128746341",
+        "relevance_score": 1
+      },
+      {
+        "position": 384,
+        "vacancy_id": 128073991,
+        "title": "Frontend-разработчик (Angular)",
+        "company": "ООО РЭД",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128073991",
+        "relevance_score": 1
+      },
+      {
+        "position": 385,
+        "vacancy_id": 128943277,
+        "title": "QA Automation Engineer / Инженер по автоматизированному тестированию (TypeScript, Web)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128943277",
+        "relevance_score": 1
+      },
+      {
+        "position": 386,
+        "vacancy_id": 128943278,
+        "title": "QA Automation Engineer / Инженер по автоматизированному тестированию (TypeScript, Web)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128943278",
+        "relevance_score": 1
+      },
+      {
+        "position": 387,
+        "vacancy_id": 128942012,
+        "title": "Frontend-разработчик (Angular)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128942012",
+        "relevance_score": 1
+      },
+      {
+        "position": 388,
+        "vacancy_id": 128942013,
+        "title": "Frontend-разработчик (Angular)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128942013",
+        "relevance_score": 1
+      },
+      {
+        "position": 389,
+        "vacancy_id": 128942014,
+        "title": "Frontend-разработчик (Angular)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128942014",
+        "relevance_score": 1
+      },
+      {
+        "position": 390,
+        "vacancy_id": 128942015,
+        "title": "Frontend-разработчик (Angular)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128942015",
+        "relevance_score": 1
+      },
+      {
+        "position": 391,
+        "vacancy_id": 128942016,
+        "title": "Frontend-разработчик (Angular)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128942016",
+        "relevance_score": 1
+      },
+      {
+        "position": 392,
+        "vacancy_id": 128941528,
+        "title": "Backend / Fullstack developer C# (Middle+/Senior)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128941528",
+        "relevance_score": 1
+      },
+      {
+        "position": 393,
+        "vacancy_id": 128941529,
+        "title": "Backend / Fullstack developer C# (Middle+/Senior)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128941529",
+        "relevance_score": 1
+      },
+      {
+        "position": 394,
+        "vacancy_id": 128941530,
+        "title": "Backend / Fullstack developer C# (Middle+/Senior)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128941530",
+        "relevance_score": 1
+      },
+      {
+        "position": 395,
+        "vacancy_id": 128941531,
+        "title": "Backend / Fullstack developer C# (Middle+/Senior)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128941531",
+        "relevance_score": 1
+      },
+      {
+        "position": 396,
+        "vacancy_id": 128941532,
+        "title": "Backend / Fullstack developer C# (Middle+/Senior)",
+        "company": "АО Монитор Электрик",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128941532",
+        "relevance_score": 1
+      },
+      {
+        "position": 397,
+        "vacancy_id": 128619183,
+        "title": "Fullstack-разработчик (.NET, Angular)",
+        "company": "ООО КваттроЛаб",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128619183",
+        "relevance_score": 1
+      },
+      {
+        "position": 398,
+        "vacancy_id": 128616633,
+        "title": "Full-Stack Python Developer",
+        "company": "Nitka Technologies, Inc.",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128616633",
+        "relevance_score": 1
+      },
+      {
+        "position": 399,
+        "vacancy_id": 128616613,
+        "title": "Full-Stack Python Developer",
+        "company": "Nitka Technologies, Inc.",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/128616613",
+        "relevance_score": 1
+      },
+      {
+        "position": 400,
+        "vacancy_id": 127062872,
+        "title": "Senior Frontend Developer (Flutter)",
+        "company": "STOMODOMO GROUP",
+        "salary": null,
+        "link": "https://hh.ru/vacancy/127062872",
+        "relevance_score": 1
+      }
+    ],
+    "applied": 429,
+    "successCount": 112,
+    "failedCount": 317,
+    "totalCount": 432
   }
 }

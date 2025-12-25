@@ -3,7 +3,7 @@
 
 import puppeteer from 'puppeteer';
 import { config } from "./config/index.js";
-import { initializeDatabase, dbAll, dbRun, isVacancyBlacklisted, updateVacancyRelevanceScore } from './db/database.js';
+import { initializeDatabase, dbAll, dbRun, isVacancyBlacklisted, updateVacancyRelevanceScore, getAllAppliedVacancyIds } from './db/database.js';
 import { parseHHVacanciesWithBrowser } from './parser/index.js';
 import { applyToVacancySimple } from './applicator/simple.js';
 
@@ -490,18 +490,31 @@ async function main() {
     );
 
     console.log(`📊 Всего вакансий в БД: ${allVacancies.length}`);
+    
+    // Загружаем ID вакансий на которые уже откликались с ДРУГИХ резюме
+    const appliedFromOtherResumes = await getAllAppliedVacancyIds();
+    console.log(`📊 Откликнуто с других резюме: ${appliedFromOtherResumes.size}`);
+    
     console.log("🔄 Вычисляем релевантность для каждой вакансии...");
 
     // Вычисляем релевантность для каждой вакансии
     const vacanciesWithScore = [];
     let blacklisted = 0;
     let zeroScore = 0;
+    let alreadyAppliedFromOther = 0;
 
     for (const v of allVacancies) {
       // Проверяем черный список
       const isBlacklisted = await isVacancyBlacklisted(v.vacancy_id);
       if (isBlacklisted) {
         blacklisted++;
+        continue;
+      }
+      
+      // Проверяем откликались ли с другого резюме
+      if (appliedFromOtherResumes.has(v.vacancy_id)) {
+        alreadyAppliedFromOther++;
+        console.log(`   ⏭️ Пропуск ${v.vacancy_id} "${v.title}" - уже откликались с другого резюме`);
         continue;
       }
 
@@ -535,6 +548,7 @@ async function main() {
     console.log(`\n📊 Результат рейтинга:`);
     console.log(`   Всего в БД: ${allVacancies.length}`);
     console.log(`   В черном списке: ${blacklisted}`);
+    console.log(`   Уже откликнуто с других резюме: ${alreadyAppliedFromOther}`);
     console.log(`   С нулевым рейтингом: ${zeroScore}`);
     console.log(`   Релевантных (score > 0): ${vacanciesWithScore.length - zeroScore}`);
     console.log(`   Будет обработано: ${vacancies.length}`);

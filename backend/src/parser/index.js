@@ -1,4 +1,4 @@
-// parser/index.js
+// parser/index.js - ПОЛНЫЙ ПАРСИНГ ВСЕХ СТРАНИЦ
 
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
@@ -7,303 +7,374 @@ puppeteer.use(StealthPlugin());
 import { config } from "../config/index.js";
 import {
   initializeDatabase,
-  checkVacancyExists,
   addVacancy,
-  updateVacancyRelevanceScore,
   dbAll,
+  getAllAppliedVacancyIds,
 } from "../db/database.js";
-import { calculateVacancyRelevance, isVacancySuitable } from "../services/filter.js";
 import { delay } from "../services/puppeteer.js";
 
-// Кэш ID вакансий в памяти для быстрой проверки дублей
+// Кэш ID вакансий
 const vacancyIdCache = new Set();
+// Кэш ID вакансий на которые уже откликались с ЛЮБОГО резюме
+let appliedFromOtherResumesCache = new Set();
 let cacheInitialized = false;
 
-// Инициализация кэша из БД
 async function initVacancyCache() {
   if (cacheInitialized) return;
   try {
     const existing = await dbAll(`SELECT vacancy_id FROM vacancies`, []);
     existing.forEach(v => vacancyIdCache.add(v.vacancy_id));
+    
+    // Загружаем ID вакансий на которые уже откликались с других резюме
+    appliedFromOtherResumesCache = await getAllAppliedVacancyIds();
+    
     cacheInitialized = true;
-    console.log(`📦 Кэш инициализирован: ${vacancyIdCache.size} вакансий`);
+    console.log(`📦 Кэш: ${vacancyIdCache.size} вакансий в текущей БД`);
+    console.log(`📦 Кэш: ${appliedFromOtherResumesCache.size} вакансий откликнуто с других резюме`);
   } catch (e) {
-    console.warn("⚠️ Ошибка инициализации кэша:", e.message);
+    console.error(`❌ Ошибка инициализации кэша: ${e.message}`);
   }
 }
 
-// Функция для подсчета вакансий в БД
 async function countVacancies() {
   try {
-    const result = await dbAll(
-      `SELECT COUNT(*) as count FROM vacancies WHERE (status IS NULL OR status = 'new')`,
-      []
-    );
+    const result = await dbAll(`SELECT COUNT(*) as count FROM vacancies WHERE (status IS NULL OR status = 'new')`, []);
     return result[0].count;
-  } catch (error) {
-    console.warn("⚠️ Ошибка подсчета вакансий:", error.message);
+  } catch (e) {
     return 0;
   }
 }
 
 /**
- * Парсер с ПЕРЕДАННЫМ браузером (сохраняет авторизацию)
+ * Получает ID резюме пользователя с HH.ru для парсинга рекомендованных вакансий
+ */
+async function getResumeIdFromHH(page) {
+  try {
+    console.log("🔍 Получаем ID резюме с HH.ru...");
+    
+    // Переходим на страницу резюме
+    await page.goto('https://hh.ru/applicant/resumes', { 
+      waitUntil: 'domcontentloaded', 
+      timeout: 15000 
+    });
+    await delay(1000);
+    
+    // Ищем ссылку на резюме и извлекаем ID
+    const resumeId = await page.evaluate(() => {
+      // Ищем ссылку на резюме
+      const resumeLink = document.querySelector('a[data-qa="resume-title-link"]');
+      if (resumeLink && resumeLink.href) {
+        // Извлекаем ID из ссылки типа /resume/877fd373ff0f9dd0e00039ed1f333459353476
+        const match = resumeLink.href.match(/\/resume\/([a-f0-9]+)/);
+        if (match) return match[1];
+      }
+      
+      // Альтернативный способ - ищем любую ссылку с resume
+      const allLinks = document.querySelectorAll('a[href*="/resume/"]');
+      for (const link of allLinks) {
+        const match = link.href.match(/\/resume\/([a-f0-9]+)/);
+        if (match) return match[1];
+      }
+      
+      return null;
+    });
+    
+    if (resumeId) {
+      console.log(`✅ ID резюме найден: ${resumeId}`);
+      return resumeId;
+    } else {
+      console.log("⚠️ ID резюме не найден");
+      return null;
+    }
+  } catch (e) {
+    console.log(`⚠️ Ошибка получения ID резюме: ${e.message}`);
+    return null;
+  }
+}
+
+/**
+ * Парсит рекомендованные вакансии (подобранные под резюме)
+ */
+async function parseRecommendedVacancies(page, resumeId, vacancyIdCache, appliedFromOtherResumesCache) {
+  if (!resumeId) {
+    console.log("⚠️ Нет ID резюме - пропускаем рекомендованные вакансии");
+    return 0;
+  }
+  
+  console.log(`\n${'='.repeat(60)}`);
+  console.log(`⭐ ПАРСИНГ РЕКОМЕНДОВАННЫХ ВАКАНСИЙ (подобранные под резюме)`);
+  console.log(`${'='.repeat(60)}`);
+  
+  let totalNew = 0;
+  let pageNum = 0;
+  let hasMorePages = true;
+  
+  const baseUrl = `https://hh.ru/search/vacancy?resume=${resumeId}&hhtmFromLabel=rec_vacancy_show_all&hhtmFrom=main&items_on_page=100`;
+  
+  while (hasMorePages) {
+    const pageUrl = `${baseUrl}&page=${pageNum}`;
+    
+    try {
+      await page.goto(pageUrl, { 
+        waitUntil: "domcontentloaded", 
+        timeout: 20000 
+      });
+      
+      // Парсим вакансии со страницы
+      const vacancies = await page.evaluate(() => {
+        const items = document.querySelectorAll('[data-qa="vacancy-serp__vacancy"]');
+        return Array.from(items).map(item => {
+          const titleEl = item.querySelector('[data-qa="serp-item__title"]');
+          const companyEl = item.querySelector('[data-qa="vacancy-serp__vacancy-employer"]');
+          const salaryEl = item.querySelector('[data-qa="vacancy-serp__vacancy-compensation"]');
+          
+          let vacancyId = null;
+          if (titleEl?.href) {
+            const match = titleEl.href.match(/vacancy\/(\d+)/);
+            vacancyId = match ? parseInt(match[1]) : null;
+          }
+
+          const text = item.innerText || '';
+          let status = null;
+          // Проверяем ТОЧНЫЕ фразы об уже отправленном отклике
+          // НЕ используем просто "Отклик" - это слово есть в кнопке "Откликнуться"
+          if (text.includes('Вы откликнулись') || 
+              text.includes('Резюме отправлено') || 
+              text.includes('Отклик отправлен') ||
+              text.includes('Вы уже откликались')) {
+            status = 'already_applied';
+          }
+
+          return {
+            vacancy_id: vacancyId,
+            title: titleEl?.innerText?.trim() || "Без названия",
+            company: companyEl?.innerText?.trim() || "Не указана",
+            link: titleEl?.href?.split('?')[0] || null,
+            salary: salaryEl?.innerText?.trim() || null,
+            status_on_list_page: status
+          };
+        }).filter(v => v.vacancy_id && v.link);
+      });
+
+      if (vacancies.length === 0) {
+        console.log(`📄 Стр.${pageNum + 1} | ПУСТАЯ - рекомендации исчерпаны`);
+        hasMorePages = false;
+        break;
+      }
+
+      // Фильтруем новые вакансии
+      const newVacancies = vacancies.filter(v => {
+        if (v.status_on_list_page) return false;
+        if (vacancyIdCache.has(v.vacancy_id)) return false;
+        if (appliedFromOtherResumesCache.has(v.vacancy_id)) {
+          console.log(`   ⏭️ Пропуск ${v.vacancy_id} - уже откликались с другого резюме`);
+          return false;
+        }
+        return true;
+      });
+
+      // Сохраняем в БД
+      for (const v of newVacancies) {
+        try {
+          await addVacancy(v);
+          vacancyIdCache.add(v.vacancy_id);
+        } catch (e) {}
+      }
+
+      totalNew += newVacancies.length;
+      const currentCount = await countVacancies();
+      
+      console.log(`⭐ Стр.${pageNum + 1} | на странице: ${vacancies.length} | новых: +${newVacancies.length} | ВСЕГО: ${currentCount}`);
+
+      pageNum++;
+      await delay(50);
+      
+    } catch (e) {
+      console.warn(`⚠️ Стр.${pageNum + 1} ошибка: ${e.message.slice(0, 50)}`);
+      pageNum++;
+      await delay(1000);
+      
+      if (pageNum > 20) {
+        hasMorePages = false;
+      }
+    }
+  }
+  
+  console.log(`\n⭐ ИТОГ рекомендованных: +${totalNew} вакансий за ${pageNum} страниц`);
+  return totalNew;
+}
+
+/**
+ * ПОЛНЫЙ ПАРСИНГ - ВСЕ страницы каждого запроса до конца
  */
 export async function parseHHVacanciesWithBrowser(browser, page) {
   try {
-    console.log("🔧 НАЧАЛО ФУНКЦИИ ПАРСИНГА...");
-    console.log("🔧 Browser:", !!browser);
-    console.log("🔧 Page:", !!page);
-    console.log("🔧 Resume ID:", process.env.RESUME_ID || 'default');
+    console.log("🚀 НАЧАЛО ПОЛНОГО ПАРСИНГА...");
     
-    if (!browser) {
-      console.error("❌ Browser не передан в функцию парсинга!");
+    if (!browser || !page) {
+      console.error("❌ Browser или Page не передан!");
       return;
     }
     
-    if (!page) {
-      console.error("❌ Page не передан в функцию парсинга!");
-      return;
-    }
-    
-    console.log("🔧 Инициализация базы данных...");
     await initializeDatabase();
     await initVacancyCache();
-    console.log("✅ База данных и кэш инициализированы");
     
-    // Получаем количество вакансий из переменной окружения или используем значение по умолчанию
-    const TARGET_VACANCIES = parseInt(process.env.VACANCY_COUNT) || (process.env.TEST_MODE === 'true' ? 30 : 2000);
-    console.log(`🔍 Начинаем парсинг вакансий с HH.ru...`);
-    console.log(`🎯 ЦЕЛЬ: Собрать МИНИМУМ ${TARGET_VACANCIES} вакансий БЕЗ откликов ${process.env.TEST_MODE === 'true' ? '(ТЕСТОВЫЙ РЕЖИМ)' : '(ПРОДАКШН РЕЖИМ)'}`);
-    
-    // Отправляем информацию о целевом количестве для фронтенда СРАЗУ
+    const TARGET_VACANCIES = parseInt(process.env.VACANCY_COUNT) || 2000;
+    console.log(`🎯 ЦЕЛЬ: ${TARGET_VACANCIES} вакансий`);
     console.log(`TARGET_VACANCIES_JSON: ${JSON.stringify({ target: TARGET_VACANCIES })}`);
     console.log(`Прогресс: 0/${TARGET_VACANCIES}`);
 
     let currentCount = await countVacancies();
-    console.log(`📊 В БД уже есть ${currentCount} вакансий`);
     
-    // ВСЕГДА продолжаем парсинг, независимо от количества вакансий
-    console.log("🚀 Начинаем сбор вакансий с HH.ru...");
-    
-    console.log("🔧 Начинаем цикл по поисковым запросам...");
-    console.log("🔧 Количество запросов:", config.search.queries.length);
-
-    // Повторяем проходы по запросам пока не наберём нужное количество
-    let passNumber = 0;
-    const MAX_PASSES = 5; // Максимум 5 проходов по всем запросам
-    
-    while (currentCount < TARGET_VACANCIES && passNumber < MAX_PASSES) {
-      passNumber++;
-      console.log(`\n🔄 ПРОХОД ${passNumber}/${MAX_PASSES} по поисковым запросам`);
-      
-    // Обрабатываем каждый поисковый запрос
-    for (const queryObj of config.search.queries) {
+    // ШАГ 1: Сначала парсим РЕКОМЕНДОВАННЫЕ вакансии (подобранные под резюме)
+    const hhResumeId = await getResumeIdFromHH(page);
+    if (hhResumeId) {
+      await parseRecommendedVacancies(page, hhResumeId, vacancyIdCache, appliedFromOtherResumesCache);
       currentCount = await countVacancies();
-      console.log(`🔧 Запрос: ${queryObj.value} | ${currentCount}/${TARGET_VACANCIES}`);
-      
-      // Проверяем достижение цели
+      console.log(`\n📊 После рекомендаций: ${currentCount}/${TARGET_VACANCIES}`);
+      console.log(`Прогресс: ${currentCount}/${TARGET_VACANCIES}`);
+    }
+
+    // ШАГ 2: Обрабатываем поисковые запросы
+    for (const queryObj of config.search.queries) {
+      // Проверяем цель только ПЕРЕД началом нового запроса
       if (currentCount >= TARGET_VACANCIES) {
-        console.log(`✅ ЦЕЛЬ ДОСТИГНУТА! Собрано ${currentCount} вакансий из ${TARGET_VACANCIES} необходимых`);
-        // Отправляем финальный прогресс для фронтенда
-        console.log(`Прогресс: ${currentCount}/${TARGET_VACANCIES}`);
+        console.log(`\n✅ ЦЕЛЬ ДОСТИГНУТА: ${currentCount}/${TARGET_VACANCIES}`);
         break;
       }
+
+      const searchText = queryObj.value;
+      const experience = queryObj.experience || '';
       
-      let baseUrl;
-
-      if (queryObj.type === 'text') {
-        baseUrl = `https://hh.ru/search/vacancy?text=${encodeURIComponent(queryObj.value)}&items_on_page=100&order_by=publication_time`;
-      } else if (queryObj.type === 'resume_based') {
-        baseUrl = `https://hh.ru/search/vacancy?resume=${queryObj.resumeId}&items_on_page=100&order_by=publication_time`;
-      } else {
-        console.warn(`⚠️ Неизвестный тип запроса "${queryObj.type}". Пропускаем.`);
-        continue;
+      // Формируем URL с фильтром опыта если указан
+      let baseUrl = `https://hh.ru/search/vacancy?text=${encodeURIComponent(searchText)}&items_on_page=100&order_by=publication_time`;
+      if (experience) {
+        baseUrl += `&experience=${experience}`;
       }
-
-      console.log(`\n🌐 Обрабатываем запрос: "${queryObj.value || queryObj.resumeId}"`);
+      
+      console.log(`\n${'='.repeat(60)}`);
+      console.log(`🌐 ЗАПРОС: "${searchText}"${experience ? ` (опыт: ${experience})` : ''}`);
       console.log(`📊 Текущий прогресс: ${currentCount}/${TARGET_VACANCIES}`);
+      console.log(`${'='.repeat(60)}`);
 
-      // HH показывает максимум 20 страниц по 100 вакансий = 2000 вакансий на запрос
-      const MAX_PAGES = process.env.TEST_MODE === 'true' ? 10 : 20;
-      let currentPage = 0;
-      let emptyPagesInRow = 0; // Только пустые страницы прерывают
-      let queryNewVacancies = 0; // Новых вакансий по этому запросу
-
-      while (currentPage < MAX_PAGES && currentCount < TARGET_VACANCIES && emptyPagesInRow < 5) {
-        const pageUrl = `${baseUrl}&page=${currentPage}`;
+      let queryTotalNew = 0;
+      let pageNum = 0;
+      let hasMorePages = true;
+      
+      // Парсим ВСЕ страницы этого запроса пока они есть
+      while (hasMorePages) {
+        const pageUrl = `${baseUrl}&page=${pageNum}`;
         
         try {
-          // Увеличиваем таймаут и добавляем retry
-          let retries = 3;
-          let pageLoaded = false;
+          await page.goto(pageUrl, { 
+            waitUntil: "domcontentloaded", 
+            timeout: 20000 
+          });
           
-          while (retries > 0 && !pageLoaded) {
-            try {
-              await page.goto(pageUrl, { waitUntil: "domcontentloaded", timeout: 30000 });
-              pageLoaded = true;
-            } catch (navError) {
-              retries--;
-              if (retries > 0) {
-                console.log(`⚠️ Retry стр.${currentPage + 1} (осталось ${retries})...`);
-                await delay(2000);
-              } else {
-                throw navError;
+          // Парсим вакансии со страницы
+          const vacancies = await page.evaluate(() => {
+            const items = document.querySelectorAll('[data-qa="vacancy-serp__vacancy"]');
+            return Array.from(items).map(item => {
+              const titleEl = item.querySelector('[data-qa="serp-item__title"]');
+              const companyEl = item.querySelector('[data-qa="vacancy-serp__vacancy-employer"]');
+              const salaryEl = item.querySelector('[data-qa="vacancy-serp__vacancy-compensation"]');
+              
+              let vacancyId = null;
+              if (titleEl?.href) {
+                const match = titleEl.href.match(/vacancy\/(\d+)/);
+                vacancyId = match ? parseInt(match[1]) : null;
               }
-            }
-          }
-          
-          const vacancies = await parseVacanciesListPage(page);
-          
+
+              const text = item.innerText || '';
+              let status = null;
+              // Проверяем ТОЧНЫЕ фразы об уже отправленном отклике
+              // НЕ используем просто "Отклик" - это слово есть в кнопке "Откликнуться"
+              if (text.includes('Вы откликнулись') || 
+                  text.includes('Резюме отправлено') || 
+                  text.includes('Отклик отправлен') ||
+                  text.includes('Вы уже откликались')) {
+                status = 'already_applied';
+              }
+
+              return {
+                vacancy_id: vacancyId,
+                title: titleEl?.innerText?.trim() || "Без названия",
+                company: companyEl?.innerText?.trim() || "Не указана",
+                link: titleEl?.href?.split('?')[0] || null,
+                salary: salaryEl?.innerText?.trim() || null,
+                status_on_list_page: status
+              };
+            }).filter(v => v.vacancy_id && v.link);
+          });
+
+          // Если страница пустая - запрос исчерпан
           if (vacancies.length === 0) {
-            emptyPagesInRow++;
-            console.log(`📄 Стр.${currentPage + 1} | Пустая страница (${emptyPagesInRow}/5)`);
-          } else {
-            emptyPagesInRow = 0;
-            
-            // Считаем сколько НОВЫХ вакансий на странице
-            const newOnPage = vacancies.filter(v => 
-              v.vacancy_id && !v.status_on_list_page && !vacancyIdCache.has(v.vacancy_id)
-            ).length;
-            
-            await processAndSaveVacancies(vacancies);
-            queryNewVacancies += newOnPage;
-            currentCount = await countVacancies();
-            
-            console.log(`📄 Стр.${currentPage + 1} | +${newOnPage} новых | Всего: ${currentCount}/${TARGET_VACANCIES}`);
+            console.log(`📄 Стр.${pageNum + 1} | ПУСТАЯ - запрос "${searchText}" полностью обработан`);
+            hasMorePages = false;
+            break;
           }
+
+          // Фильтруем новые вакансии (не дубли, не откликнутые, не откликнутые с других резюме)
+          const newVacancies = vacancies.filter(v => {
+            // Пропускаем если уже откликнулись (показано на странице)
+            if (v.status_on_list_page) return false;
+            // Пропускаем если уже есть в текущей БД
+            if (vacancyIdCache.has(v.vacancy_id)) return false;
+            // Пропускаем если уже откликались с ДРУГОГО резюме
+            if (appliedFromOtherResumesCache.has(v.vacancy_id)) {
+              console.log(`   ⏭️ Пропуск ${v.vacancy_id} - уже откликались с другого резюме`);
+              return false;
+            }
+            return true;
+          });
+
+          // Сохраняем в БД
+          for (const v of newVacancies) {
+            try {
+              await addVacancy(v);
+              vacancyIdCache.add(v.vacancy_id);
+            } catch (e) {}
+          }
+
+          queryTotalNew += newVacancies.length;
+          currentCount = await countVacancies();
           
-          currentPage++;
+          console.log(`📄 Стр.${pageNum + 1} | на странице: ${vacancies.length} | новых: +${newVacancies.length} | ВСЕГО: ${currentCount}/${TARGET_VACANCIES}`);
           console.log(`Прогресс: ${currentCount}/${TARGET_VACANCIES}`);
+
+          pageNum++;
           
-          // Задержка между страницами - защита от бана
-          await delay(200);
+          // Минимальная пауза между страницами
+          await delay(50);
           
         } catch (e) {
-          console.warn(`⚠️ Ошибка стр.${currentPage}: ${e.message.slice(0, 50)}`);
-          currentPage++;
+          console.warn(`⚠️ Стр.${pageNum + 1} ошибка: ${e.message.slice(0, 50)}`);
+          // При ошибке пробуем следующую страницу
+          pageNum++;
           await delay(1000);
+          
+          // Если много ошибок подряд - возможно запрос исчерпан
+          if (pageNum > 25) {
+            console.log(`⏹ Слишком много страниц (${pageNum}) - переходим к следующему запросу`);
+            hasMorePages = false;
+          }
         }
       }
       
-      console.log(`📊 Запрос "${queryObj.value}" завершён: +${queryNewVacancies} новых вакансий за ${currentPage} страниц`);
+      console.log(`\n📊 ИТОГ запроса "${searchText}": +${queryTotalNew} новых вакансий за ${pageNum} страниц`);
+    }
 
-      // Проверяем достижение цели
-      const finalCount = await countVacancies();
-      console.log(`Прогресс: ${finalCount}/${TARGET_VACANCIES}`);
-      if (finalCount >= TARGET_VACANCIES) break;
-    }
-    
-    // Обновляем счётчик после прохода
-    currentCount = await countVacancies();
-    
-    if (currentCount >= TARGET_VACANCIES) {
-      console.log(`✅ ЦЕЛЬ ДОСТИГНУТА после прохода ${passNumber}!`);
-      break;
-    }
-    
-    console.log(`📊 После прохода ${passNumber}: ${currentCount}/${TARGET_VACANCIES}`);
-    } // Конец while по проходам
-    
-    // Финальный подсчет
     const totalCount = await countVacancies();
-    console.log(`\n📊 ФИНАЛЬНЫЙ РЕЗУЛЬТАТ ПАРСИНГА:`);
-    console.log(`   Собрано вакансий: ${totalCount}`);
-    console.log(`   Целевое количество: ${TARGET_VACANCIES}`);
-    console.log(`   Статус: ${totalCount >= TARGET_VACANCIES ? '✅ ДОСТИГНУТА' : '⚠️ НЕ ДОСТИГНУТА'}`);
-
-    // Отправляем финальный прогресс для фронтенда
+    console.log(`\n${'='.repeat(60)}`);
+    console.log(`✅ ПАРСИНГ ПОЛНОСТЬЮ ЗАВЕРШЕН`);
+    console.log(`📊 Всего собрано: ${totalCount} вакансий`);
+    console.log(`🎯 Цель была: ${TARGET_VACANCIES}`);
+    console.log(`${'='.repeat(60)}`);
     console.log(`Прогресс: ${totalCount}/${TARGET_VACANCIES}`);
-
-    // Добавляем специальную метку для завершения парсинга
-    console.log("✅ ПАРСИНГ ЗАВЕРШЕН");
     
   } catch (error) {
-    console.error("❌ ОШИБКА ПАРСИНГА:", error.message);
-    console.error(error.stack);
+    console.error("❌ КРИТИЧЕСКАЯ ОШИБКА:", error.message);
   }
 }
 
-async function parseVacanciesListPage(page) {
-  return await page.evaluate(() => {
-    // Используем более надежные селекторы
-    const vacancyElements = Array.from(
-      document.querySelectorAll('[data-qa="vacancy-serp__vacancy"]')
-    );
-
-    return vacancyElements
-      .map((item) => {
-        // Используем более надежные селекторы для элементов вакансии
-        const titleElement = item.querySelector('[data-qa="serp-item__title"]') || 
-                           item.querySelector('a[data-qa*="vacancy"]') ||
-                           item.querySelector('a[href*="/vacancy/"]');
-                           
-        const companyElement = item.querySelector('[data-qa="vacancy-serp__vacancy-employer"]') || 
-                             item.querySelector('[data-qa*="employer"]') ||
-                             item.querySelector('.bloko-link_kind-tertiary');
-                             
-        const salaryElement = item.querySelector('[data-qa="vacancy-serp__vacancy-compensation"]') || 
-                            item.querySelector('[data-qa*="compensation"]') ||
-                            item.querySelector('.bloko-header-section-3');
-
-        let vacancyId = null;
-        if (titleElement?.href) {
-          const match = titleElement.href.match(/vacancy\/(\d+)/);
-          vacancyId = match ? parseInt(match[1]) : null;
-        }
-
-        let statusOnListPage = null;
-        const itemText = item.innerText || '';
-        
-        if (itemText.includes('Вы откликнулись') || 
-            itemText.includes('Отклик отправлен') ||
-            itemText.includes('Резюме отправлено') ||
-            itemText.includes('Ваш отклик') ||
-            itemText.includes('Не просмотрен') ||
-            itemText.includes('Просмотрен')) {
-          statusOnListPage = 'already_applied_hh';
-        } else if (itemText.includes('Вас пригласили') || itemText.includes('Приглашение')) {
-          statusOnListPage = 'invited_hh';
-        } else if (itemText.includes('Вам отказали') || itemText.includes('Отказ')) {
-          statusOnListPage = 'rejected_hh';
-        }
-
-        const link = titleElement?.href ? titleElement.href.split('?')[0] : null;
-        
-        return {
-          vacancy_id: vacancyId,
-          title: titleElement?.innerText?.trim() || "Без названия",
-          company: companyElement?.innerText?.trim().replace(/\s+/g, ' ') || "Компания не указана",
-          link: link,
-          salary: salaryElement?.innerText?.replace(/\s/g, " ").trim() || null,
-          status_on_list_page: statusOnListPage,
-        };
-      })
-      .filter((v) => v.vacancy_id !== null && v.link !== null);
-  });
-}
-
-async function processAndSaveVacancies(vacancies) {
-  let added = 0;
-  
-  // Фильтруем сразу по кэшу - без запросов к БД
-  const newVacancies = vacancies.filter(v => {
-    if (!v.link || !v.vacancy_id) return false;
-    if (v.status_on_list_page) return false;
-    if (vacancyIdCache.has(v.vacancy_id)) return false;
-    return true;
-  });
-  
-  // Сохраняем только новые
-  for (const vacancy of newVacancies) {
-    try {
-      await addVacancy(vacancy);
-      vacancyIdCache.add(vacancy.vacancy_id); // Добавляем в кэш
-      added++;
-    } catch (e) {
-      // Игнорируем ошибки (дубли и т.д.)
-    }
-  }
-  
-  if (added > 0) console.log(`💾 +${added} вакансий`);
-}
+export { parseHHVacanciesWithBrowser as parseVacancies };

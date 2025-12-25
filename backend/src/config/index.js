@@ -1,51 +1,46 @@
 // config/index.js
 
 export const config = {
-  // Авторизация происходит вручную через браузер
-  // Gemini API ключ передаётся через UI
-
-  // Параметры поиска вакансий - РАСШИРЕННЫЙ СПИСОК для большего охвата
+  // Параметры поиска вакансий - С ФИЛЬТРАМИ ПО ОПЫТУ
   search: {
     queries: [
-      // Основные запросы
+      // Основные запросы БЕЗ фильтра опыта
       { type: "text", value: 'Frontend разработчик' },
       { type: "text", value: 'React разработчик' },
       { type: "text", value: 'JavaScript разработчик' },
-      { type: "text", value: 'TypeScript разработчик' },
       { type: "text", value: 'Фронтенд' },
       { type: "text", value: 'Fullstack' },
-      { type: "text", value: 'Next.js' },
       { type: "text", value: 'Web разработчик' },
-      { type: "text", value: 'Веб-разработчик' },
       { type: "text", value: 'Node.js разработчик' },
-      { type: "text", value: 'Верстальщик' },
-      // Дополнительные технологии
       { type: "text", value: 'Vue.js разработчик' },
       { type: "text", value: 'Angular разработчик' },
-      { type: "text", value: 'Redux' },
-      { type: "text", value: 'GraphQL разработчик' },
-      // Уровни
-      { type: "text", value: 'Junior Frontend' },
-      { type: "text", value: 'Middle Frontend' },
+      { type: "text", value: 'TypeScript' },
+      { type: "text", value: 'Next.js' },
+      // С фильтром "без опыта"
+      { type: "text", value: 'Frontend разработчик', experience: 'noExperience' },
+      { type: "text", value: 'React', experience: 'noExperience' },
+      { type: "text", value: 'JavaScript', experience: 'noExperience' },
+      // С фильтром "1-3 года"
+      { type: "text", value: 'Frontend', experience: 'between1And3' },
+      { type: "text", value: 'React', experience: 'between1And3' },
+      { type: "text", value: 'JavaScript', experience: 'between1And3' },
+      // С фильтром "3-6 лет"
+      { type: "text", value: 'Frontend', experience: 'between3And6' },
+      { type: "text", value: 'React', experience: 'between3And6' },
       { type: "text", value: 'Senior Frontend' },
-      { type: "text", value: 'Junior React' },
-      { type: "text", value: 'Middle React' },
-      // Английские варианты
-      { type: "text", value: 'Frontend developer' },
-      { type: "text", value: 'Frontend engineer' },
-      { type: "text", value: 'React developer' },
-      { type: "text", value: 'JavaScript developer' },
       // Удалённая работа
       { type: "text", value: 'Frontend удаленно' },
-      { type: "text", value: 'React удаленная работа' },
-      { type: "text", value: 'JavaScript remote' },
-      { type: "text", value: 'Фронтенд удаленно' },
+      { type: "text", value: 'React remote' },
+      { type: "text", value: 'JavaScript удаленная работа' },
+      // Английские варианты
+      { type: "text", value: 'Frontend developer' },
+      { type: "text", value: 'React developer' },
+      { type: "text", value: 'JavaScript developer' },
+      { type: "text", value: 'Frontend engineer' },
       // Специализации
+      { type: "text", value: 'Верстальщик' },
       { type: "text", value: 'UI разработчик' },
-      { type: "text", value: 'HTML верстальщик' },
-      { type: "text", value: 'CSS верстка' },
-      { type: "text", value: 'Программист JavaScript' },
-      { type: "text", value: 'Разработчик интерфейсов' },
+      { type: "text", value: 'Веб-разработчик' },
     ],
     keywords: [
       { word: "React", weight: 10 },

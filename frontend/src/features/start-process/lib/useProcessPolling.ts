@@ -67,12 +67,8 @@ export function useProcessPolling({ resumeId, vacancyCount, onUpdate, onComplete
           updates.topVacancies = data.topVacancies;
         }
 
-        if (data.extractedTokens) {
-          updates.hhtoken = data.extractedTokens.hhtoken;
-          updates.xsrf = data.extractedTokens.xsrf;
-          if (data.extractedTokens.userName) updates.hhUserName = data.extractedTokens.userName;
-          if (data.extractedTokens.userEmail) updates.hhUserEmail = data.extractedTokens.userEmail;
-        }
+        // Токены сохраняем только один раз при первом получении
+        // (проверка на наличие делается в onUpdate)
 
         console.log(`[useProcessPolling ${resumeId}] Calling onUpdate with:`, JSON.stringify(updates));
         onUpdate(resumeId, updates);
