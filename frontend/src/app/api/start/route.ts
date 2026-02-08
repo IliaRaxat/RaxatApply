@@ -86,6 +86,42 @@ export async function POST(request: NextRequest) {
         console.log(`📊 Парсинг прогресс: ${parsed}/${target}`);
       }
 
+      // Парсим прогресс парсинга из специальных сообщений
+      const specialProgressMatch = output.match(/PARSING_PROGRESS:\s*({.*})/);
+      if (specialProgressMatch) {
+        try {
+          const progressData = JSON.parse(specialProgressMatch[1]);
+          const current = progressStore.get(resumeId) || {};
+          updateProgress(resumeId, {
+            ...current,
+            parsed: progressData.parsed,
+            target: progressData.target,
+            status: 'parsing'
+          });
+          console.log(`📊 Обновлен прогресс парсинга: ${progressData.parsed}/${progressData.target}`);
+        } catch (e) {
+          console.error('Ошибка парсинга PARSING_PROGRESS:', e);
+        }
+      }
+
+      // Парсим статистику откликов
+      const applyStatsMatch = output.match(/APPLY_STATS:\s*({.*})/);
+      if (applyStatsMatch) {
+        try {
+          const statsData = JSON.parse(applyStatsMatch[1]);
+          const current = progressStore.get(resumeId) || {};
+          updateProgress(resumeId, {
+            ...current,
+            applied: statsData.success,
+            failed: statsData.failed,
+            status: 'applying'
+          });
+          console.log(`📊 Обновлена статистика откликов: успешно=${statsData.success}, ошибок=${statsData.failed}`);
+        } catch (e) {
+          console.error('Ошибка парсинга APPLY_STATS:', e);
+        }
+      }
+
       // Определяем фазы - более точная проверка
       if (output.includes('CURRENT_PHASE: parsing') || 
           (output.includes('ФАЗА ПАРСИНГА') && output.includes('СЕЙЧАС СОБИРАЕМ ВАКАНСИИ'))) {

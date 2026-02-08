@@ -4,47 +4,24 @@ import { config } from '../config/index.js';
 
 /**
  * Проверяет, соответствует ли вакансия фильтрам
- * БОЛЕЕ ЛОЯЛЬНАЯ фильтрация - разрешаем больше вакансий
+ * ОЧЕНЬ МИНИМАЛЬНАЯ фильтрация - пропускаем почти всё
  */
 export function isVacancySuitable(vacancy) {
-  // Восстанавливаем нормальную фильтрацию
   const { stopWords } = config.filters;
   
   const titleLower = (vacancy.title || '').toLowerCase();
-  const fullText = [
-    vacancy.title || '',
-    vacancy.company || '',
-    vacancy.description_text || ''
-  ].join(' ').toLowerCase();
   
   // СТОП-СЛОВА - отсеиваем только явно нерелевантные
   if (stopWords && stopWords.length > 0) {
     for (const stopWord of stopWords) {
-      // Проверяем только в заголовке для более строгой фильтрации
       if (titleLower.includes(stopWord.toLowerCase())) {
+        console.log(`   🚫 Отфильтровано по стоп-слову "${stopWord}": ${vacancy.title}`);
         return false;
       }
     }
   }
   
-  // ЖЁСТКАЯ ПРОВЕРКА НАЗВАНИЯ
-  // Если в названии Angular или Vue - отсеиваем
-  if (/\bangular\b/i.test(titleLower)) return false;
-  if (/\bvue\.?js\b/i.test(titleLower)) return false;
-  if (/\bsvelte\b/i.test(titleLower)) return false;
-  
-  // Если в названии backend языки - отсеиваем
-  if (/\b(php|java(?!script)|c#|\.net|python|golang|ruby|django|laravel)\b/i.test(titleLower)) return false;
-  
-  // Если в названии mobile - отсеиваем
-  if (/\b(ios|android|flutter|swift|kotlin|mobile)\b/i.test(titleLower)) return false;
-  
-  // Если явно указано "backend" в заголовке - отсеиваем
-  if (/\b(backend|бэкенд|бекенд|back-end)\b/i.test(titleLower)) return false;
-  
-  // Если явно указано DevOps/QA/Analyst/Support/Manager в заголовке - отсеиваем
-  if (/\b(devops|qa|qc|тестировщик|тестирование|аналитик|analyst|sre|support|поддержк|менеджер|manager|hr|recruiter|рекрутер|product owner|po\b|pm\b|project manager|scrum master|data scientist|data engineer|ml engineer|machine learning|dba|администратор|sysadmin|системный администратор)\b/i.test(titleLower)) return false;
-  
+  // Пропускаем ВСЁ остальное - сортировка по релевантности сделает своё дело
   return true;
 }
 
@@ -72,30 +49,31 @@ export function calculateVacancyRelevance(vacancy) {
 
   // ============================================
   // ПРОВЕРЯЕМ СТОП-ФАКТОРЫ
-  // Даём очень низкий score вместо 0, чтобы вакансии были в конце списка
+  // Даём низкий score вместо 0, чтобы вакансии были в конце списка
+  // УМЕНЬШАЕМ штрафы чтобы больше вакансий проходило
   // ============================================
   
   let penalty = 0;
   
-  // Angular/Vue/Svelte в НАЗВАНИИ = низкий приоритет
-  if (/\bangular\b/i.test(titleText)) penalty += 50000;
-  if (/\bvue\.?js\b/i.test(titleText)) penalty += 50000;
-  if (/\bsvelte\b/i.test(titleText)) penalty += 50000;
+  // Angular/Vue/Svelte в НАЗВАНИИ = низкий приоритет (уменьшаем штраф)
+  if (/\bangular\b/i.test(titleText)) penalty += 20000;
+  if (/\bvue\.?js\b/i.test(titleText)) penalty += 20000;
+  if (/\bsvelte\b/i.test(titleText)) penalty += 20000;
   
-  // Backend языки в НАЗВАНИИ = низкий приоритет (java но не javascript)
-  if (/\b(php|java(?!script)|c#|\.net|python|golang|ruby|django|laravel|spring)\b/i.test(titleText)) penalty += 80000;
+  // Backend языки в НАЗВАНИИ = низкий приоритет (уменьшаем штраф)
+  if (/\b(php|java(?!script)|c#|\.net|python|golang|ruby|django|laravel|spring)\b/i.test(titleText)) penalty += 30000;
   
-  // Mobile в НАЗВАНИИ = низкий приоритет
-  if (/\b(ios|android|flutter|swift|kotlin|mobile|мобильн)\b/i.test(titleText)) penalty += 80000;
+  // Mobile в НАЗВАНИИ = низкий приоритет (уменьшаем штраф)
+  if (/\b(ios|android|flutter|swift|kotlin|mobile|мобильн)\b/i.test(titleText)) penalty += 30000;
   
-  // Backend в НАЗВАНИИ = низкий приоритет
-  if (/\b(backend|бэкенд|бекенд|back-end)\b/i.test(titleText)) penalty += 70000;
+  // Backend в НАЗВАНИИ = низкий приоритет (уменьшаем штраф)
+  if (/\b(backend|бэкенд|бекенд|back-end)\b/i.test(titleText)) penalty += 25000;
   
-  // DevOps/QA/Analyst = очень низкий приоритет (но не 0!)
-  if (/\b(devops|qa|qc|тестировщик|тестирование|аналитик|analyst|sre)\b/i.test(titleText)) penalty += 90000;
+  // DevOps/QA/Analyst = низкий приоритет (уменьшаем штраф)
+  if (/\b(devops|qa|qc|тестировщик|тестирование|аналитик|analyst|sre)\b/i.test(titleText)) penalty += 40000;
   
-  // HR/Manager/Support = самый низкий приоритет
-  if (/\b(support|поддержк|менеджер|manager|hr|recruiter|рекрутер|product owner|pm\b|project manager|scrum master|data scientist|data engineer|ml engineer|machine learning|dba|администратор|sysadmin|системный администратор)\b/i.test(titleText)) penalty += 95000;
+  // HR/Manager/Support = самый низкий приоритет (уменьшаем штраф)
+  if (/\b(support|поддержк|менеджер|manager|hr|recruiter|рекрутер|product owner|pm\b|project manager|scrum master|data scientist|data engineer|ml engineer|machine learning|dba|администратор|sysadmin|системный администратор)\b/i.test(titleText)) penalty += 50000;
 
   // ============================================
   // ОПРЕДЕЛЯЕМ КАТЕГОРИЮ ВАКАНСИИ
@@ -252,25 +230,25 @@ export function calculateVacancyRelevance(vacancy) {
   if (/docker/i.test(fullText)) score += 100;
 
   // ============================================
-  // ШТРАФЫ ЗА НЕРЕЛЕВАНТНОЕ В ОПИСАНИИ
+  // ШТРАФЫ ЗА НЕРЕЛЕВАНТНОЕ В ОПИСАНИИ (уменьшаем)
   // ============================================
   
-  // Vue/Angular в описании - штраф
-  if (/\bvue\b/i.test(fullText)) score -= 500; // Уменьшаем штраф
-  if (/\bangular\b/i.test(fullText)) score -= 500; // Уменьшаем штраф
+  // Vue/Angular в описании - небольшой штраф
+  if (/\bvue\b/i.test(fullText)) score -= 200;
+  if (/\bangular\b/i.test(fullText)) score -= 200;
   
-  // 1C, Bitrix, Wordpress - средний штраф
-  if (/1с|1c|битрикс|bitrix/i.test(fullText)) score -= 1000; // Уменьшаем штраф
-  if (/wordpress|вордпресс/i.test(fullText)) score -= 1000; // Уменьшаем штраф
+  // 1C, Bitrix, Wordpress - небольшой штраф
+  if (/1с|1c|битрикс|bitrix/i.test(fullText)) score -= 500;
+  if (/wordpress|вордпресс/i.test(fullText)) score -= 500;
   
-  // Modx, Drupal, Joomla
-  if (/modx|drupal|joomla/i.test(fullText)) score -= 1000; // Уменьшаем штраф
+  // Modx, Drupal, Joomla - небольшой штраф
+  if (/modx|drupal|joomla/i.test(fullText)) score -= 500;
   
   // Применяем штрафы
   score = score - penalty;
   
-  // Минимальный score = 1 (чтобы вакансия не была отфильтрована)
-  score = Math.max(1, Math.round(score));
+  // Минимальный score = 10 (чтобы больше вакансий проходило фильтрацию)
+  score = Math.max(10, Math.round(score));
   
   // Дополнительный бонус для высокорелевантных вакансий
   if (score > 50000) {

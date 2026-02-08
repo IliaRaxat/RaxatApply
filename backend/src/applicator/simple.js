@@ -7,18 +7,19 @@ function sleep(ms) {
 }
 
 // Сопроводительное письмо по умолчанию
-const DEFAULT_COVER_LETTER = `Здравствуйте!
+const DEFAULT_COVER_LETTER = `Добрый день!
 
-Меня зовут Илья, я frontend-разработчик с более чем 4 годами опыта работы в финтехе и high-load проектах. В своей работе я уделяю особое внимание стабильности продукта, удобству интерфейсов и оптимизации производительности.
+Меня заинтересовала ваша вакансия, так как мой опыт идеально ложится в задачи по развитию высоконагруженных фронтенд-систем.
 
-За время работы я разрабатывал и улучшал пользовательские интерфейсы для систем с высокой нагрузкой, автоматизировал процессы и внедрял решения, повышающие эффективность бизнеса. Хорошо понимаю, как строить удобные и масштабируемые продукты, и умею работать как в команде, так и самостоятельно.
+Почему стоит обратить внимание на мой профиль:
 
-Я открыт к новым вызовам и уверен, что мой опыт и навыки будут полезны вашей компании. Буду рад обсудить детали и ответить на вопросы на собеседовании.
+• Масштабирование: В Альфа-Банке я успешно перевел платформу со 130k+ пользователей на стек Next.js (RSC), что позволило ускорить TTI с 4.5с до 1.2с без остановки бизнес-процессов.
 
-Спасибо за внимание к моей кандидатуре.
+• Сложный UI: Имею опыт разработки интерактивных модулей на чистом Canvas API и WebSockets (реализовал систему бронирования мест в реальном времени), где стандартные React-библиотеки не справлялись с нагрузкой.
 
-С уважением,
-Илья`;
+• Бизнес-подход: Умею превращать размытые требования в четкую архитектуру, фокусируясь на производительности (Core Web Vitals) и быстрой доставке фич.
+
+Готов оперативно созвониться, чтобы обсудить, как мой опыт работы в финтехе и со сложной графикой поможет вашей команде.`;
 
 export async function applyToVacancySimple(vacancy, browser, page) {
   console.log(`\n🚀 ${vacancy.title}`);
@@ -62,85 +63,123 @@ export async function applyToVacancySimple(vacancy, browser, page) {
     });
     console.log(`Страница загружена: ${JSON.stringify(pageLoadInfo)}`);
 
+    // 1.5. ПРОВЕРЯЕМ - уже откликались на эту вакансию?
+    const alreadyAppliedCheck = await page.evaluate(() => {
+      const text = document.body?.innerText || '';
+      
+      // Ищем конкретные фразы которые ТОЧНО означают что уже откликались
+      const phrases = [
+        'Вы откликнулись',
+        'Отклик отправлен',
+        'Резюме отправлено',
+        'Вы уже откликались',
+        'Вам отказали',
+        'Вас пригласили',
+        'Смотреть отклик',
+        'Приглашение',
+        'Отказ',
+        'Отклик рассмотрен',
+        'Отклик просмотрен',
+        'Ваше резюме рассматривается',
+        'Резюме на рассмотрении'
+      ];
+      
+      for (const phrase of phrases) {
+        if (text.includes(phrase)) {
+          return { applied: true, reason: phrase };
+        }
+      }
+      
+      // Дополнительно проверяем элементы интерфейса
+      const responseElements = document.querySelectorAll('[data-qa*="response"], [class*="response"], [data-qa*="отклик"]');
+      for (const el of responseElements) {
+        const elText = el.innerText || '';
+        if (elText.includes('отправлен') || elText.includes('рассмотр') || elText.includes('пригласи') || elText.includes('отказ')) {
+          return { applied: true, reason: `element: ${elText.substring(0, 50)}` };
+        }
+      }
+      
+      return { applied: false, reason: null };
+    });
+    
+    if (alreadyAppliedCheck.applied) {
+      console.log(`⏭️ УЖЕ ОТКЛИКАЛИСЬ: "${alreadyAppliedCheck.reason}" - пропускаем`);
+      await updateVacancyStatus(vacancy.vacancy_id, 'already_applied');
+      return { success: false, reason: 'already_applied' };
+    }
+
     // 2. Ищем кнопку "Откликнуться"
     
     // Добавляем логирование для диагностики
     const pageContent = await page.evaluate(() => document.body.innerText.substring(0, 500));
     console.log(`🔍 Содержимое страницы (первые 500 символов): ${pageContent}`);
     
+    // Ждем загрузки всех элементов
+    await sleep(2000);
+    
     const clickResult = await page.evaluate(() => {
       // Логируем все кнопки на странице для диагностики
-      const allButtons = Array.from(document.querySelectorAll('button')).map(btn => ({
-        text: btn.innerText,
+      const allButtons = Array.from(document.querySelectorAll('button, a')).map(btn => ({
+        text: btn.innerText?.trim(),
         className: btn.className,
         dataQa: btn.getAttribute('data-qa'),
-        id: btn.id
-      }));
-      console.log('Все кнопки на странице:', allButtons.slice(0, 10)); // Первые 10 кнопок
+        id: btn.id,
+        href: btn.href
+      })).filter(btn => btn.text && (btn.text.includes('Откликнуться') || btn.text.includes('Respond') || btn.dataQa?.includes('response')));
       
+      console.log('Кнопки отклика на странице:', allButtons);
+      
+      // Приоритетные селекторы для кнопки "Откликнуться"
       const selectors = [
         '[data-qa="vacancy-response-link-top"]',
-        '[data-qa="vacancy-response-link-bottom"]',
+        '[data-qa="vacancy-response-link-bottom"]', 
         '[data-qa="vacancy-response-link"]',
+        'a[data-qa*="vacancy-response"]',
+        'button[data-qa*="vacancy-response"]',
+        '[data-qa="vacancy__actions"] a',
         '[data-qa="vacancy__actions"] button',
+        '.vacancy-actions a',
         '.vacancy-actions button',
+        'a[data-qa*="response"]',
         'button[data-qa*="response"]',
-        'button[data-qa*="respond"]',
-        '[class*="response"] button',
-        '[class*="respond"] button',
-        'button[class*="response"], button[class*="respond"], button[class*="отклик"]'
+        'a[data-qa*="respond"]',
+        'button[data-qa*="respond"]'
       ];
       
       for (const sel of selectors) {
         const btn = document.querySelector(sel);
-        if (btn) {
+        if (btn && btn.offsetParent !== null) {
           btn.scrollIntoView({ block: 'center' });
           btn.click();
-          return { clicked: true, selector: sel };
+          return { clicked: true, selector: sel, text: btn.innerText?.trim() };
         }
       }
       
-      // Ищем по тексту "Откликнуться"
-      const allElements = document.querySelectorAll('a, button, span');
-      for (const el of allElements) {
+      // Ищем по тексту "Откликнуться" среди всех кликабельных элементов
+      const allClickable = document.querySelectorAll('a, button, span[onclick], div[onclick]');
+      for (const el of allClickable) {
         const text = (el.innerText || el.textContent || '').trim();
-        if (text === 'Откликнуться' || text === 'Respond' || text.includes('Отклик') || text.includes('Respond')) {
+        if (text === 'Откликнуться' || text === 'Respond' || text === 'Отклик') {
           el.scrollIntoView({ block: 'center' });
           el.click();
-          return { clicked: true, selector: 'text:Откликнуться' };
+          return { clicked: true, selector: 'text:' + text, text: text };
         }
       }
       
-      // Дополнительные селекторы для новых элементов HH.ru
-      const alternativeSelectors = [
-        'button[data-qa*="response"]',
-        'button[data-qa*="respond"]',
-        '[class*="response"] button',
-        '[class*="respond"] button'
-      ];
-      
-      for (const sel of alternativeSelectors) {
-        const btn = document.querySelector(sel);
-        if (btn) {
-          btn.scrollIntoView({ block: 'center' });
-          btn.click();
-          return { clicked: true, selector: sel };
-        }
-      }
-      
-      return { clicked: false, selector: null };
+      return { clicked: false, selector: null, availableButtons: allButtons.length };
     });
 
     if (clickResult.clicked) {
-      console.log(`✅ Кликнули: ${clickResult.selector}`);
+      console.log(`✅ Кликнули: ${clickResult.selector} (текст: "${clickResult.text}")`);
     } else {
-      console.log('❌ Кнопка не найдена');
+      console.log(`❌ Кнопка не найдена (доступно кнопок: ${clickResult.availableButtons})`);
       // Дополнительная диагностика - проверяем наличие других элементов
       const pageElements = await page.evaluate(() => {
         return {
           hasResponseButton: document.querySelector('[data-qa*="response"], [data-qa*="respond"], button') !== null,
           hasVacancyActions: document.querySelector('.vacancy-actions, [data-qa="vacancy__actions"]') !== null,
-          pageUrl: window.location.href
+          pageUrl: window.location.href,
+          allDataQaElements: Array.from(document.querySelectorAll('[data-qa]')).map(el => el.getAttribute('data-qa')).slice(0, 20)
         };
       });
       console.log(`Диагностика: ${JSON.stringify(pageElements)}`);
@@ -548,30 +587,64 @@ async function checkSuccess(page) {
       console.log(`Проверка успешности: текст страницы содержит - ${text.substring(0, 300)}`);
       
       // Проверяем различные варианты сообщений об успехе
-      const isSuccess = text.includes('Отклик отправлен') || 
-             text.includes('Вы откликнулись') ||
-             text.includes('Резюме отправлено') ||
-             text.includes('Ваш отклик отправлен') ||
-             text.includes('Отклик успешно отправлен') ||
-             text.includes('Successfully sent') ||
-             text.includes('успешно') ||
-             text.includes('Success') ||
-             text.includes('отправлен') ||
-             text.includes('принят') ||
-             text.includes('Отклик создан') ||
-             text.includes('created') ||
-             document.querySelector('[data-qa="vacancy-response-success-message"]') !== null ||
-             document.querySelector('[class*="success" i]') !== null ||
-             document.querySelector('[data-qa*="success"]') !== null ||
-             document.querySelector('.bloko-notification__content')?.innerText?.includes('отклик') ||
-             document.querySelector('.bloko-notification__content')?.innerText?.includes('успешно') ||
-             document.querySelector('.bloko-notification')?.innerText?.includes('отклик') ||
-             document.querySelector('.notification')?.innerText?.includes('отклик');
-             
-      console.log(`Результат проверки успешности: ${isSuccess}`);
-      return isSuccess;
+      const successPhrases = [
+        'Отклик отправлен',
+        'Вы откликнулись',
+        'Резюме отправлено',
+        'Ваш отклик отправлен',
+        'Отклик успешно отправлен',
+        'Successfully sent',
+        'Response sent',
+        'Отклик создан',
+        'Response created',
+        'Заявка отправлена',
+        'Application sent'
+      ];
+      
+      // Проверяем текст на наличие фраз успеха
+      for (const phrase of successPhrases) {
+        if (text.includes(phrase)) {
+          console.log(`Найдена фраза успеха: "${phrase}"`);
+          return true;
+        }
+      }
+      
+      // Проверяем элементы интерфейса с сообщениями об успехе
+      const successSelectors = [
+        '[data-qa="vacancy-response-success-message"]',
+        '[data-qa*="success"]',
+        '[class*="success" i]',
+        '.bloko-notification__content',
+        '.bloko-notification',
+        '.notification',
+        '[data-qa="notification"]'
+      ];
+      
+      for (const sel of successSelectors) {
+        const el = document.querySelector(sel);
+        if (el) {
+          const elText = el.innerText || '';
+          console.log(`Проверяем элемент ${sel}: "${elText}"`);
+          if (elText.includes('отклик') || elText.includes('успешно') || elText.includes('отправлен') || 
+              elText.includes('response') || elText.includes('success') || elText.includes('sent')) {
+            console.log(`Элемент содержит сообщение об успехе`);
+            return true;
+          }
+        }
+      }
+      
+      // Проверяем изменение URL (иногда после успешного отклика происходит редирект)
+      const currentUrl = window.location.href;
+      if (currentUrl.includes('responses') || currentUrl.includes('отклик')) {
+        console.log(`URL изменился на страницу откликов: ${currentUrl}`);
+        return true;
+      }
+      
+      console.log(`Результат проверки успешности: false`);
+      return false;
     });
   } catch (e) {
+    console.log(`Ошибка проверки успешности: ${e.message}`);
     return false;
   }
 }

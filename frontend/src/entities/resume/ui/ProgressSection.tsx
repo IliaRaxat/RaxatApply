@@ -8,7 +8,7 @@ interface ProgressSectionProps {
 }
 
 export function ProgressSection({ resume }: ProgressSectionProps) {
-  const progress = (resume.progress.parsed / resume.progress.target) * 100;
+  const progress = Math.min((resume.progress.parsed / resume.progress.target) * 100, 100);
 
   return (
     <div className="mt-6">

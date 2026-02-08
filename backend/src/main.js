@@ -32,7 +32,8 @@ async function checkAuthorization(page) {
       // Проверяем что НЕТ кнопки входа (главный признак неавторизованности)
       const loginButton = document.querySelector('[data-qa="login"]') || 
                           document.querySelector('[data-qa="account-login-button"]') ||
-                          document.querySelector('button[data-qa="login"]');
+                          document.querySelector('button[data-qa="login"]') ||
+                          document.querySelector('a[href*="/account/login"]');
       
       // Ищем элементы авторизованного пользователя
       const accountSwitcher = document.querySelector('[data-qa="account-switcher"]');
@@ -50,28 +51,54 @@ async function checkAuthorization(page) {
       const headerUserIcon = document.querySelector('.supernova-navi-item_user') ||
                              document.querySelector('[data-qa="supernova-navi-item-user"]');
       
-      const hasAuthElements = !!(accountSwitcher || userName || userAvatar || myResumes || 
-                                 applicantProfile || responses || hasProfileLink || headerUserIcon);
+      // Считаем количество найденных элементов авторизации
+      const authElementsCount = [accountSwitcher, userName, userAvatar, myResumes, 
+                                 applicantProfile, responses, headerUserIcon, hasProfileLink].filter(Boolean).length;
       
-      // Авторизован если: нет кнопки входа И есть элементы авторизации
-      const isAuthorized = !loginButton && hasAuthElements;
+      // НОВАЯ ЛОГИКА: Авторизован если есть хотя бы 1 элемент авторизации
+      // (кнопка входа может быть на главной странице даже для авторизованных)
+      const isAuthorized = authElementsCount >= 1;
       
-      console.log(`   - Login Button: ${!!loginButton}`);
-      console.log(`   - Account Switcher: ${!!accountSwitcher}`);
-      console.log(`   - User Name: ${!!userName}`);
-      console.log(`   - My Resumes: ${!!myResumes}`);
-      console.log(`   - Profile Links: ${hasProfileLink}`);
-      console.log(`   - Header User Icon: ${!!headerUserIcon}`);
-      console.log(`   - Авторизован: ${isAuthorized}`);
-      
-      return isAuthorized;
+      // Возвращаем детальную информацию для логирования
+      return {
+        isAuthorized,
+        loginButton: !!loginButton,
+        accountSwitcher: !!accountSwitcher,
+        userName: !!userName,
+        userAvatar: !!userAvatar,
+        myResumes: !!myResumes,
+        applicantProfile: !!applicantProfile,
+        responses: !!responses,
+        hasProfileLink,
+        headerUserIcon: !!headerUserIcon,
+        authElementsCount
+      };
     } catch (evalError) {
-      console.log(`❌ Ошибка выполнения скрипта: ${evalError.message}`);
-      return false;
+      return {
+        isAuthorized: false,
+        error: evalError.message
+      };
     }
   });
   
-  return result;
+  // Логируем результаты проверки
+  if (result.error) {
+    console.log(`❌ Ошибка выполнения скрипта: ${result.error}`);
+  } else {
+    console.log(`   - Login Button: ${result.loginButton}`);
+    console.log(`   - Account Switcher: ${result.accountSwitcher}`);
+    console.log(`   - User Name: ${result.userName}`);
+    console.log(`   - User Avatar: ${result.userAvatar}`);
+    console.log(`   - My Resumes: ${result.myResumes}`);
+    console.log(`   - Applicant Profile: ${result.applicantProfile}`);
+    console.log(`   - Responses: ${result.responses}`);
+    console.log(`   - Profile Links: ${result.hasProfileLink}`);
+    console.log(`   - Header User Icon: ${result.headerUserIcon}`);
+    console.log(`   - Auth Elements Count: ${result.authElementsCount}`);
+    console.log(`   - Авторизован: ${result.isAuthorized}`);
+  }
+  
+  return result.isAuthorized;
 }
 
 // Функция для ожидания авторизации (проверяет каждые 2 секунды)
@@ -79,12 +106,12 @@ async function waitForAuth(page) {
   console.log("AUTHORIZATION_PERIOD_START: true");
   console.log("⏳ Ожидание авторизации... Войдите в аккаунт HH.ru");
   
-  const MAX_WAIT = 600; // Максимум 10 минут
+  const MAX_WAIT = 900; // Увеличиваем до 15 минут
   let waited = 0;
   
   while (waited < MAX_WAIT) {
-    await sleep(2000);
-    waited += 2;
+    await sleep(3000); // Увеличиваем интервал проверки до 3 секунд
+    waited += 3;
     
     try {
       const isAuth = await checkAuthorization(page);
@@ -320,69 +347,69 @@ async function main() {
       throw new Error('Не удалось запустить браузер - профиль занят другим процессом. Закройте все окна Chrome и попробуйте снова.');
     }
 
-    page = await browser.newPage();
+    // ВАЖНО: Используем существующие страницы из профиля вместо создания новой
+    const pages = await browser.pages();
+    if (pages.length > 0) {
+      page = pages[0]; // Используем первую существующую страницу
+      console.log("✅ Используем существующую страницу из профиля");
+    } else {
+      page = await browser.newPage(); // Создаем новую только если нет существующих
+      console.log("✅ Создана новая страница");
+    }
     await page.setViewport({ width: 1920, height: 1080 });
 
     // 4. Ожидание авторизации с таймером
     console.log("\n⏳ ОЖИДАНИЕ АВТОРИЗАЦИИ");
     console.log("========================");
     
-    // Переходим на главную страницу
-    console.log("🏠 Переход на hh.ru...");
-    let pageLoaded = false;
-    
-    try {
-      await page.goto('https://hh.ru', { waitUntil: 'domcontentloaded', timeout: 30000 });
-      console.log("✅ Переход выполнен");
-      pageLoaded = true;
-    } catch (navError) {
-      console.log(`❌ Ошибка перехода: ${navError.message}`);
-      console.log("🔄 Пробуем альтернативный URL...");
-      try {
-        await page.goto('https://hh.ru/?', { waitUntil: 'domcontentloaded', timeout: 30000 });
-        console.log("✅ Альтернативный переход выполнен");
-        pageLoaded = true;
-      } catch (altError) {
-        console.log(`❌ Альтернативный переход тоже не удался: ${altError.message}`);
-      }
-    }
-    
-    // Если страница не загрузилась, ждем и пробуем снова
-    if (!pageLoaded) {
-      console.log("⏳ Страница не загрузилась, ждем 10 секунд и пробуем снова...");
-      await sleep(10000);
-      
-      try {
-        await page.goto('https://hh.ru', { waitUntil: 'domcontentloaded', timeout: 30000 });
-        console.log("✅ Переход выполнен после ожидания");
-        pageLoaded = true;
-      } catch (retryError) {
-        console.log(`❌ Повторный переход не удался: ${retryError.message}`);
-      }
-    }
-    
-    // Если все попытки неудачны, завершаем программу с ошибкой
-    if (!pageLoaded) {
-      console.log("❌ Не удалось загрузить страницу hh.ru");
-      console.log("⚠️ Проверьте подключение к интернету и доступность сайта hh.ru");
-      await browser.close();
-      process.exit(1);
-      return; // Добавляем return чтобы избежать дальнейшего выполнения
-    }
-    
-    // Проверяем текущий URL
-    const currentUrl = page.url();
-    console.log(`📍 Текущий URL: ${currentUrl}`);
-    
     // Проверяем авторизацию в сохранённом профиле браузера
     let authorized = false;
     
     console.log("🔍 Проверяем авторизацию в сохранённом профиле...");
-    await sleep(2000); // Даём странице загрузиться
+    
+    // Сначала открываем главную страницу для проверки авторизации
+    console.log("🏠 Открываем HH.ru для проверки...");
+    try {
+      await page.goto('https://hh.ru', { waitUntil: 'domcontentloaded', timeout: 30000 });
+      console.log("✅ HH.ru открыт");
+    } catch (navError) {
+      console.log(`⚠️ Ошибка открытия HH.ru: ${navError.message}`);
+    }
+    
+    await sleep(3000); // Даем странице загрузиться
     
     try {
-      authorized = await checkAuthorization(page);
-      console.log(`📊 Результат проверки: ${authorized ? 'АВТОРИЗОВАН' : 'НЕ АВТОРИЗОВАН'}`);
+      // СТРОГАЯ ПРОВЕРКА: проверяем и элементы И куки
+      const hasAuthElements = await checkAuthorization(page);
+      console.log(`📊 Элементы авторизации: ${hasAuthElements ? 'НАЙДЕНЫ' : 'НЕ НАЙДЕНЫ'}`);
+      
+      // ОБЯЗАТЕЛЬНАЯ ПРОВЕРКА: проверяем что есть куки авторизации
+      const cookies = await page.cookies();
+      const authCookies = cookies.filter(c => 
+        c.name === 'hhtoken' || 
+        c.name === 'hhuid' || 
+        c.name === '_xsrf' ||
+        c.name === 'hhrole'
+      );
+      
+      console.log(`📊 Найдено кук авторизации: ${authCookies.length}`);
+      authCookies.forEach(c => {
+        console.log(`   🍪 ${c.name}: ${c.value.substring(0, 20)}...`);
+      });
+      
+      const hasAuthCookies = authCookies.length >= 1; // Достаточно хотя бы 1 куки
+      
+      // АВТОРИЗОВАН ТОЛЬКО ЕСЛИ ЕСТЬ И ЭЛЕМЕНТЫ И КУКИ
+      authorized = hasAuthElements && hasAuthCookies;
+      
+      console.log(`📊 Результат проверки: ${authorized ? 'АВТОРИЗОВАН ✅' : 'НЕ АВТОРИЗОВАН ❌'}`);
+      
+      if (!hasAuthCookies) {
+        console.log("⚠️ Недостаточно кук авторизации - требуется вход");
+      }
+      if (!hasAuthElements) {
+        console.log("⚠️ Не найдены элементы авторизованного пользователя - требуется вход");
+      }
     } catch (authError) {
       console.log(`❌ Ошибка проверки авторизации: ${authError.message}`);
       authorized = false;
@@ -401,6 +428,21 @@ async function main() {
       }
     } else {
       console.log("⚠️ Требуется ручная авторизация");
+      
+      // Открываем страницу ЛОГИНА для ручной авторизации
+      console.log("\n🔐 Открываем страницу входа...");
+      try {
+        await page.goto('https://hh.ru/account/login', { waitUntil: 'domcontentloaded', timeout: 30000 });
+        console.log("✅ Страница входа открыта");
+      } catch (loginPageError) {
+        console.log(`⚠️ Ошибка открытия страницы входа: ${loginPageError.message}`);
+      }
+      
+      await sleep(2000);
+      
+      console.log("\n👉 ВОЙДИ В АККАУНТ HH.RU В ОТКРЫВШЕМСЯ БРАУЗЕРЕ");
+      console.log("👉 Программа будет ждать 15 минут");
+      console.log("👉 После входа парсинг начнется автоматически\n");
     }
     
     // Если авторизация через токены не удалась или токены не переданы
@@ -491,9 +533,27 @@ async function main() {
 
     console.log(`📊 Всего вакансий в БД: ${allVacancies.length}`);
     
+    // Выводим примеры вакансий для диагностики
+    console.log(`📊 Примеры вакансий в БД:`);
+    for (let i = 0; i < Math.min(10, allVacancies.length); i++) {
+      const v = allVacancies[i];
+      console.log(`   ${i + 1}. ID:${v.vacancy_id} "${v.title}" | ${v.company}`);
+    }
+    
     // Загружаем ID вакансий на которые уже откликались с ДРУГИХ резюме
     const appliedFromOtherResumes = await getAllAppliedVacancyIds();
     console.log(`📊 Откликнуто с других резюме: ${appliedFromOtherResumes.size}`);
+    
+    // Показываем примеры откликнутых вакансий
+    if (appliedFromOtherResumes.size > 0) {
+      console.log(`📊 Примеры откликнутых с других резюме:`);
+      let count = 0;
+      for (const id of appliedFromOtherResumes) {
+        if (count >= 10) break;
+        console.log(`   - ID:${id}`);
+        count++;
+      }
+    }
     
     console.log("🔄 Вычисляем релевантность для каждой вакансии...");
 
@@ -503,11 +563,14 @@ async function main() {
     let zeroScore = 0;
     let alreadyAppliedFromOther = 0;
 
+    console.log(`🔄 Обрабатываем ${allVacancies.length} вакансий...`);
+
     for (const v of allVacancies) {
       // Проверяем черный список
       const isBlacklisted = await isVacancyBlacklisted(v.vacancy_id);
       if (isBlacklisted) {
         blacklisted++;
+        console.log(`   🚫 Черный список: ${v.vacancy_id} "${v.title}"`);
         continue;
       }
       
@@ -530,7 +593,12 @@ async function main() {
         relevance_score: score
       });
       
-      if (score === 0) zeroScore++;
+      if (score === 0) {
+        zeroScore++;
+        console.log(`   📊 Нулевой score: ${v.vacancy_id} "${v.title}"`);
+      } else {
+        console.log(`   📊 Score ${score}: ${v.vacancy_id} "${v.title}"`);
+      }
     }
 
     // Сортируем по релевантности (от большего к меньшему)
@@ -669,8 +737,11 @@ async function main() {
 
       console.log(`📊 Статистика: успешно=${successCount} ошибок=${failedCount} всего=${num}/${vacancies.length}`);
       
+      // Отправляем статистику откликов на фронтенд
+      console.log(`APPLY_STATS: ${JSON.stringify({ success: successCount, failed: failedCount, total: num, remaining: vacancies.length - num })}`);
+      
       // Уменьшаем паузу между откликами для ускорения
-      await sleep(500);
+      await sleep(200); // Уменьшаем с 500 до 200мс
     }
 
     // 8. Итоги
@@ -687,12 +758,30 @@ async function main() {
     console.error(error.stack);
     // Отправляем информацию об ошибке для фронтенда
     console.log("CURRENT_PHASE: error");
-  } finally {
+    
+    // Закрываем браузер при ошибке
     if (browser) {
       try {
         await browser.close();
-        console.log("\n✅ Браузер закрыт");
-      } catch (e) {}
+        console.log("✅ Браузер закрыт после ошибки");
+      } catch (e) {
+        console.log(`⚠️ Ошибка при закрытии браузера: ${e.message}`);
+      }
+    }
+    
+    // ВАЖНО: Завершаем процесс с кодом ошибки
+    process.exit(1);
+  } finally {
+    if (browser) {
+      try {
+        // ВАЖНО: Даем время на сохранение профиля перед закрытием
+        console.log("\n⏳ Сохраняем профиль браузера...");
+        await sleep(2000);
+        await browser.close();
+        console.log("✅ Браузер закрыт, профиль сохранен");
+      } catch (e) {
+        console.log(`⚠️ Ошибка при закрытии браузера: ${e.message}`);
+      }
     }
   }
 }

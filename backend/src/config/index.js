@@ -1,46 +1,20 @@
 // config/index.js
 
 export const config = {
-  // Параметры поиска вакансий - С ФИЛЬТРАМИ ПО ОПЫТУ
+  // Параметры поиска вакансий - СУПЕР БЫСТРЫЙ СПИСОК (только самые эффективные)
   search: {
     queries: [
-      // Основные запросы БЕЗ фильтра опыта
+      // === ТОЛЬКО САМЫЕ ЭФФЕКТИВНЫЕ ЗАПРОСЫ ===
       { type: "text", value: 'Frontend разработчик' },
       { type: "text", value: 'React разработчик' },
       { type: "text", value: 'JavaScript разработчик' },
-      { type: "text", value: 'Фронтенд' },
-      { type: "text", value: 'Fullstack' },
-      { type: "text", value: 'Web разработчик' },
-      { type: "text", value: 'Node.js разработчик' },
-      { type: "text", value: 'Vue.js разработчик' },
-      { type: "text", value: 'Angular разработчик' },
-      { type: "text", value: 'TypeScript' },
-      { type: "text", value: 'Next.js' },
-      // С фильтром "без опыта"
-      { type: "text", value: 'Frontend разработчик', experience: 'noExperience' },
-      { type: "text", value: 'React', experience: 'noExperience' },
-      { type: "text", value: 'JavaScript', experience: 'noExperience' },
-      // С фильтром "1-3 года"
-      { type: "text", value: 'Frontend', experience: 'between1And3' },
-      { type: "text", value: 'React', experience: 'between1And3' },
-      { type: "text", value: 'JavaScript', experience: 'between1And3' },
-      // С фильтром "3-6 лет"
-      { type: "text", value: 'Frontend', experience: 'between3And6' },
-      { type: "text", value: 'React', experience: 'between3And6' },
-      { type: "text", value: 'Senior Frontend' },
-      // Удалённая работа
-      { type: "text", value: 'Frontend удаленно' },
-      { type: "text", value: 'React remote' },
-      { type: "text", value: 'JavaScript удаленная работа' },
-      // Английские варианты
+      { type: "text", value: 'Frontend' },
+      { type: "text", value: 'React' },
       { type: "text", value: 'Frontend developer' },
       { type: "text", value: 'React developer' },
-      { type: "text", value: 'JavaScript developer' },
-      { type: "text", value: 'Frontend engineer' },
-      // Специализации
-      { type: "text", value: 'Верстальщик' },
-      { type: "text", value: 'UI разработчик' },
-      { type: "text", value: 'Веб-разработчик' },
+      { type: "text", value: 'Fullstack разработчик' },
+      { type: "text", value: 'Middle Frontend' },
+      { type: "text", value: 'Senior Frontend' },
     ],
     keywords: [
       { word: "React", weight: 10 },
@@ -61,7 +35,6 @@ export const config = {
       { word: "AWS", weight: 2 },
       { word: "HTML", weight: 2 },
       { word: "CSS", weight: 2 },
-      // Добавляем больше ключевых слов
       { word: "Webpack", weight: 2 },
       { word: "Vite", weight: 2 },
       { word: "Tailwind", weight: 2 },
@@ -69,14 +42,12 @@ export const config = {
       { word: "GraphQL", weight: 2 },
       { word: "Jira", weight: 1 },
       { word: "Git", weight: 1 },
-      // Дополнительные ключевые слова
       { word: "Agile", weight: 1 },
       { word: "Scrum", weight: 1 },
       { word: "Figma", weight: 1 },
       { word: "UI/UX", weight: 1 },
       { word: "Responsive", weight: 1 },
       { word: "Mobile-first", weight: 1 },
-      // Дополнительные ключевые слова
       { word: "ES6", weight: 1 },
       { word: "ESLint", weight: 1 },
       { word: "Prettier", weight: 1 },
@@ -88,8 +59,7 @@ export const config = {
       { word: "Ant Design", weight: 1 },
       { word: "Chakra UI", weight: 1 }
     ],
-    // Без фильтра по регионам - все регионы
-    areas: [null], // Упрощаем до одного значения, так как мы больше не используем этот параметр
+    areas: [null],
     query: "frontend",
     area: 113,
     searchFields: ["name", "company_name", "description"],
@@ -98,21 +68,12 @@ export const config = {
     LSaveArea: true,
   },
 
-  // Правила фильтрации - только явно нерелевантные
+  // Правила фильтрации - МИНИМАЛЬНАЯ фильтрация
   filters: {
     stopWords: [
-      // Уровень - только стажёры
+      // Только явно нерелевантные позиции
       "стажер", "стажёр", "intern", "интерн",
-      // Другие фреймворки (только в заголовке)
-      //"angular", "vue.js", "vuejs", // Переносим в более мягкую фильтрацию
-      // Явно не frontend
-      "flutter", "ios разработчик", "android разработчик",
-      "devops", "qa", "тестировщик",
-      "аналитик", "analyst", "designer", "дизайнер",
       "1с", "1c", "битрикс", "bitrix",
-      "data engineer", "data scientist", "ml engineer",
-      "системный администратор", "sysadmin",
-      "backend", "бэкенд", "back-end", "back end"
     ],
     requiredWords: [],
   },
@@ -120,14 +81,14 @@ export const config = {
   // Настройки Puppeteer
   puppeteer: {
     headless: false,
-    slowMo: 0, // Убираем замедление для максимальной скорости
+    slowMo: 0,
     defaultViewport: {
       width: 1920,
       height: 1080
     }
   },
   
-  // Настройки задержек - минимальные для скорости
+  // Настройки задержек
   delays: {
     pageLoad: 100,
     afterClick: 50,
