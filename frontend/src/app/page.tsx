@@ -7,19 +7,7 @@ import { AuthForm } from '@/features/auth';
 import { Resume } from '@/shared/types';
 import { getToken, getUser, logout, User, authFetch } from '@/shared/lib/auth';
 
-const DEFAULT_COVER_LETTER = `Добрый день!
-
-Меня заинтересовала ваша вакансия, так как мой опыт идеально ложится в задачи по развитию высоконагруженных фронтенд-систем.
-
-Почему стоит обратить внимание на мой профиль:
-
-• Масштабирование: В Альфа-Банке я успешно перевел платформу со 130k+ пользователей на стек Next.js (RSC), что позволило ускорить TTI с 4.5с до 1.2с без остановки бизнес-процессов.
-
-• Сложный UI: Имею опыт разработки интерактивных модулей на чистом Canvas API и WebSockets (реализовал систему бронирования мест в реальном времени), где стандартные React-библиотеки не справлялись с нагрузкой.
-
-• Бизнес-подход: Умею превращать размытые требования в четкую архитектуру, фокусируясь на производительности (Core Web Vitals) и быстрой доставке фич.
-
-Готов оперативно созвониться, чтобы обсудить, как мой опыт работы в финтехе и со сложной графикой поможет вашей команде.`;
+const DEFAULT_COVER_LETTER = ``;
 
 function createDefaultResume(slot: number): Resume {
   return {
@@ -35,7 +23,7 @@ function createDefaultResume(slot: number): Resume {
 }
 
 function createDefaultResumes(): Resume[] {
-  return [1, 2, 3, 4].map(slot => createDefaultResume(slot));
+  return [1].map(slot => createDefaultResume(slot));
 }
 
 interface SavedResume {

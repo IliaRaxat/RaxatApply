@@ -105,13 +105,14 @@ async function checkAuthorization(page) {
 async function waitForAuth(page) {
   console.log("AUTHORIZATION_PERIOD_START: true");
   console.log("⏳ Ожидание авторизации... Войдите в аккаунт HH.ru");
+  console.log("💡 Браузер будет ждать сколько угодно времени, пока вы не войдете");
   
-  const MAX_WAIT = 900; // Увеличиваем до 15 минут
   let waited = 0;
   
-  while (waited < MAX_WAIT) {
-    await sleep(3000); // Увеличиваем интервал проверки до 3 секунд
-    waited += 3;
+  // Бесконечный цикл - ждем пока пользователь не войдет
+  while (true) {
+    await sleep(2000);
+    waited += 2;
     
     try {
       const isAuth = await checkAuthorization(page);
@@ -128,6 +129,7 @@ async function waitForAuth(page) {
       console.log(`⏳ Ожидание авторизации... (${waited} сек)`);
     }
   }
+}
   
   console.log("AUTHORIZATION_PERIOD_END: true");
   console.log("❌ Время ожидания авторизации истекло");

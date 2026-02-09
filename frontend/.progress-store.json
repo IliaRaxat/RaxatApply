@@ -1,24 +1,7 @@
 {
   "1": {
     "status": "parsing",
-    "parsed": 20,
-    "target": 2500,
-    "extractedTokens": {
-      "hhtoken": "51535cca79c74f488869db3def5e2010",
-      "xsrf": "51535cca79c74f488869db3def5e2010",
-      "userName": null,
-      "userEmail": null
-    }
-  },
-  "2": {
-    "status": "parsing",
     "parsed": 0,
-    "target": 2500,
-    "extractedTokens": {
-      "hhtoken": "e1210ab61220f0a7a954028effb9f5b2",
-      "xsrf": "e1210ab61220f0a7a954028effb9f5b2",
-      "userName": null,
-      "userEmail": null
-    }
+    "target": 2300
   }
 }
